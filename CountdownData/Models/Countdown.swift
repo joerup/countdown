@@ -15,6 +15,8 @@ public final class Countdown {
     public var id: String
     public var name: String
     
+    @Transient public var update: Bool = false
+    
     // MARK: - Destination
     
     @Attribute private var _destination: Data?
@@ -64,10 +66,9 @@ public final class Countdown {
     
     // MARK: - Cards
     
-    @Relationship(deleteRule: .cascade) private var cards: [Card] = []
-    
-    @Transient public var card: Card {
-        return cards.first ?? Card()
+    @Relationship(deleteRule: .cascade) public var cards: [Card] = []
+    public var card: Card? {
+        return cards.first
     }
     @Transient public var cardIndex: Int?
     @Transient public var cardTimer: Timer?
@@ -80,18 +81,21 @@ public final class Countdown {
     public init(name: String, date: Date, emoji: String, color: Color, image: UIImage) {
         self.id = name
         self.name = name
+        self.cards = [Card()]
         self.destination = .custom(date: .date(.now))
     }
     
     public init(name: String, destination: Destination) {
         self.id = name
         self.name = name
+        self.cards = [Card()]
         self.destination = destination
     }
     
     public init(name: String, date: Date) {
         self.id = name
         self.name = name
+        self.cards = [Card()]
         self.destination = .custom(date: .date(date))
     }
     
@@ -109,12 +113,6 @@ public final class Countdown {
 //        Countdown(name: "Birthday", date: Date().addingTimeInterval(86400 * (276 - 365)), emoji: "🎁", color: .purple),
 //        Countdown(name: "Game", date: Date().addingTimeInterval(86400 * -28), emoji: "🏆", color: .green)
     ]
-    
-    public func loadCards() async {
-        for card in cards {
-            await card.loadBackground()
-        }
-    }
     
     public func addCard(_ card: Card) {
         cards.append(card)
@@ -149,7 +147,7 @@ extension Countdown: Identifiable { }
 
 extension Countdown: Hashable {
     public static func == (lhs: Countdown, rhs: Countdown) -> Bool {
-        return lhs.id == rhs.id
+        return lhs.id == rhs.id 
     }
     
     public func hash(into hasher: inout Hasher) {

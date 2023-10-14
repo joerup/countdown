@@ -11,14 +11,12 @@ import CountdownData
 public struct CounterDisplay: View {
     
     var countdown: Countdown
-    var textDesign: Countdown.TextDesign?
     
     var type: DisplayType
     var size: CGFloat
     
-    public init(countdown: Countdown, textDesign: Countdown.TextDesign? = nil, type: DisplayType = .days, size: CGFloat) {
+    public init(countdown: Countdown, type: DisplayType = .days, size: CGFloat) {
         self.countdown = countdown
-        self.textDesign = textDesign
         self.type = type
         self.size = size
     }
@@ -60,26 +58,34 @@ public struct CounterDisplay: View {
     
     private func number(_ value: Int, size: CGFloat) -> some View {
         ZStack {
-            TintedText(tint: countdown.card.tint) {
-                Text(String(value))
-                    .font(.system(size: size, weight: .heavy, design: .serif))
-                    .lineLimit(0).minimumScaleFactor(0.5)
+            if let tintColor = countdown.card?.tint, let textStyle = countdown.card?.textStyle {
+                TintedText(tint: tintColor) {
+                    Text(String(value))
+                        .font(.system(size: size))
+                        .fontDesign(textStyle.design)
+                        .fontWeight(textStyle.weight)
+                        .fontWidth(textStyle.width)
+                        .lineLimit(0).minimumScaleFactor(0.5)
+                }
             }
         }
     }
     
     private func numberUnit(_ value: Int?, unit: String, size: CGFloat) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 1) {
-            TintedText(tint: countdown.card.tint) {
-                Text(String(format: "%02i", abs(value ?? 0)))
-                    .font(.system(size: size, weight: .bold))
+            if let tintColor = countdown.card?.tint {
+                TintedText(tint: tintColor) {
+                    Text(String(format: "%02i", abs(value ?? 0)))
+                        .font(.system(size: size))
+                        .fontWeight(.bold)
+                        .fontWidth(.condensed)
+                        .monospacedDigit()
+                }
+                Text(unit)
+                    .font(.system(size: size*5/6, weight: .semibold))
+                    .foregroundStyle(.thinMaterial)
                     .fontWidth(.condensed)
-                    .monospacedDigit()
             }
-            Text(unit)
-                .font(.system(size: size*5/6, weight: .semibold))
-                .foregroundStyle(.thinMaterial)
-                .fontWidth(.condensed)
         }
     }
 }

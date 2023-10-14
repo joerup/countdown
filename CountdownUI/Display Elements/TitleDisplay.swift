@@ -11,14 +11,12 @@ import CountdownData
 public struct TitleDisplay: View {
     
     var countdown: Countdown
-    var textDesign: Countdown.TextDesign? 
     
     var size: CGFloat
     var arrangement: Arrangement
     
-    public init(countdown: Countdown, textDesign: Countdown.TextDesign? = nil, size: CGFloat, arrangement: Arrangement = .vertical(alignment: .center)) {
+    public init(countdown: Countdown, size: CGFloat, arrangement: Arrangement = .vertical(alignment: .center)) {
         self.countdown = countdown
-        self.textDesign = textDesign
         self.size = size
         self.arrangement = arrangement
     }
@@ -42,25 +40,27 @@ public struct TitleDisplay: View {
     
     @ViewBuilder
     private func content() -> some View {
-        TintedText(tint: countdown.card.tint) {
-            Text("\(countdown.displayName)")
-                .font(.system(size: size))
-                .fontWeight(.bold)
-                .multilineTextAlignment(.center)
-                .minimumScaleFactor(0.5)
-                .frame(height: size)
-        }
-        if case .horizontal(_) = arrangement {
-            Spacer()
-        }
-        TintedText(tint: countdown.card.tint) {
-            Text("\(countdown.date.string)")
-                .textCase(.uppercase)
-                .font(.system(size: size/2))
-                .fontWeight(.medium)
-                .fontWidth(.condensed)
-                .padding(.bottom, 5)
-                .frame(height: size/2)
+        if let tintColor = countdown.card?.tint {
+            TintedText(tint: tintColor) {
+                Text("\(countdown.displayName)")
+                    .font(.system(size: size))
+                    .fontWeight(.bold)
+                    .multilineTextAlignment(.center)
+                    .minimumScaleFactor(0.5)
+                    .frame(height: size)
+            }
+            if case .horizontal(_) = arrangement {
+                Spacer()
+            }
+            TintedText(tint: tintColor) {
+                Text("\(countdown.date.string)")
+                    .textCase(.uppercase)
+                    .font(.system(size: size/2))
+                    .fontWeight(.medium)
+                    .fontWidth(.condensed)
+                    .padding(.bottom, 5)
+                    .frame(height: size/2)
+            }
         }
     }
 }

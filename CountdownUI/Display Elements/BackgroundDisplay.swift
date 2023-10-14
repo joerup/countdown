@@ -10,20 +10,21 @@ import CountdownData
 
 public struct BackgroundDisplay: View {
     
-    var card: Card
+    var countdown: Countdown
     var blurRadius: Double = 0
     
-    public init(card: Card) {
-        self.card = card
+    public init(countdown: Countdown) {
+        self.countdown = countdown
+        self.blurRadius = 0
     }
-    public init(card: Card, blurRadius: Double = 0) {
-        self.card = card
+    public init(countdown: Countdown, blurRadius: Double = 0) {
+        self.countdown = countdown
         self.blurRadius = blurRadius
     }
     
     public var body: some View {
         Group {
-            switch card.background {
+            switch countdown.cards.first?.background ?? .none {
             case .photo(let photo):
                 Image(uiImage: photo)
                     .resizable()
@@ -31,6 +32,8 @@ public struct BackgroundDisplay: View {
                     .blur(radius: blurRadius)
             case .gradient(let colors):
                 LinearGradient(colors: colors, startPoint: .top, endPoint: .bottom)
+            case .none:
+                Color.red
             }
         }
     }

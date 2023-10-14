@@ -11,7 +11,7 @@ import CountdownData
 
 struct CountdownTimeView: View {
     
-    @Query private var countdowns: [Countdown]
+    @Query(sort: \Countdown.timeRemaining) private var countdowns: [Countdown]
     @State private var selectedCountdown: Countdown?
     
     @State private var countdownTimer: Timer?
@@ -26,10 +26,12 @@ struct CountdownTimeView: View {
                     }
                 }
             }
-            .task {
+            .onAppear {
                 // Load countdown backgrounds
                 for countdown in countdowns {
-                    await countdown.loadCards()
+                    if countdown.cards.isEmpty {
+                        countdown.addCard(Card())
+                    }
                 }
             }
             .onOpenURL { url in

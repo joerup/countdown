@@ -1,5 +1,5 @@
 //
-//  CountdownEditor.swift
+//  CardEditor.swift
 //  CountdownTime
 //
 //  Created by Joe Rupertus on 7/21/23.
@@ -9,7 +9,7 @@ import SwiftUI
 import CountdownData
 import CountdownUI
 
-struct CountdownEditor: View {
+struct CardEditor: View {
     
     @Environment(\.modelContext) var modelContext
     
@@ -23,7 +23,8 @@ struct CountdownEditor: View {
     @State private var showUnsplashLibrary = false
     @State private var showGradientEditor = false
     
-    @State private var editText: Bool = false
+    @State private var editTint = false
+    @State private var editFont = false
     
     var namespace: Namespace.ID
     
@@ -46,7 +47,7 @@ struct CountdownEditor: View {
                 }
                 .padding(.horizontal)
                 
-                CountdownView(countdown: countdown, editing: $editing)
+                CardView(countdown: countdown, editing: $editing)
                     .clipShape(RoundedRectangle(cornerRadius: 30))
                     .shadow(radius: 10)
                     .matchedGeometryEffect(id: countdown, in: namespace)
@@ -57,6 +58,10 @@ struct CountdownEditor: View {
                 Spacer(minLength: 0)
                 
                 HStack {
+                    iconButton("calendar") {
+                        editDestination.toggle()
+                    }
+                    Spacer()
                     iconMenu("photo") {
                         Button {
                             showPhotoLibrary.toggle()
@@ -68,22 +73,19 @@ struct CountdownEditor: View {
                         } label: {
                             Label("Search Photos", systemImage: "magnifyingglass")
                         }
-                        Button {
-                            showGradientEditor.toggle()
-                        } label: {
-                            Label("Gradient", systemImage: "paintpalette")
-                        }
+//                        Button {
+//                            showGradientEditor.toggle()
+//                        } label: {
+//                            Label("Gradient", systemImage: "paintpalette")
+//                        }
                     }
                     iconButton("paintpalette") {
-                        
+                        editTint.toggle()
                     }
                     iconButton("textformat") {
-                        self.editText.toggle()
+                        editFont.toggle()
                     }
                     Spacer()
-                    iconButton("calendar") {
-                        self.editDestination.toggle()
-                    }
                     iconButton("trash") {
                         
                     }
@@ -95,17 +97,20 @@ struct CountdownEditor: View {
         .sheet(isPresented: $editDestination) {
             DestinationEditor(countdown: countdown)
         }
-        .sheet(isPresented: $editText) {
-            textEditor
+        .sheet(isPresented: $editTint) {
+            tintEditor
+        }
+        .sheet(isPresented: $editFont) {
+            fontEditor
         }
         .photoMenu(isPresented: $showPhotoLibrary) { photo in
-            countdown.card.setBackground(.photo(photo))
+            countdown.card?.setBackground(.photo(photo))
         }
         .unsplashMenu(isPresented: $showUnsplashLibrary) { photo in
-            countdown.card.setBackground(.photo(photo))
+            countdown.card?.setBackground(.photo(photo))
         }
         .gradientMenu(isPresented: $showGradientEditor) { colors in
-            countdown.card.setBackground(.gradient(colors))
+            countdown.card?.setBackground(.gradient(colors))
         }
     }
     
@@ -130,23 +135,49 @@ struct CountdownEditor: View {
             .background(Color.gray.opacity(0.2).clipShape(Circle()))
     }
     
-    private var textEditor: some View {
-        sheetDisplay(title: "Text") {
-            VStack(alignment: .leading) {
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4), spacing: 10) {
-                    ForEach(Countdown.TextDesign.allCases) { design in
+    private var tintEditor: some View {
+        sheetDisplay {
+            ScrollView(.horizontal) {
+                HStack {
+                    ForEach(Color.standardColors, id: \.self) { color in
                         Button {
-                            
+                            countdown.card?.tint = color
                         } label: {
-                            VStack(spacing: 0) {
-                                Spacer(minLength: 0)
-                                CounterDisplay(countdown: countdown, textDesign: design, type: .full, size: 25)
-                                TitleDisplay(countdown: countdown, textDesign: design, size: 15)
+                            ZStack {
+                                Circle().fill(color)
+                                Circle().fill(.regularMaterial)
+                                Circle().stroke(Color.init(white: 0.8), lineWidth: 2).padding(1)
+                                Circle().stroke(color.opacity(0.1), lineWidth: 2).padding(1)
                             }
-                            .frame(maxWidth: .infinity)
-                            .aspectRatio(1.0, contentMode: .fit)
-                            .background(Color.pink.opacity(0.8))
-                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                            .frame(height: 50)
+                        }
+                    }
+                }
+            }
+            .scrollIndicators(.hidden)
+        }
+    }
+    
+    private var fontEditor: some View {
+        sheetDisplay {
+            ScrollView(.horizontal) {
+                HStack {
+                    ForEach(Card.TextStyle.allCases) { textStyle in
+                        Button {
+                            countdown.card?.textStyle = textStyle
+                        } label: {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 5)
+                                    .fill(Color.init(white: 0.9))
+                                    .aspectRatio(1.0, contentMode: .fit)
+                                    .frame(maxHeight: 50)
+                                Text("\(countdown.daysRemaining)")
+                                    .font(.system(size: 30))
+                                    .fontDesign(textStyle.design)
+                                    .fontWeight(textStyle.weight)
+                                    .fontWidth(textStyle.width)
+                            }
+                            .frame(height: 50)
                         }
                     }
                 }
@@ -154,17 +185,15 @@ struct CountdownEditor: View {
         }
     }
     
-    private func sheetDisplay<Content: View>(title: String, content: () -> Content) -> some View {
+    private func sheetDisplay<Content: View>(content: () -> Content) -> some View {
         ScrollView {
             VStack(alignment: .leading) {
-                Text(title)
-                    .font(.system(.title, design: .rounded, weight: .semibold))
                 content()
                     .frame(maxWidth: .infinity)
             }
             .safeAreaPadding()
         }
-        .presentationDetents([.fraction(0.35), .fraction(0.8)])
+        .presentationDetents([.fraction(0.1)])
     }
 }
 

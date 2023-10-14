@@ -12,29 +12,33 @@ import SwiftUI
 @Model
 final public class Card {
     
-    @Attribute private var _tint: [Double] = [255,255,255]
-    @Transient public var tint: Color {
+    private var backgroundData: BackgroundData?
+    public var background: Background? {
+        backgroundData?.background
+    }
+    
+    private var _tint: [Double] = [255,255,255]
+    public var tint: Color {
         get { Color(rgb: _tint) }
         set { _tint = newValue.rgb }
     }
     
-    @Attribute(.externalStorage) private var backgroundData: BackgroundData?
-    @Transient public var background: Background = .gradient([.black])
+    public var textStyle: TextStyle = TextStyle.serif
     
     public init() {
-        self.background = .gradient([.white, .mint])
-        self.backgroundData = background.data
     }
     
-    public func loadBackground() async {
-        if let background = backgroundData?.background {
-            self.background = background
-        }
-    }
     public func setBackground(_ background: Background) {
-        if let data = background.data {
-            self.backgroundData = data
-            self.background = background
-        }
+        self.backgroundData = background.data
+    }
+}
+
+extension Card: Equatable, Hashable {
+    public static func == (lhs: Card, rhs: Card) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }

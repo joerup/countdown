@@ -17,10 +17,9 @@
 		015DD3DC2A77483A000EB3C0 /* CountdownList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015DD3D42A77483A000EB3C0 /* CountdownList.swift */; };
 		015DD3DE2A77483A000EB3C0 /* PhotoMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015DD3D72A77483A000EB3C0 /* PhotoMenu.swift */; };
 		015DD3DF2A77483A000EB3C0 /* DestinationEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015DD3D82A77483A000EB3C0 /* DestinationEditor.swift */; };
-		015DD3E02A77483A000EB3C0 /* CountdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015DD3D92A77483A000EB3C0 /* CountdownView.swift */; };
-		015DD3E12A77483A000EB3C0 /* CountdownEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015DD3DA2A77483A000EB3C0 /* CountdownEditor.swift */; };
+		015DD3E02A77483A000EB3C0 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015DD3D92A77483A000EB3C0 /* CardView.swift */; };
+		015DD3E12A77483A000EB3C0 /* CardEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015DD3DA2A77483A000EB3C0 /* CardEditor.swift */; };
 		015DD4212A79BBBA000EB3C0 /* DateEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015DD4202A79BBBA000EB3C0 /* DateEditor.swift */; };
-		0161E6F42AA6D22600D0C362 /* AlertEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0161E6F32AA6D22600D0C362 /* AlertEditor.swift */; };
 		01B31A8E2A81512200002F15 /* CalendarEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B31A8D2A81512200002F15 /* CalendarEditor.swift */; };
 		01B31AB32A81D0D100002F15 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01B31A972A81CFE800002F15 /* WidgetKit.framework */; };
 		01B31AB42A81D0D100002F15 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01B31A992A81CFE800002F15 /* SwiftUI.framework */; };
@@ -76,10 +75,9 @@
 		015DD3D42A77483A000EB3C0 /* CountdownList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountdownList.swift; sourceTree = "<group>"; };
 		015DD3D72A77483A000EB3C0 /* PhotoMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoMenu.swift; sourceTree = "<group>"; };
 		015DD3D82A77483A000EB3C0 /* DestinationEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DestinationEditor.swift; sourceTree = "<group>"; };
-		015DD3D92A77483A000EB3C0 /* CountdownView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountdownView.swift; sourceTree = "<group>"; };
-		015DD3DA2A77483A000EB3C0 /* CountdownEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountdownEditor.swift; sourceTree = "<group>"; };
+		015DD3D92A77483A000EB3C0 /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		015DD3DA2A77483A000EB3C0 /* CardEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardEditor.swift; sourceTree = "<group>"; };
 		015DD4202A79BBBA000EB3C0 /* DateEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateEditor.swift; sourceTree = "<group>"; };
-		0161E6F32AA6D22600D0C362 /* AlertEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertEditor.swift; sourceTree = "<group>"; };
 		01B31A8D2A81512200002F15 /* CalendarEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarEditor.swift; sourceTree = "<group>"; };
 		01B31A972A81CFE800002F15 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		01B31A992A81CFE800002F15 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -181,8 +179,11 @@
 			isa = PBXGroup;
 			children = (
 				015DD3D42A77483A000EB3C0 /* CountdownList.swift */,
-				015DD3D92A77483A000EB3C0 /* CountdownView.swift */,
-				015DD4222A79BBBF000EB3C0 /* Editor Views */,
+				015DD3D92A77483A000EB3C0 /* CardView.swift */,
+				015DD3DA2A77483A000EB3C0 /* CardEditor.swift */,
+				015DD3D82A77483A000EB3C0 /* DestinationEditor.swift */,
+				0114EAA22A8FE0240013EE87 /* Destination Editors */,
+				015DD3D62A77483A000EB3C0 /* Background Editors */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -195,18 +196,6 @@
 				0157B7D62A8887B5007CF704 /* ColorGradientMenu.swift */,
 			);
 			path = "Background Editors";
-			sourceTree = "<group>";
-		};
-		015DD4222A79BBBF000EB3C0 /* Editor Views */ = {
-			isa = PBXGroup;
-			children = (
-				015DD3DA2A77483A000EB3C0 /* CountdownEditor.swift */,
-				015DD3D82A77483A000EB3C0 /* DestinationEditor.swift */,
-				0161E6F32AA6D22600D0C362 /* AlertEditor.swift */,
-				0114EAA22A8FE0240013EE87 /* Destination Editors */,
-				015DD3D62A77483A000EB3C0 /* Background Editors */,
-			);
-			path = "Editor Views";
 			sourceTree = "<group>";
 		};
 		01B31A962A81CFE800002F15 /* Frameworks */ = {
@@ -349,15 +338,14 @@
 			files = (
 				015DD4212A79BBBA000EB3C0 /* DateEditor.swift in Sources */,
 				01E092462A9EC29F006BDABF /* BirthdayEditor.swift in Sources */,
-				015DD3E02A77483A000EB3C0 /* CountdownView.swift in Sources */,
+				015DD3E02A77483A000EB3C0 /* CardView.swift in Sources */,
 				015DD3DF2A77483A000EB3C0 /* DestinationEditor.swift in Sources */,
 				01B31A8E2A81512200002F15 /* CalendarEditor.swift in Sources */,
-				015DD3E12A77483A000EB3C0 /* CountdownEditor.swift in Sources */,
+				015DD3E12A77483A000EB3C0 /* CardEditor.swift in Sources */,
 				01FA61962A8312EA003BDA2B /* UnsplashMenu.swift in Sources */,
 				01C3C7D42A7CD14000475FC4 /* HolidayEditor.swift in Sources */,
 				0157B7D52A8758D2007CF704 /* CountdownTimeView.swift in Sources */,
 				015DD3C02A774807000EB3C0 /* CountdownTimeApp.swift in Sources */,
-				0161E6F42AA6D22600D0C362 /* AlertEditor.swift in Sources */,
 				015DD3DC2A77483A000EB3C0 /* CountdownList.swift in Sources */,
 				0157B7D72A8887B5007CF704 /* ColorGradientMenu.swift in Sources */,
 				015DD3DE2A77483A000EB3C0 /* PhotoMenu.swift in Sources */,

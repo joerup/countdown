@@ -46,7 +46,6 @@ extension View {
     }
 }
 
-
 struct UnsplashPhotoPickerView: UIViewControllerRepresentable {
     
     let uiViewController: UnsplashPhotoPicker

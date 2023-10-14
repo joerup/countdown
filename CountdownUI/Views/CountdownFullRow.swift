@@ -17,17 +17,6 @@ public struct CountdownFullRow: View {
     }
     
     public var body: some View {
-        VStack {
-            HStack {
-                TitleDisplay(countdown: countdown, size: 25, arrangement: .horizontal(alignment: .center))
-                Spacer()
-            }
-            CounterDisplay(countdown: countdown, type: .hms, size: 40)
-                .padding(.top, 50)
-        }
-        .padding()
-        .transition(.opacity)
-        .background(BackgroundDisplay(card: countdown.card, blurRadius: 5))
-        .cornerRadius(20)
+        Text("h")
     }
 }

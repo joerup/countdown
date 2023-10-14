@@ -16,27 +16,18 @@ struct CountdownList: View {
     @Environment(\.modelContext) private var modelContext
     
     var countdowns: [Countdown]
-    var sortedCountdowns: [Countdown] {
-        countdowns.sorted(by: { $0.timeRemaining < $1.timeRemaining })
-    }
-    var currentCountdowns: [Countdown] {
-        sortedCountdowns.filter { $0.timeRemaining <= 86400 }
-    }
-    var upcomingCountdowns: [Countdown] {
-        sortedCountdowns.filter { $0.timeRemaining > 86400 }
-    }
     
     @Binding var selectedCountdown: Countdown?
     
     private var previousCountdown: Countdown? {
-        if let selectedCountdown, let index = sortedCountdowns.firstIndex(of: selectedCountdown), sortedCountdowns.indices ~= index-1 {
-            return sortedCountdowns[index-1]
+        if let selectedCountdown, let index = countdowns.firstIndex(of: selectedCountdown), countdowns.indices ~= index-1 {
+            return countdowns[index-1]
         }
         return nil
     }
     private var nextCountdown: Countdown? {
-        if let selectedCountdown, let index = sortedCountdowns.firstIndex(of: selectedCountdown), sortedCountdowns.indices ~= index+1 {
-            return sortedCountdowns[index+1]
+        if let selectedCountdown, let index = countdowns.firstIndex(of: selectedCountdown), countdowns.indices ~= index+1 {
+            return countdowns[index+1]
         }
         return nil
     }
@@ -44,7 +35,7 @@ struct CountdownList: View {
     @State private var editing: Bool = false
     @State private var newCountdown: Countdown.DestinationType? = nil
     
-    @AppStorage("displayType") private var displayType: DisplayType = .list
+    @AppStorage("displayType") private var displayType: DisplayType = .grid
     
     @State private var offset: CGSize = .zero
     private var offsetScale: CGFloat {
@@ -59,12 +50,9 @@ struct CountdownList: View {
         Group {
             if let selectedCountdown {
                 if editing {
-                    CountdownEditor(countdown: selectedCountdown, editing: $editing, namespace: namespace)
+                    CardEditor(countdown: selectedCountdown, editing: $editing, namespace: namespace)
                 } else {
-                    mainCountdownDisplay
-                        .overlay(alignment: .top) {
-                            headerButtons
-                        }
+                    mainCardDisplay
                 }
             } else {
                 allCountdownDisplay
@@ -82,26 +70,26 @@ struct CountdownList: View {
         }
     }
     
-    private var mainCountdownDisplay: some View {
+    private var mainCardDisplay: some View {
         GeometryReader { geometry in
             ZStack {
                 if let previousCountdown, offset.width > 50 {
-                    countdownDisplay(countdown: previousCountdown, size: geometry.size)
+                    cardDisplay(countdown: previousCountdown, size: geometry.size)
                         .offset(x: -geometry.size.width*(1-offsetScale)-15)
                         .opacity((offset.width-50)/(geometry.size.width-50))
                 }
                 if let nextCountdown, offset.width < -50 {
-                    countdownDisplay(countdown: nextCountdown, size: geometry.size)
+                    cardDisplay(countdown: nextCountdown, size: geometry.size)
                         .offset(x: geometry.size.width*(1-offsetScale)+15)
                         .opacity((-offset.width-50)/(geometry.size.width-50))
                 }
                 if let countdown = selectedCountdown {
-                    countdownDisplay(countdown: countdown, size: geometry.size)
+                    cardDisplay(countdown: countdown, size: geometry.size)
                         .opacity(1.0-abs(offset.width)/geometry.size.width)
                         .overlay(alignment: .bottom) {
                             if abs(offset.height) < 10 {
                                 HStack {
-                                    ForEach(sortedCountdowns, id: \.self) { countdown in
+                                    ForEach(countdowns, id: \.self) { countdown in
                                         Circle().fill(.white)
                                             .opacity(countdown == selectedCountdown ? 1 : 0.5)
                                             .frame(width: 10)
@@ -111,18 +99,21 @@ struct CountdownList: View {
                         }
                 }
             }
+            .overlay(alignment: .top) {
+                cardHeaderButtons
+            }
         }
     }
     
-    private func countdownDisplay(countdown: Countdown, size: CGSize) -> some View {
-        CountdownView(countdown: countdown)
+    private func cardDisplay(countdown: Countdown, size: CGSize) -> some View {
+        CardView(countdown: countdown)
             .clipShape(RoundedRectangle(cornerRadius: 30))
             .shadow(radius: 10)
             .matchedGeometryEffect(id: countdown, in: namespace)
             .offset(offset)
             .scaleEffect(1-offsetScale)
             .ignoresSafeArea(edges: .vertical)
-            .gesture(countdownGesture(size: size))
+            .gesture(cardGesture(size: size))
             .simultaneousGesture(LongPressGesture().onEnded { _ in
                 withAnimation {
                     self.editing.toggle()
@@ -130,7 +121,7 @@ struct CountdownList: View {
             })
     }
     
-    private func countdownGesture(size: CGSize) -> some Gesture {
+    private func cardGesture(size: CGSize) -> some Gesture {
         DragGesture()
             .onChanged { value in
                 self.offset = value.translation
@@ -192,12 +183,7 @@ struct CountdownList: View {
                 headerButtons
                 ScrollView {
                     VStack {
-                        ForEach(currentCountdowns) { countdown in
-                            countdownButton(countdown: countdown) {
-                                CountdownFullRow(countdown: countdown)
-                            }
-                        }
-                        ForEach(upcomingCountdowns) { countdown in
+                        ForEach(countdowns) { countdown in
                             countdownButton(countdown: countdown) {
                                 CountdownRow(countdown: countdown)
                             }
@@ -211,7 +197,7 @@ struct CountdownList: View {
                 headerButtons
                 ScrollView {
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2)) {
-                        ForEach(sortedCountdowns) { countdown in
+                        ForEach(countdowns) { countdown in
                             countdownButton(countdown: countdown) {
                                 CountdownSquare(countdown: countdown)
                             }
@@ -245,11 +231,18 @@ struct CountdownList: View {
     
     private var headerButtons: some View {
         HStack(spacing: 15) {
+            Button {
+                
+            } label: {
+                Image(systemName: "gearshape.fill")
+            }
+            
+            Spacer()
+            
             ForEach(DisplayType.allCases, id: \.self) { type in
                 Button {
                     withAnimation {
-                        self.displayType = type
-                        self.selectedCountdown = nil
+                        displayType = type
                     }
                 } label: {
                     Image(systemName: type.icon)
@@ -259,15 +252,10 @@ struct CountdownList: View {
             
             Spacer()
             
-            Button {
-                print("share")
-            } label: {
-                Image(systemName: "square.and.arrow.up")
-            }
             Menu {
                 ForEach(Countdown.DestinationType.allCases) { type in
                     Button(type.rawValue.capitalized) {
-                        self.newCountdown = type
+                        newCountdown = type
                     }
                 }
             } label: {
@@ -275,14 +263,36 @@ struct CountdownList: View {
                     .imageScale(.large)
             }
         }
-        .tint(selectedCountdown != nil && !editing ? .white : .pink)
         .padding(.horizontal)
-        .overlay {
-            if selectedCountdown == nil {
-                Text("Countdowns")
-                    .font(.system(.headline, design: .default, weight: .bold))
+        .padding(.top, 5)
+    }
+    
+    private var cardHeaderButtons: some View {
+        HStack(spacing: 15) {
+            Button {
+                withAnimation {
+                    editing.toggle()
+                }
+            } label: {
+                Image(systemName: "pencil.circle.fill")
+                    .imageScale(.large)
+                    .opacity(0.5)
+            }
+            
+            Spacer()
+            
+            Button {
+                withAnimation {
+                    selectedCountdown = nil
+                }
+            } label: {
+                Image(systemName: "xmark.circle.fill")
+                    .imageScale(.large)
+                    .opacity(0.5)
             }
         }
+        .tint(.white)
+        .padding(.horizontal)
         .padding(.top, 5)
     }
     

@@ -18,19 +18,11 @@ struct CountdownWidget: Widget {
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: CountdownWidgetIntent.self, provider: CountdownTimelineProvider()) { entry in
             if let countdown = entry.countdown {
-                VStack(alignment: .leading) {
-                    TitleDisplay(countdown: countdown, size: 25, arrangement: .vertical(alignment: .leading))
-                    Spacer(minLength: 0)
-                    HStack {
-                        Spacer()
-                        CounterDisplay(countdown: countdown, size: 55)
+                Text("hi")
+                    .containerBackground(for: .widget) {
+                        CountdownSquare(countdown: countdown)
                     }
-                    .padding(.bottom, -7)
-                }
-                .containerBackground(for: .widget) {
-                    BackgroundDisplay(card: countdown.card)
-                }
-                .widgetURL(URL(string: "countdown:///\(countdown.id)"))
+                    .widgetURL(URL(string: "countdown:///\(countdown.id)"))
             } else {
                 Text("No countdowns")
             }

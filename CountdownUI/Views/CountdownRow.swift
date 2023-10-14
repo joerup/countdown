@@ -25,7 +25,7 @@ public struct CountdownRow: View {
         .padding(.horizontal)
         .padding(.vertical, 10)
         .transition(.opacity)
-        .background(BackgroundDisplay(card: countdown.card, blurRadius: 5))
+        .background(BackgroundDisplay(countdown: countdown, blurRadius: 5))
         .cornerRadius(20)
     }
 }

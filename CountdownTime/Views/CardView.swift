@@ -1,5 +1,5 @@
 //
-//  CountdownView.swift
+//  CardView.swift
 //  CountdownTime
 //
 //  Created by Joe Rupertus on 5/6/23.
@@ -10,7 +10,7 @@ import CountdownData
 import CountdownUI
 import ConfettiSwiftUI
 
-struct CountdownView: View {
+struct CardView: View {
     
     var countdown: Countdown
     
@@ -39,7 +39,7 @@ struct CountdownView: View {
             .padding(applyScale(20))
             .frame(width: geometry.size.width)
             .background {
-                BackgroundDisplay(card: countdown.card)
+                BackgroundDisplay(countdown: countdown)
                     .onTapGesture {
                         if editing {
                             withAnimation {
