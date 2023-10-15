@@ -12,12 +12,13 @@ import CountdownData
 struct CountdownTimeView: View {
     
     @Query(sort: \Countdown.timeRemaining) private var countdowns: [Countdown]
+    
     @State private var selectedCountdown: Countdown?
     
     @State private var countdownTimer: Timer?
     
     var body: some View {
-        CountdownList(countdowns: countdowns, selectedCountdown: $selectedCountdown)
+        CountdownGrid(countdowns: countdowns, selectedCountdown: $selectedCountdown)
             .onAppear {
                 // Start the countdown timer
                 countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
@@ -27,7 +28,6 @@ struct CountdownTimeView: View {
                 }
             }
             .onAppear {
-                // Load countdown backgrounds
                 for countdown in countdowns {
                     if countdown.cards.isEmpty {
                         countdown.addCard(Card())
@@ -36,6 +36,7 @@ struct CountdownTimeView: View {
             }
             .onOpenURL { url in
                 // Set the selected countdown from a widget
+                print(url)
                 if let countdown = countdowns.first(where: { $0.id == url.lastPathComponent }) {
                     selectedCountdown = countdown
                 }

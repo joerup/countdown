@@ -15,10 +15,6 @@ public final class Countdown {
     public var id: String
     public var name: String
     
-    @Transient public var update: Bool = false
-    
-    // MARK: - Destination
-    
     @Attribute private var _destination: Data?
     @Transient public var destination: Destination {
         get {
@@ -51,39 +47,25 @@ public final class Countdown {
     
     public var timeRemaining: Double = 0
     public var daysRemaining: Int {
-        (Calendar.current.dateComponents([.second], from: .now, to: .now.advanced(by: timeRemaining + 1)).second ?? 0) / 86400
+        let components = componentsRemaining
+        guard let day = components.day, let hour = components.hour, let minute = components.minute, let second = components.second else { return 0 }
+        return day + (hour == 0 && minute == 0 && second == 0 ? 0 : 1)
     }
     public var componentsRemaining: DateComponents {
         Calendar.current.dateComponents([.day, .hour, .minute, .second], from: .now, to: .now.advanced(by: timeRemaining + 1))
     }
     
-    
-    // MARK: - Alerts
-    
-    public var alertsOn: Bool = true
-    public var alerts: Set<AlertTime> = []
-    
-    
-    // MARK: - Cards
-    
     @Relationship(deleteRule: .cascade) public var cards: [Card] = []
+    
     public var card: Card? {
         return cards.first
     }
+    
     @Transient public var cardIndex: Int?
     @Transient public var cardTimer: Timer?
+    
     public var cardCycleEnabled: Bool = false
     public var cardCycleDuration: Double = 7.0
-    
-    
-    // MARK: - Initializers
-    
-    public init(name: String, date: Date, emoji: String, color: Color, image: UIImage) {
-        self.id = name
-        self.name = name
-        self.cards = [Card()]
-        self.destination = .custom(date: .date(.now))
-    }
     
     public init(name: String, destination: Destination) {
         self.id = name
@@ -91,28 +73,12 @@ public final class Countdown {
         self.cards = [Card()]
         self.destination = destination
     }
-    
     public init(name: String, date: Date) {
         self.id = name
         self.name = name
         self.cards = [Card()]
         self.destination = .custom(date: .date(date))
     }
-    
-    
-    // MARK: - Samples
-    
-    public static let samples: [Countdown] = [
-        Countdown(name: "Birthday", date: Date().addingTimeInterval(86400 * 276), emoji: "🎁", color: .red, image: UIImage(named: "Birthday")!),
-        Countdown(name: "Graduation", date: Date().addingTimeInterval(86400 * 379 + 58347), emoji: "🎓", color: .green, image: UIImage(named: "Birthday")!),
-        Countdown(name: "Halloween", date: Date().addingTimeInterval(86400 * 168), emoji: "🎃", color: .purple, image: UIImage(named: "Birthday")!),
-        Countdown(name: "Vacation", date: Date().addingTimeInterval(86400 * 2), emoji: "🏝️", color: .cyan, image: UIImage(named: "Birthday")!),
-        Countdown(name: "Party", date: Date().addingTimeInterval(86400 * 24 + 12389), emoji: "🥳", color: .orange, image: UIImage(named: "Birthday")!),
-//        Countdown(name: "Move In", date: Date().addingTimeInterval(86400 * -37), emoji: "🏡", color: .orange),
-//        Countdown(name: "Trip", date: Date().addingTimeInterval(86400 * -119), emoji: "✈️", color: .cyan),
-//        Countdown(name: "Birthday", date: Date().addingTimeInterval(86400 * (276 - 365)), emoji: "🎁", color: .purple),
-//        Countdown(name: "Game", date: Date().addingTimeInterval(86400 * -28), emoji: "🏆", color: .green)
-    ]
     
     public func addCard(_ card: Card) {
         cards.append(card)

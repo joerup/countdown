@@ -18,17 +18,17 @@ public struct CountdownSquare: View {
     
     public var body: some View {
         VStack(alignment: .leading) {
-            TitleDisplay(countdown: countdown, size: 25, arrangement: .vertical(alignment: .leading))
+            TitleDisplay(countdown: countdown, size: 25, alignment: .leading)
             Spacer(minLength: 0)
             HStack {
                 Spacer()
-                CounterDisplay(countdown: countdown, size: 55)
+                CounterDisplay(countdown: countdown, size: 60)
             }
         }
         .padding([.horizontal, .top])
-        .padding(.bottom, 10)
+        .padding(.bottom, 7)
         .transition(.opacity)
-        .background(BackgroundDisplay(countdown: countdown, blurRadius: 2))
+        .background(BackgroundDisplay(countdown: countdown, blurRadius: 1))
         .cornerRadius(20)
         .aspectRatio(1.0, contentMode: .fill)
     }

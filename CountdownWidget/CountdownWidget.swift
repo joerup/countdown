@@ -18,7 +18,7 @@ struct CountdownWidget: Widget {
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: CountdownWidgetIntent.self, provider: CountdownTimelineProvider()) { entry in
             if let countdown = entry.countdown {
-                Text("hi")
+                Text("")
                     .containerBackground(for: .widget) {
                         CountdownSquare(countdown: countdown)
                     }

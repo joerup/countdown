@@ -17,15 +17,17 @@ final public class Card {
         backgroundData?.background
     }
     
-    private var _tint: [Double] = [255,255,255]
+    private var _tint: [Double]
     public var tint: Color {
         get { Color(rgb: _tint) }
         set { _tint = newValue.rgb }
     }
     
-    public var textStyle: TextStyle = TextStyle.serif
+    public var textStyle: TextStyle
     
     public init() {
+        self._tint = Color.gray.rgb
+        self.textStyle = TextStyle.serif
     }
     
     public func setBackground(_ background: Background) {

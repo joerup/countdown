@@ -16,6 +16,8 @@ extension Countdown {
         case birthday
         case custom
         
+        public static let availableCases: [Self] = [.holiday, .custom]
+        
         public var id: Self { self }
     }
     

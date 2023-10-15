@@ -26,7 +26,7 @@ struct CountdownTimelineProvider: AppIntentTimelineProvider {
     }
     
     func placeholder(in context: Context) -> Entry {
-        let countdown = Countdown.samples[0]
+        let countdown = Countdown(name: "Test", date: .now)
         return CountdownWidgetEntry(date: .now, countdown: countdown)
     }
     
