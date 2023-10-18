@@ -23,16 +23,21 @@ extension Countdown {
     
     public enum Destination: Codable, CaseIterable, Hashable {
         
-        case holiday(name: String)
+        case holiday(id: Int)
         case birthday(year: Int, month: Int, day: Int)
-        case custom(date: EventDate)
+        case custom(date: Occasion)
         
-        public var date: EventDate {
+        public static let now = Self.custom(date: .singleDate(.now))
+        public static func date(_ date: Date) -> Self {
+            return Self.custom(date: .singleDate(date))
+        }
+        
+        public var date: Occasion {
             switch self {
-            case .holiday(let name):
-                return Holiday(named: name)?.date ?? .date(.now)
+            case .holiday(let id):
+                return Holiday.get(from: id)?.date ?? .singleDate(.now)
             case .birthday(_, let month, let day):
-                return .repeatDayYearly(month: month, day: day)
+                return .annualDate(calendar: "gregorian", month: month, day: day)
             case .custom(let date):
                 return date
             }
@@ -60,6 +65,6 @@ extension Countdown {
             }
         }
         
-        public static var allCases: [Countdown.Destination] = [.holiday(name: ""), .birthday(year: 0, month: 0, day: 0), .custom(date: .date(.now))]
+        public static var allCases: [Countdown.Destination] = [.holiday(id: -1), .birthday(year: 0, month: 0, day: 0), .custom(date: .singleDate(.now))]
     }
 }

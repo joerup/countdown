@@ -41,7 +41,6 @@ public struct TitleDisplay: View {
                         .minimumScaleFactor(0.5)
                 }
                 .frame(height: size)
-                .shadow(radius: 10)
             }
         }
         .id(countdown.daysRemaining) // keep this
@@ -59,7 +58,6 @@ public struct TitleDisplay: View {
                         .padding(.bottom, 5)
                 }
                 .frame(height: size/2)
-                .shadow(radius: 10)
             }
         }
     }

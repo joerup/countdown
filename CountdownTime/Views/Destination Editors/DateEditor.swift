@@ -50,7 +50,7 @@ struct DateEditor: View {
             if let destination, case .custom(let date) = destination {
                 self.date = date.next
                 self.time = date.next
-                if case .repeatDayYearly(_, _, _) = date {
+                if case .annualDate(_, _, _) = date {
                     self.repeatAnnually = true
                 }
             } else {
@@ -85,9 +85,9 @@ struct DateEditor: View {
         
         let combinedDate = calendar.date(from: combinedComponents) ?? .now
         if repeatAnnually {
-            self.destination = .custom(date: .repeatDayYearly(month: combinedDate.component(.month), day: combinedDate.component(.day)))
+            self.destination = .custom(date: .annualDate(calendar: "gregorian", month: combinedDate.component(.month), day: combinedDate.component(.day)))
         } else {
-            self.destination = .custom(date: .date(combinedDate))
+            self.destination = .custom(date: .singleDate(combinedDate))
         }
     }
 }

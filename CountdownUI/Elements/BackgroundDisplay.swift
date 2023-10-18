@@ -24,7 +24,7 @@ public struct BackgroundDisplay: View {
     
     public var body: some View {
         Group {
-            switch countdown.cards.first?.background ?? .none {
+            switch countdown.cards.first?.background {
             case .photo(let photo):
                 Image(uiImage: photo)
                     .resizable()
@@ -32,8 +32,8 @@ public struct BackgroundDisplay: View {
                     .blur(radius: blurRadius)
             case .gradient(let colors):
                 LinearGradient(colors: colors, startPoint: .top, endPoint: .bottom)
-            case .none:
-                Color.red
+            case nil:
+                Rectangle().fill(Constants.color)
             }
         }
         .id(countdown.daysRemaining) // keep this

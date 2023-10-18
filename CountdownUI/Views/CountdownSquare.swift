@@ -22,7 +22,7 @@ public struct CountdownSquare: View {
             Spacer(minLength: 0)
             HStack {
                 Spacer()
-                CounterDisplay(countdown: countdown, size: 60)
+                CounterDisplay(countdown: countdown, size: 80)
             }
         }
         .padding([.horizontal, .top])

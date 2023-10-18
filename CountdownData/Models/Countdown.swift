@@ -18,10 +18,8 @@ public final class Countdown {
     @Attribute private var _destination: Data?
     @Transient public var destination: Destination {
         get {
-            if let rawDestination = _destination, let destination = try? JSONDecoder().decode(Destination.self, from: rawDestination) {
-                return destination
-            }
-            return .custom(date: .date(.now))
+            guard let rawDestination = _destination, let destination = try? JSONDecoder().decode(Destination.self, from: rawDestination) else { return .now }
+            return destination
         }
         set {
             if let rawDestination = try? JSONEncoder().encode(newValue) {
@@ -77,7 +75,7 @@ public final class Countdown {
         self.id = name
         self.name = name
         self.cards = [Card()]
-        self.destination = .custom(date: .date(date))
+        self.destination = .date(date)
     }
     
     public func addCard(_ card: Card) {

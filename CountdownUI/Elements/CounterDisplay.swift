@@ -32,7 +32,7 @@ public struct CounterDisplay: View {
             Group {
                 switch type {
                 case .days:
-                    number(countdown.daysRemaining, size: size)
+                    number(countdown.daysRemaining, size: size * (1-CGFloat(String(countdown.daysRemaining).count)/10))
                 case .hms:
                     HStack {
                         numberUnit(countdown.componentsRemaining.hour, unit: "h", size: size)
@@ -67,7 +67,7 @@ public struct CounterDisplay: View {
                         .fontWidth(textStyle.width)
                         .lineLimit(0).minimumScaleFactor(0.5)
                 }
-                .shadow(radius: 10)
+//                .shadow(radius: 10)
             }
         }
     }
@@ -88,7 +88,6 @@ public struct CounterDisplay: View {
                     .fontWidth(.condensed)
             }
         }
-        .shadow(radius: 10)
     }
 }
 

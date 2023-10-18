@@ -179,8 +179,20 @@ public extension Int {
     }
 }
 
-public extension Calendar.Identifier {
-    var name: String {
+extension Calendar.Identifier {
+
+    public init(_ string: String) {
+        switch string {
+        case "gregorian": self = .gregorian
+        case "hebrew": self = .hebrew
+        case "chinese": self = .chinese
+        case "islamic": self = .islamic
+        default: self = .iso8601
+        }
+    }
+    
+    public var name: String {
         return String("\(self)").capitalized
     }
+    
 }

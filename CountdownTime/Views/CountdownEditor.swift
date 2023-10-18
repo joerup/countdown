@@ -17,7 +17,10 @@ struct CountdownEditor: View {
     
     @Binding var editing: Bool
     
+    var onDelete: () -> Void
+    
     @State private var editDestination = false
+    @State private var deleteCountdown = false
     
     @State private var showPhotoLibrary = false
     @State private var showUnsplashLibrary = false
@@ -31,23 +34,31 @@ struct CountdownEditor: View {
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
-                
                 HStack {
-                    Button("Cancel") {
+                    Button("", systemImage: "calendar") {
                         withAnimation {
-                            editing = false
+                            editDestination.toggle()
+                        }
+                    }
+                    Button("", systemImage: "trash") {
+                        withAnimation {
+                            deleteCountdown.toggle()
                         }
                     }
                     Spacer()
-                    Button("Done") {
+                    Button {
                         withAnimation {
                             editing = false
                         }
+                    } label: {
+                        Text("Done")
+                            .fontDesign(.rounded)
+                            .fontWeight(.semibold)
                     }
                 }
                 .padding(.horizontal)
                 
-                CountdownCard(countdown: countdown, editing: $editing)
+                CountdownCard(countdown: countdown, editing: true)
                     .clipShape(RoundedRectangle(cornerRadius: 30))
                     .shadow(radius: 10)
                     .matchedGeometryEffect(id: countdown, in: namespace)
@@ -55,13 +66,7 @@ struct CountdownEditor: View {
                     .padding(.horizontal, geometry.totalSize.width*0.125)
                     .padding(.vertical)
                 
-                Spacer(minLength: 0)
-                
                 HStack {
-                    iconButton("calendar") {
-                        editDestination.toggle()
-                    }
-                    Spacer()
                     iconMenu("photo") {
                         Button {
                             showPhotoLibrary.toggle()
@@ -80,13 +85,11 @@ struct CountdownEditor: View {
                     iconButton("textformat") {
                         editFont.toggle()
                     }
-                    Spacer()
-                    iconButton("trash") {
-                        
-                    }
                 }
                 .frame(maxHeight: geometry.size.height*0.1)
                 .padding(.horizontal)
+                
+                Spacer(minLength: 0)
             }
         }
         .sheet(isPresented: $editDestination) {
@@ -97,6 +100,20 @@ struct CountdownEditor: View {
         }
         .sheet(isPresented: $editFont) {
             fontEditor
+        }
+        .alert("Delete Countdown", isPresented: $deleteCountdown) {
+            Button("Cancel", role: .cancel) {
+                deleteCountdown = false
+            }
+            Button("Delete", role: .destructive) {
+                modelContext.delete(countdown)
+                withAnimation {
+                    onDelete()
+                    editing = false
+                }
+            }
+        } message: {
+            Text("Are you sure you want to delete this countdown? This action cannot be undone.")
         }
         .photoMenu(isPresented: $showPhotoLibrary) { photo in
             countdown.card?.setBackground(.photo(photo))

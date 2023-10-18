@@ -55,6 +55,7 @@ struct CountdownEntityQuery: EntityQuery {
             print("Failed to get countdowns")
             return []
         }
+        print(countdowns)
         return countdowns.map { CountdownEntity(from: $0) }
     }
     
@@ -67,6 +68,7 @@ struct CountdownEntityQuery: EntityQuery {
             print("Failed to get countdowns")
             return []
         }
+        print(countdowns)
         return countdowns.map { CountdownEntity(from: $0) }
     }
 }

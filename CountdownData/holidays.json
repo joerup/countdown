@@ -1,0 +1,332 @@
+[
+ {
+   "id": 0,
+   "name": "New Year",
+   "displayName": "New Year",
+   "date": {
+      "annualDate": {
+         "calendar": "gregorian",
+         "month": 1,
+         "day": 1
+      }
+   }
+},
+ {
+   "id": 1,
+   "name": "Christmas",
+   "displayName": "Christmas",
+   "date": {
+      "annualDate": {
+         "calendar": "gregorian",
+         "month": 12,
+         "day": 25
+      }
+   }
+},
+ {
+   "id": 2,
+   "name": "Easter",
+   "displayName": "Easter",
+   "date": {
+      "annualOther": {
+         "calendar": "gregorian",
+         "tag": "easter",
+         "offset": 0
+      }
+   }
+},
+ {
+   "id": 3,
+   "name": "Thanksgiving (U.S.)",
+   "displayName": "Thanksgiving",
+   "date": {
+      "annualWeek": {
+         "calendar": "gregorian",
+         "month": 11,
+         "week": 4,
+         "day": 5
+      }
+   }
+},
+ {
+   "id": 4,
+   "name": "Halloween",
+   "displayName": "Halloween",
+   "date": {
+      "annualDate": {
+         "calendar": "gregorian",
+         "month": 10,
+         "day": 31
+      }
+   }
+},
+ {
+   "id": 5,
+   "name": "Hanukkah",
+   "displayName": "Hanukkah",
+   "date": {
+      "annualDate": {
+         "calendar": "hebrew",
+         "month": 3,
+         "day": 25
+      }
+   }
+},
+ {
+   "id": 6,
+   "name": "Kwanzaa",
+   "displayName": "Kwanzaa",
+   "date": {
+      "annualDate": {
+         "calendar": "gregorian",
+         "month": 12,
+         "day": 26
+      }
+   }
+},
+ {
+   "id": 7,
+   "name": "Valentine's Day",
+   "displayName": "Valentine's Day",
+   "date": {
+      "annualDate": {
+         "calendar": "gregorian",
+         "month": 2,
+         "day": 14
+      }
+   }
+},
+ {
+   "id": 8,
+   "name": "St. Patrick's Day",
+   "displayName": "St. Patrick's Day",
+   "date": {
+      "annualDate": {
+         "calendar": "gregorian",
+         "month": 3,
+         "day": 17
+      }
+   }
+},
+ {
+   "id": 9,
+   "name": "Chinese New Year",
+   "displayName": "Chinese New Year",
+   "date": {
+      "annualDate": {
+         "calendar": "chinese",
+         "month": 1,
+         "day": 1
+      }
+   }
+},
+ {
+   "id": 10,
+   "name": "Passover",
+   "displayName": "Passover",
+   "date": {
+      "annualDate": {
+         "calendar": "hebrew",
+         "month": 8,
+         "day": 15
+      }
+   }
+},
+ {
+   "id": 11,
+   "name": "Rosh Hashanah",
+   "displayName": "Rosh Hashanah",
+   "date": {
+      "annualDate": {
+         "calendar": "hebrew",
+         "month": 1,
+         "day": 1
+      }
+   }
+},
+ {
+   "id": 12,
+   "name": "Yom Kippur",
+   "displayName": "Yom Kippur",
+   "date": {
+      "annualDate": {
+         "calendar": "hebrew",
+         "month": 1,
+         "day": 10
+      }
+   }
+},
+ {
+   "id": 13,
+   "name": "Ramadan",
+   "displayName": "Ramadan",
+   "date": {
+      "annualDate": {
+         "calendar": "islamic",
+         "month": 9,
+         "day": 1
+      }
+   }
+},
+ {
+   "id": 14,
+   "name": "Eid Al-Fitr",
+   "displayName": "Eid Al-Fitr",
+   "date": {
+      "annualDate": {
+         "calendar": "islamic",
+         "month": 10,
+         "day": 1
+      }
+   }
+},
+ {
+   "id": 15,
+   "name": "Eid Al-Adha",
+   "displayName": "Eid Al-Adha",
+   "date": {
+      "annualDate": {
+         "calendar": "islamic",
+         "month": 12,
+         "day": 10
+      }
+   }
+},
+ {
+   "id": 16,
+   "name": "Mardi Gras",
+   "displayName": "Mardi Gras",
+   "date": {
+      "annualOther": {
+         "calendar": "gregorian",
+         "tag": "easter",
+         "offset": -47
+      }
+   }
+},
+ {
+   "id": 17,
+   "name": "Ash Wednesday",
+   "displayName": "Ash Wednesday",
+   "date": {
+      "annualOther": {
+         "calendar": "gregorian",
+         "tag": "easter",
+         "offset": -46
+      }
+   }
+},
+ {
+   "id": 18,
+   "name": "Good Friday",
+   "displayName": "Good Friday",
+   "date": {
+      "annualOther": {
+         "calendar": "gregorian",
+         "tag": "easter",
+         "offset": -2
+      }
+   }
+},
+ {
+   "id": 19,
+   "name": "Memorial Day (U.S.)",
+   "displayName": "Memorial Day",
+   "date": {
+      "annualWeek": {
+         "calendar": "gregorian",
+         "month": 5,
+         "week": -1,
+         "day": 2
+      }
+   }
+},
+ {
+   "id": 20,
+   "name": "Independence Day (U.S.)",
+   "displayName": "Independence Day",
+   "date": {
+      "annualDate": {
+         "calendar": "gregorian",
+         "month": 7,
+         "day": 4
+      }
+   }
+},
+ {
+   "id": 21,
+   "name": "Canada Day (Canada)",
+   "displayName": "Canada Day",
+   "date": {
+      "annualDate": {
+         "calendar": "gregorian",
+         "month": 7,
+         "day": 1
+      }
+   }
+},
+ {
+   "id": 22,
+   "name": "Bastille Day (France)",
+   "displayName": "Bastille Day",
+   "date": {
+      "annualDate": {
+         "calendar": "gregorian",
+         "month": 7,
+         "day": 14
+      }
+   }
+},
+ {
+   "id": 23,
+   "name": "Labor Day (U.S.)",
+   "displayName": "Labor Day",
+   "date": {
+      "annualWeek": {
+         "calendar": "gregorian",
+         "month": 9,
+         "week": 1,
+         "day": 2
+      }
+   }
+},
+ {
+   "id": 24,
+   "name": "Thanksgiving (Canada)",
+   "displayName": "Thanksgiving",
+   "date": {
+      "annualWeek": {
+         "calendar": "gregorian",
+         "month": 10,
+         "week": 2,
+         "day": 2
+      }
+   }
+},
+ {
+   "id": 25,
+   "name": "Mother's Day",
+   "displayName": "Mother's Day",
+   "date": {
+      "annualWeek": {
+         "calendar": "gregorian",
+         "month": 5,
+         "week": 2,
+         "day": 1
+      }
+   }
+},
+ {
+   "id": 26,
+   "name": "Father's Day",
+   "displayName": "Father's Day",
+   "date": {
+      "annualWeek": {
+         "calendar": "gregorian",
+         "month": 6,
+         "week": 3,
+         "day": 1
+      }
+   }
+}
+]

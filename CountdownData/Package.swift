@@ -20,7 +20,8 @@ let package = Package(
     targets: [
         .target(
             name: "CountdownData",
-            path: "."
+            path: ".",
+            resources: [.process("holidays.json")]
         )
     ]
 )

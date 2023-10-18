@@ -10,8 +10,6 @@ import CountdownData
 
 struct HolidayEditor: View {
     
-    typealias Holiday = Countdown.Holiday
-    
     @Binding var name: String
     @Binding var destination: Countdown.Destination?
     
@@ -52,26 +50,15 @@ struct HolidayEditor: View {
         }
         .searchable(text: $search, prompt: "Search for holidays")
         .onAppear {
-            if let destination, case .holiday(let name) = destination, let holiday = Holiday(named: name) {
+            if let destination, case .holiday(let id) = destination, let holiday = Holiday.get(from: id) {
                 self.holiday = holiday
             }
         }
         .onChange(of: holiday) { _, holiday in
             if let holiday {
                 self.name = holiday.displayName
-                self.destination = .holiday(name: holiday.name)
+                self.destination = .holiday(id: holiday.id)
             }
-        }
-    }
-    
-    private func holidayDetails(for holiday: Holiday) -> some View {
-        List {
-            Text(holiday.name)
-            Section {
-                TextField("Display Name", text: $name)
-            }
-        }
-        .onAppear {
         }
     }
 }

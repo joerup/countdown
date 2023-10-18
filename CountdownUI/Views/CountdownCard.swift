@@ -12,18 +12,13 @@ import ConfettiSwiftUI
 public struct CountdownCard: View {
     
     var countdown: Countdown
-    
-    @Binding var editing: Bool
+    var editing: Bool
     
     @State private var confettiTrigger: Int = 0
     
-    public init(countdown: Countdown) {
+    public init(countdown: Countdown, editing: Bool = false) {
         self.countdown = countdown
-        self._editing = .constant(false)
-    }
-    public init(countdown: Countdown, editing: Binding<Bool>) {
-        self.countdown = countdown
-        self._editing = editing
+        self.editing = editing
     }
     
     public var body: some View {
@@ -40,15 +35,9 @@ public struct CountdownCard: View {
             .background {
                 BackgroundDisplay(countdown: countdown)
                     .onTapGesture {
-                        if editing {
-                            withAnimation {
-                                editing = false
-                            }
-                        } else {
-                            withAnimation(.easeInOut(duration: 1.0)) {
-                                countdown.cycleCards()
-                                countdown.startCardTimer()
-                            }
+                        withAnimation(.easeInOut(duration: 1.0)) {
+                            countdown.cycleCards()
+                            countdown.startCardTimer()
                         }
                     }
             }

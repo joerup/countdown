@@ -33,6 +33,7 @@ struct CountdownGrid: View {
     }
     
     @State private var editing: Bool = false
+    @State private var showSettings: Bool = false
     @State private var newCountdown: Countdown.DestinationType? = nil
     
     @State private var offset: CGSize = .zero
@@ -48,7 +49,7 @@ struct CountdownGrid: View {
         Group {
             if let selectedCountdown {
                 if editing {
-                    CountdownEditor(countdown: selectedCountdown, editing: $editing, namespace: namespace)
+                    CountdownEditor(countdown: selectedCountdown, editing: $editing, onDelete: { self.selectedCountdown = nil }, namespace: namespace)
                 } else {
                     mainCardDisplay
                 }
@@ -59,6 +60,9 @@ struct CountdownGrid: View {
         .tint(.pink)
         .sheet(item: $newCountdown) { type in
             DestinationEditor(type: type)
+        }
+        .sheet(isPresented: $showSettings) {
+            SettingsMenu()
         }
         .onChange(of: countdowns) { oldCountdowns, newCountdowns in
             if let countdown = newCountdowns.first(where: { !oldCountdowns.contains($0) }) {
@@ -131,7 +135,7 @@ struct CountdownGrid: View {
                 }
             }
             .onEnded { value in
-                withAnimation(.easeInOut(duration: 0.35)) {
+                withAnimation {
                     if abs(offset.height) > 100 {
                         self.selectedCountdown = nil
                     }
@@ -172,19 +176,25 @@ struct CountdownGrid: View {
     
     @ViewBuilder
     private var allCountdownDisplay: some View {
-        VStack {
-            headerButtons
-            ScrollView {
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2)) {
-                    ForEach(countdowns) { countdown in
-                        countdownButton(countdown: countdown) {
-                            CountdownSquare(countdown: countdown)
+        NavigationStack {
+            VStack {
+                ScrollView {
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2)) {
+                        ForEach(countdowns) { countdown in
+                            countdownButton(countdown: countdown) {
+                                CountdownSquare(countdown: countdown)
+                            }
+                            .shadow(radius: 10)
+                            .padding(5)
                         }
-                        .shadow(radius: 10)
-                        .padding(5)
                     }
+                    .padding()
                 }
-                .padding()
+            }
+            .navigationTitle("Countdowns")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                headerButtons
             }
         }
     }
@@ -196,30 +206,21 @@ struct CountdownGrid: View {
             }
         } label: {
             VStack(content: label)
-                .matchedGeometryEffect(id: countdown, in: namespace)
-                .contextMenu {
-                    Button {
-                        modelContext.delete(countdown)
-                    } label: {
-                        Label("Delete", systemImage: "trash")
-                    }
-                }
                 .background(Color.blue.opacity(0.2))
                 .clipShape(RoundedRectangle(cornerRadius: 20))
         }
     }
     
-    private var headerButtons: some View {
-        HStack(spacing: 15) {
+    @ToolbarContentBuilder
+    private var headerButtons: some ToolbarContent {
+        ToolbarItem(placement: .topBarLeading) {
             Button {
-                
+                showSettings.toggle()
             } label: {
                 Image(systemName: "gearshape.fill")
             }
-            Spacer()
-            Text("Countdowns")
-                .font(.system(.body, design: .rounded, weight: .bold))
-            Spacer()
+        }
+        ToolbarItem(placement: .topBarTrailing) {
             Menu {
                 ForEach(Countdown.DestinationType.availableCases) { type in
                     Button(type.rawValue.capitalized) {
@@ -228,11 +229,9 @@ struct CountdownGrid: View {
                 }
             } label: {
                 Image(systemName: "plus")
-                    .imageScale(.large)
+                    .fontWeight(.bold)
             }
         }
-        .padding(.horizontal)
-        .padding(.top, 5)
     }
     
     private var cardHeaderButtons: some View {
