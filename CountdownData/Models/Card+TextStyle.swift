@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  Card+TextStyle.swift
+//
 //
 //  Created by Joe Rupertus on 10/14/23.
 //

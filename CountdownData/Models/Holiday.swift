@@ -9,33 +9,32 @@ import Foundation
     
 public struct Holiday: Codable, Hashable {
     
-    public var id: Int
     public var name: String
     public var displayName: String
-    public var date: Occasion
+    public var occasion: Occasion
     
-    private static var allHolidays: [Holiday]?
+    public static func get(_ name: String) -> Holiday? {
+        if let holiday = all.first(where: { $0.name == name }) {
+            return holiday
+        } 
+        return nil
+    }
+    
     public static var all: [Holiday] {
-        if let allHolidays {
-            return allHolidays
-        } else {
-            self.allHolidays = loadHolidays()
-            return allHolidays ?? []
+        if allHolidays.isEmpty {
+            getAllHolidays()
         }
+        return allHolidays
     }
     
-    public static func get(from id: Int) -> Holiday? {
-        return all.first(where: { $0.id == id })
-    }
-    
-    private static func loadHolidays() -> [Holiday]? {
-        guard let fileURL = Bundle.module.url(forResource: "holidays", withExtension: "json") else { return nil }
+    private static var allHolidays: [Holiday] = []
+    private static func getAllHolidays() {
+        guard let fileURL = Bundle.module.url(forResource: "holidays", withExtension: "json") else { return }
         do {
             let data = try Data(contentsOf: fileURL)
-            return try JSONDecoder().decode([Holiday].self, from: data)
+            allHolidays = try JSONDecoder().decode([Holiday].self, from: data)
         } catch {
             print("Error decoding holidays: \(error)")
-            return nil
         }
     }
 }

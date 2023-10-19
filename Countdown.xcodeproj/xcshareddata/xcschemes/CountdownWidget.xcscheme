@@ -18,7 +18,7 @@
                BlueprintIdentifier = "01B31AB12A81D0D100002F15"
                BuildableName = "CountdownWidgetExtension.appex"
                BlueprintName = "CountdownWidgetExtension"
-               ReferencedContainer = "container:CountdownTime.xcodeproj">
+               ReferencedContainer = "container:Countdown.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -30,9 +30,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "015DD3BB2A774807000EB3C0"
-               BuildableName = "CountdownTime.app"
-               BlueprintName = "CountdownTime"
-               ReferencedContainer = "container:CountdownTime.xcodeproj">
+               BuildableName = "Countdown.app"
+               BlueprintName = "Countdown"
+               ReferencedContainer = "container:Countdown.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -64,16 +64,16 @@
             BlueprintIdentifier = "01B31AB12A81D0D100002F15"
             BuildableName = "CountdownWidgetExtension.appex"
             BlueprintName = "CountdownWidgetExtension"
-            ReferencedContainer = "container:CountdownTime.xcodeproj">
+            ReferencedContainer = "container:Countdown.xcodeproj">
          </BuildableReference>
       </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "015DD3BB2A774807000EB3C0"
-            BuildableName = "CountdownTime.app"
-            BlueprintName = "CountdownTime"
-            ReferencedContainer = "container:CountdownTime.xcodeproj">
+            BuildableName = "Countdown.app"
+            BlueprintName = "Countdown"
+            ReferencedContainer = "container:Countdown.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <EnvironmentVariables>
@@ -89,7 +89,7 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "_XCWidgetFamily"
-            value = "accessoryInline"
+            value = "systemSmall"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
@@ -107,9 +107,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "015DD3BB2A774807000EB3C0"
-            BuildableName = "CountdownTime.app"
-            BlueprintName = "CountdownTime"
-            ReferencedContainer = "container:CountdownTime.xcodeproj">
+            BuildableName = "Countdown.app"
+            BlueprintName = "Countdown"
+            ReferencedContainer = "container:Countdown.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

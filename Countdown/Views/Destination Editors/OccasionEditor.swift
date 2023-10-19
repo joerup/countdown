@@ -1,5 +1,5 @@
 //
-//  DestinationEditor.swift
+//  OccasionEditor.swift
 //  CountdownTime
 //
 //  Created by Joe Rupertus on 7/20/23.
@@ -8,25 +8,27 @@
 import SwiftUI
 import CountdownData
 
-struct DestinationEditor: View {
+struct OccasionEditor: View {
     
     @Environment(\.modelContext) private var modelContext
     
     @Environment(\.dismiss) var dismiss
     
     var countdown: Countdown?
-    var type: Countdown.DestinationType
+    var type: EventType
     
     @State private var name: String = ""
-    @State private var destination: Countdown.Destination?
+    @State private var displayName: String = ""
+    @State private var occasion: Occasion?
     
     init(countdown: Countdown) {
         self.countdown = countdown
-        self.type = countdown.destination.type
+        self.type = countdown.type
         self._name = State(initialValue: countdown.name)
-        self._destination = State(initialValue: countdown.destination)
+        self._displayName = State(initialValue: countdown.displayName)
+        self._occasion = State(initialValue: countdown.occasion)
     }
-    init(type: Countdown.DestinationType) {
+    init(type: EventType) {
         self.countdown = nil
         self.type = type
     }
@@ -48,33 +50,32 @@ struct DestinationEditor: View {
                             dismiss()
                         }
                         .fontWeight(.semibold)
-                        .disabled(destination == nil)
+                        .disabled(occasion == nil)
                     }
                 }
         }
         .tint(.pink)
     }
     
+    @ViewBuilder
     private var page: some View {
-        Group {
-            switch type {
-            case .holiday:
-                HolidayEditor(name: $name, destination: $destination)
-            case .birthday:
-                BirthdayEditor(name: $name, destination: $destination)
-            case .custom:
-                DateEditor(name: $name, destination: $destination)
-            }
+        switch type {
+        case .holiday:
+            HolidayEditor(name: $name, displayName: $displayName, occasion: $occasion)
+        case .custom:
+            DateEditor(name: $name, displayName: $displayName, occasion: $occasion)
         }
     }
     
     private func saveCountdown() {
-        guard let destination else { return }
+        guard let occasion else { return }
         if let countdown {
             countdown.name = name
-            countdown.destination = destination
+            countdown.displayName = displayName
+            countdown.type = type
+            countdown.occasion = occasion
         } else {
-            let countdown = Countdown(name: name, destination: destination)
+            let countdown = Countdown(name: name, displayName: displayName, type: type, occasion: occasion)
             modelContext.insert(countdown)
         }
     }

@@ -10,21 +10,14 @@ import CountdownData
 
 public struct BackgroundDisplay: View {
     
+    @EnvironmentObject private var clock: Clock
+    
     var countdown: Countdown
     var blurRadius: Double = 0
     
-    public init(countdown: Countdown) {
-        self.countdown = countdown
-        self.blurRadius = 0
-    }
-    public init(countdown: Countdown, blurRadius: Double = 0) {
-        self.countdown = countdown
-        self.blurRadius = blurRadius
-    }
-    
     public var body: some View {
         Group {
-            switch countdown.cards.first?.background {
+            switch countdown.card?.background {
             case .photo(let photo):
                 Image(uiImage: photo)
                     .resizable()
@@ -36,6 +29,6 @@ public struct BackgroundDisplay: View {
                 Rectangle().fill(Constants.color)
             }
         }
-        .id(countdown.daysRemaining) // keep this
+        .id(clock.tick)
     }
 }

@@ -1,6 +1,6 @@
 //
-//  CountdownTimeView.swift
-//  CountdownTime
+//  CountdownRoot.swift
+//  Countdown
 //
 //  Created by Joe Rupertus on 8/12/23.
 //
@@ -8,36 +8,47 @@
 import SwiftUI
 import SwiftData
 import CountdownData
+import CoreData
 
-struct CountdownTimeView: View {
+struct CountdownRoot: View {
     
-    @Query(sort: \Countdown.timeRemaining) private var countdowns: [Countdown]
+    @Environment(\.modelContext) private var modelContext
+    
+    @Query private var countdowns: [Countdown]
     
     @State private var selectedCountdown: Countdown?
+    
+    @StateObject private var clock: Clock = Clock()
     
     @State private var countdownTimer: Timer?
     
     var body: some View {
-        CountdownGrid(countdowns: countdowns, selectedCountdown: $selectedCountdown)
+        CountdownView(countdowns: countdowns, selectedCountdown: $selectedCountdown)
+            .environmentObject(clock)
             .onAppear {
                 // Start the countdown timer
                 countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
                     for countdown in countdowns {
-                        countdown.setTimeRemaining()
+                        clock.setTimeRemaining(for: countdown)
                     }
+                    clock.tick.toggle()
                 }
             }
             .onAppear {
                 for countdown in countdowns {
-                    if countdown.cards.isEmpty {
-                        countdown.addCard(Card())
+                    if let cards = countdown.cards {
+                        if cards.isEmpty {
+                            countdown.addCard(Card())
+                        }
+                    } else {
+                        countdown.cards = [Card()]
                     }
                 }
             }
             .onOpenURL { url in
                 // Set the selected countdown from a widget
                 print(url)
-                if let countdown = countdowns.first(where: { $0.id == url.lastPathComponent }) {
+                if let countdown = countdowns.first(where: { $0.name == url.lastPathComponent }) {
                     selectedCountdown = countdown
                 }
             }

@@ -12,82 +12,54 @@ import SwiftUI
 @Model
 public final class Countdown {
     
-    public var id: String
-    public var name: String
+    public var id: UUID = UUID()
+    public var name: String = ""
+    public var displayName: String = ""
+    public var type: EventType = EventType.custom
     
-    @Attribute private var _destination: Data?
-    @Transient public var destination: Destination {
-        get {
-            guard let rawDestination = _destination, let destination = try? JSONDecoder().decode(Destination.self, from: rawDestination) else { return .now }
-            return destination
-        }
-        set {
-            if let rawDestination = try? JSONEncoder().encode(newValue) {
-                _destination = rawDestination
-            }
-        }
-    }
-    
-    public var displayName: String {
-        if case .birthday(let year, _, _) = destination {
-            return "\(name == "My Birthday" ? "" : "\(name)'s ")\((date.component(.year) - year).ordinalString) Birthday"
-        } else {
-            return name
-        }
-    }
+    public var occasion: Occasion = Occasion.now
     
     public var date: Date {
-        destination.date.next
-    }
-    public func setTimeRemaining() {
-        timeRemaining = max(-1, date.timeIntervalSinceNow)
+        occasion.next
     }
     
-    public var timeRemaining: Double = 0
-    public var daysRemaining: Int {
-        let components = componentsRemaining
-        guard let day = components.day, let hour = components.hour, let minute = components.minute, let second = components.second else { return 0 }
-        return day + (hour == 0 && minute == 0 && second == 0 ? 0 : 1)
-    }
-    public var componentsRemaining: DateComponents {
-        Calendar.current.dateComponents([.day, .hour, .minute, .second], from: .now, to: .now.advanced(by: timeRemaining + 1))
-    }
-    
-    @Relationship(deleteRule: .cascade) public var cards: [Card] = []
-    
+    @Relationship(deleteRule: .cascade, inverse: \Card.countdown) public var cards: [Card]?
+    @Transient public var currentBackground: Card.Background? = nil
     public var card: Card? {
-        return cards.first
+        return cards?.first
     }
-    
     @Transient public var cardIndex: Int?
     @Transient public var cardTimer: Timer?
-    
     public var cardCycleEnabled: Bool = false
     public var cardCycleDuration: Double = 7.0
     
-    public init(name: String, destination: Destination) {
-        self.id = name
+    public init(name: String, displayName: String, type: EventType, occasion: Occasion) {
+        self.id = UUID()
         self.name = name
+        self.displayName = displayName
+        self.type = type
         self.cards = [Card()]
-        self.destination = destination
+        self.occasion = occasion
     }
     public init(name: String, date: Date) {
-        self.id = name
+        self.id = UUID()
         self.name = name
+        self.displayName = name
+        self.type = .custom
         self.cards = [Card()]
-        self.destination = .date(date)
+        self.occasion = .singleDate(date)
     }
     
     public func addCard(_ card: Card) {
-        cards.append(card)
+        cards?.append(card)
     }
     public func removeCard(at index: Int) {
-        cards.remove(at: index)
+        cards?.remove(at: index)
     }
     
     public func startCardTimer() {
         cardTimer?.invalidate()
-        guard cardCycleEnabled, cards.count > 1 else { return }
+        guard let cards, cardCycleEnabled, cards.count > 1 else { return }
         cardTimer = Timer.scheduledTimer(withTimeInterval: cardCycleDuration, repeats: true) { _ in
             withAnimation(.easeInOut(duration: 2.0)) {
                 self.cycleCards()
@@ -98,7 +70,7 @@ public final class Countdown {
         cardTimer?.invalidate()
     }
     public func cycleCards() {
-        guard let cardIndex else { return }
+        guard let cards, let cardIndex else { return }
         if cardIndex+1 < cards.count {
             self.cardIndex = cardIndex + 1
         } else {

@@ -13,6 +13,8 @@ struct CountdownEditor: View {
     
     @Environment(\.modelContext) var modelContext
     
+    @EnvironmentObject private var clock: Clock
+    
     var countdown: Countdown
     
     @Binding var editing: Bool
@@ -28,8 +30,6 @@ struct CountdownEditor: View {
     
     @State private var editTint = false
     @State private var editFont = false
-    
-    var namespace: Namespace.ID
     
     var body: some View {
         GeometryReader { geometry in
@@ -61,7 +61,6 @@ struct CountdownEditor: View {
                 CountdownCard(countdown: countdown, editing: true)
                     .clipShape(RoundedRectangle(cornerRadius: 30))
                     .shadow(radius: 10)
-                    .matchedGeometryEffect(id: countdown, in: namespace)
                     .frame(width: geometry.totalSize.width*0.75, height: geometry.totalSize.height*0.75)
                     .padding(.horizontal, geometry.totalSize.width*0.125)
                     .padding(.vertical)
@@ -93,7 +92,7 @@ struct CountdownEditor: View {
             }
         }
         .sheet(isPresented: $editDestination) {
-            DestinationEditor(countdown: countdown)
+            OccasionEditor(countdown: countdown)
         }
         .sheet(isPresented: $editTint) {
             tintEditor
@@ -179,7 +178,7 @@ struct CountdownEditor: View {
                                     .fill(Color.init(white: 0.9))
                                     .aspectRatio(1.0, contentMode: .fit)
                                     .frame(maxHeight: 50)
-                                Text("\(countdown.daysRemaining)")
+                                Text("\(clock.daysRemaining(for: countdown))")
                                     .font(.system(size: 30))
                                     .fontDesign(textStyle.design)
                                     .fontWeight(textStyle.weight)

@@ -14,6 +14,8 @@ import CountdownUI
 struct CountdownWidget: Widget {
      
     let kind: String = "CountdownWidget"
+    
+    @State private var clock: Clock = Clock()
 
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: CountdownWidgetIntent.self, provider: CountdownTimelineProvider()) { entry in
@@ -21,14 +23,24 @@ struct CountdownWidget: Widget {
                 Text("")
                     .containerBackground(for: .widget) {
                         CountdownSquare(countdown: countdown)
+                            .environmentObject(clock)
+                            .onAppear {
+                                clock.setTimeRemaining(for: countdown)
+                                clock.tick.toggle()
+                            }
                     }
                     .widgetURL(URL(string: "countdown:///\(countdown.id)"))
             } else {
                 Text("No countdowns")
+                    .fontDesign(.rounded)
+                    .fontWeight(.bold)
+                    .containerBackground(for: .widget) {
+                        Color.white
+                    }
             }
         }
         .configurationDisplayName("Countdown")
         .description("Show a countdown on your home screen.")
-        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge, .accessoryCircular, .accessoryInline, .accessoryRectangular])
+        .supportedFamilies([.systemSmall])
     }
 }

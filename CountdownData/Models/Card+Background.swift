@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Card+Background.swift
 //  
 //
 //  Created by Joe Rupertus on 10/5/23.
@@ -18,11 +18,22 @@ extension Card {
         var data: BackgroundData? {
             switch self {
             case .photo(let photo):
-                if let data = photo.pngData() {
+                if let data = compress(photo) {
                     return .photo(data)
                 }
             case .gradient(let colors):
                 return .gradient(colors)
+            }
+            return nil
+        }
+        
+        private func compress(_ photo: UIImage, compressionQuality: Double = 1.0) -> Data? {
+            if let data = photo.jpegData(compressionQuality: compressionQuality) {
+                if data.count >= 2000000 {
+                    return compress(photo, compressionQuality: compressionQuality*0.8)
+                } else {
+                    return data
+                }
             }
             return nil
         }

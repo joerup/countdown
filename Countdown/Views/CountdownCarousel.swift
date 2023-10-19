@@ -1,19 +1,15 @@
 //
-//  CountdownGrid.swift
+//  CountdownCarousel.swift
 //  CountdownTime
 //
-//  Created by Joe Rupertus on 5/7/23.
+//  Created by Joe Rupertus on 10/18/23.
 //
 
 import SwiftUI
-import Foundation
-import SwiftData
 import CountdownData
 import CountdownUI
 
-struct CountdownGrid: View {
-    
-    @Environment(\.modelContext) private var modelContext
+struct CountdownCarousel: View {
     
     var countdowns: [Countdown]
     
@@ -32,47 +28,14 @@ struct CountdownGrid: View {
         return nil
     }
     
-    @State private var editing: Bool = false
-    @State private var showSettings: Bool = false
-    @State private var newCountdown: Countdown.DestinationType? = nil
+    @Binding var editing: Bool
     
     @State private var offset: CGSize = .zero
     private var offsetScale: CGFloat {
         return pow(offset.height, 2)/1E5
     }
     
-    @State private var confettiTrigger: Int = 0
-    
-    @Namespace private var namespace
-    
     var body: some View {
-        Group {
-            if let selectedCountdown {
-                if editing {
-                    CountdownEditor(countdown: selectedCountdown, editing: $editing, onDelete: { self.selectedCountdown = nil }, namespace: namespace)
-                } else {
-                    mainCardDisplay
-                }
-            } else {
-                allCountdownDisplay
-            }
-        }
-        .tint(.pink)
-        .sheet(item: $newCountdown) { type in
-            DestinationEditor(type: type)
-        }
-        .sheet(isPresented: $showSettings) {
-            SettingsMenu()
-        }
-        .onChange(of: countdowns) { oldCountdowns, newCountdowns in
-            if let countdown = newCountdowns.first(where: { !oldCountdowns.contains($0) }) {
-                selectedCountdown = countdown
-                editing = true
-            }
-        }
-    }
-    
-    private var mainCardDisplay: some View {
         GeometryReader { geometry in
             ZStack {
                 if let previousCountdown, offset.width > 50 {
@@ -100,10 +63,13 @@ struct CountdownGrid: View {
                             }
                         }
                         .overlay(alignment: .top) {
-                            cardHeaderButtons
+                            headerButtons
                         }
                 }
             }
+            .transition(.move(edge: .bottom))
+            .animation(.easeOut, value: selectedCountdown)
+            .id(selectedCountdown)
         }
     }
     
@@ -111,7 +77,6 @@ struct CountdownGrid: View {
         CountdownCard(countdown: countdown)
             .clipShape(RoundedRectangle(cornerRadius: 30))
             .shadow(radius: 10)
-            .matchedGeometryEffect(id: countdown, in: namespace)
             .offset(offset)
             .scaleEffect(1-offsetScale)
             .ignoresSafeArea(edges: .vertical)
@@ -174,67 +139,7 @@ struct CountdownGrid: View {
             }
     }
     
-    @ViewBuilder
-    private var allCountdownDisplay: some View {
-        NavigationStack {
-            VStack {
-                ScrollView {
-                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2)) {
-                        ForEach(countdowns) { countdown in
-                            countdownButton(countdown: countdown) {
-                                CountdownSquare(countdown: countdown)
-                            }
-                            .shadow(radius: 10)
-                            .padding(5)
-                        }
-                    }
-                    .padding()
-                }
-            }
-            .navigationTitle("Countdowns")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                headerButtons
-            }
-        }
-    }
-    
-    private func countdownButton<Content: View>(countdown: Countdown, label: @escaping () -> Content) -> some View {
-        Button {
-            withAnimation {
-                self.selectedCountdown = countdown
-            }
-        } label: {
-            VStack(content: label)
-                .background(Color.blue.opacity(0.2))
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-        }
-    }
-    
-    @ToolbarContentBuilder
-    private var headerButtons: some ToolbarContent {
-        ToolbarItem(placement: .topBarLeading) {
-            Button {
-                showSettings.toggle()
-            } label: {
-                Image(systemName: "gearshape.fill")
-            }
-        }
-        ToolbarItem(placement: .topBarTrailing) {
-            Menu {
-                ForEach(Countdown.DestinationType.availableCases) { type in
-                    Button(type.rawValue.capitalized) {
-                        newCountdown = type
-                    }
-                }
-            } label: {
-                Image(systemName: "plus")
-                    .fontWeight(.bold)
-            }
-        }
-    }
-    
-    private var cardHeaderButtons: some View {
+    private var headerButtons: some View {
         HStack(spacing: 15) {
             Button {
                 withAnimation {

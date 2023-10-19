@@ -10,6 +10,8 @@ import CountdownData
 
 public struct TitleDisplay: View {
     
+    @EnvironmentObject private var clock: Clock
+    
     var countdown: Countdown
     
     var size: CGFloat
@@ -26,6 +28,7 @@ public struct TitleDisplay: View {
             title()
             date()
         }
+        .id(clock.tick)
         .environment(\.colorScheme, .light)
     }
     
@@ -43,7 +46,6 @@ public struct TitleDisplay: View {
                 .frame(height: size)
             }
         }
-        .id(countdown.daysRemaining) // keep this
     }
     
     private func date() -> some View {

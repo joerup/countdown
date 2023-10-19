@@ -1,6 +1,6 @@
 //
-//  CountdownTimeApp.swift
-//  CountdownTime
+//  CountdownApp.swift
+//  Countdown
 //
 //  Created by Joe Rupertus on 7/30/23.
 //
@@ -14,7 +14,7 @@ struct CountdownTimeApp: App {
     
     var body: some Scene {
         WindowGroup {
-            CountdownTimeView()
+            CountdownRoot()
         }
         .modelContainer(for: Countdown.self)
     }

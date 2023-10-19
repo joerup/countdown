@@ -11,7 +11,8 @@ import CountdownData
 struct DateEditor: View {
     
     @Binding var name: String
-    @Binding var destination: Countdown.Destination?
+    @Binding var displayName: String
+    @Binding var occasion: Occasion?
     
     @State private var date: Date = .now
     @State private var time: Date = .now
@@ -33,30 +34,15 @@ struct DateEditor: View {
             Section {
                 Toggle("Repeat Annually", isOn: $repeatAnnually)
             }
-            
-//            if let destination, case .custom(let date) = destination {
-//                Section { } header: {
-//                    HStack {
-//                        Spacer()
-//                        Text("\(includeTime ? date.fullString : date.string)")
-//                            .fontWeight(.bold)
-//                            .textCase(nil)
-//                        Spacer()
-//                    }
-//                }
-//            }
         }
         .onAppear {
-            if let destination, case .custom(let date) = destination {
-                self.date = date.next
-                self.time = date.next
-                if case .annualDate(_, _, _) = date {
-                    self.repeatAnnually = true
-                }
-            } else {
-                self.date = .midnight
-                self.time = .midnight
+            if let occasion, case .singleDate(let date) = occasion {
+                self.date = date
+                self.time = date
             }
+        }
+        .onChange(of: name) { _, name in
+            self.displayName = name
         }
         .onChange(of: date) { _, date in
             setDate(date: date, time: time)
@@ -85,9 +71,9 @@ struct DateEditor: View {
         
         let combinedDate = calendar.date(from: combinedComponents) ?? .now
         if repeatAnnually {
-            self.destination = .custom(date: .annualDate(calendar: "gregorian", month: combinedDate.component(.month), day: combinedDate.component(.day)))
+            self.occasion = .annualDate(calendar: "gregorian", month: combinedDate.component(.month), day: combinedDate.component(.day))
         } else {
-            self.destination = .custom(date: .singleDate(combinedDate))
+            self.occasion = .singleDate(combinedDate)
         }
     }
 }

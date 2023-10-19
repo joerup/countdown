@@ -12,16 +12,16 @@ import SwiftData
 import CountdownData
 
 struct CountdownTimelineProvider: AppIntentTimelineProvider {
-    let modelContainer = try! ModelContainer(for: Countdown.self)
+    let modelContainer = try? ModelContainer(for: Countdown.self)
     
     typealias Entry = CountdownWidgetEntry
     
     @MainActor
     func countdowns(for configuration: CountdownWidgetIntent) -> [Countdown] {
         if let id = configuration.countdown?.id {
-            return try! modelContainer.mainContext.fetch(FetchDescriptor<Countdown>(predicate: #Predicate { $0.id == id })).sorted(by: { $0.timeRemaining < $1.timeRemaining })
+            return (try? modelContainer?.mainContext.fetch(FetchDescriptor<Countdown>(predicate: #Predicate { $0.id == id })).sorted(by: { $0.date < $1.date })) ?? []
         } else {
-            return try! modelContainer.mainContext.fetch(FetchDescriptor<Countdown>())
+            return (try? modelContainer?.mainContext.fetch(FetchDescriptor<Countdown>()).sorted(by: { $0.date < $1.date })) ?? []
         }
     }
     

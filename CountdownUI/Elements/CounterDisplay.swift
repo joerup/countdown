@@ -10,6 +10,8 @@ import CountdownData
 
 public struct CounterDisplay: View {
     
+    @EnvironmentObject private var clock: Clock
+    
     var countdown: Countdown
     
     var type: DisplayType
@@ -30,28 +32,31 @@ public struct CounterDisplay: View {
     public var body: some View {
         VStack(spacing: 0) {
             Group {
+                let daysRemaining = clock.daysRemaining(for: countdown)
+                let componentsRemaining = clock.componentsRemaining(for: countdown)
                 switch type {
                 case .days:
-                    number(countdown.daysRemaining, size: size * (1-CGFloat(String(countdown.daysRemaining).count)/10))
+                    number(daysRemaining, size: size * (1-CGFloat(String(daysRemaining).count)/10))
                 case .hms:
                     HStack {
-                        numberUnit(countdown.componentsRemaining.hour, unit: "h", size: size)
-                        numberUnit(countdown.componentsRemaining.minute, unit: "m", size: size)
-                        numberUnit(countdown.componentsRemaining.second, unit: "s", size: size)
+                        numberUnit(componentsRemaining.hour, unit: "h", size: size)
+                        numberUnit(componentsRemaining.minute, unit: "m", size: size)
+                        numberUnit(componentsRemaining.second, unit: "s", size: size)
                     }
                 case .full:
                     VStack {
-                        number(countdown.daysRemaining, size: size * (1-CGFloat(String(countdown.daysRemaining).count)/10))
+                        number(daysRemaining, size: size * (1-CGFloat(String(daysRemaining).count)/10))
                         HStack {
-                            numberUnit(countdown.componentsRemaining.day, unit: "d", size: size/4)
-                            numberUnit(countdown.componentsRemaining.hour, unit: "h", size: size/4)
-                            numberUnit(countdown.componentsRemaining.minute, unit: "m", size: size/4)
-                            numberUnit(countdown.componentsRemaining.second, unit: "s", size: size/4)
+                            numberUnit(componentsRemaining.day, unit: "d", size: size/4)
+                            numberUnit(componentsRemaining.hour, unit: "h", size: size/4)
+                            numberUnit(componentsRemaining.minute, unit: "m", size: size/4)
+                            numberUnit(componentsRemaining.second, unit: "s", size: size/4)
                         }
                     }
                 }
             }
             .foregroundStyle(.thickMaterial)
+            .id(clock.tick)
             .environment(\.colorScheme, .light)
         }
     }
@@ -67,7 +72,6 @@ public struct CounterDisplay: View {
                         .fontWidth(textStyle.width)
                         .lineLimit(0).minimumScaleFactor(0.5)
                 }
-//                .shadow(radius: 10)
             }
         }
     }

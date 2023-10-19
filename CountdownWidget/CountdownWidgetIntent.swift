@@ -32,7 +32,7 @@ struct CountdownEntity: AppEntity, Identifiable, Hashable {
     
     init(from countdown: Countdown) {
         self.id = countdown.id
-        self.name = countdown.name
+        self.name = countdown.displayName
     }
     
     var displayRepresentation: DisplayRepresentation {

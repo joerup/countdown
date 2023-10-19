@@ -16,6 +16,8 @@ public enum Occasion: Codable, Hashable, Equatable {
     case annualWeek(calendar: String, month: Int, week: Int, day: Int)
     case annualOther(calendar: String, tag: String, offset: Int)
     
+    public static let now = Self.singleDate(.now)
+    
     public var next: Date {
         switch self {
         case .singleDate(let date):

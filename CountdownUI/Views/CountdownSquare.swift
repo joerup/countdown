@@ -27,7 +27,6 @@ public struct CountdownSquare: View {
         }
         .padding([.horizontal, .top])
         .padding(.bottom, 7)
-        .transition(.opacity)
         .background(BackgroundDisplay(countdown: countdown, blurRadius: 1))
         .cornerRadius(20)
         .aspectRatio(1.0, contentMode: .fill)

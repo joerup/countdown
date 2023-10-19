@@ -3,7 +3,7 @@
    "id": 0,
    "name": "New Year",
    "displayName": "New Year",
-   "date": {
+   "occasion": {
       "annualDate": {
          "calendar": "gregorian",
          "month": 1,
@@ -15,7 +15,7 @@
    "id": 1,
    "name": "Christmas",
    "displayName": "Christmas",
-   "date": {
+   "occasion": {
       "annualDate": {
          "calendar": "gregorian",
          "month": 12,
@@ -27,7 +27,7 @@
    "id": 2,
    "name": "Easter",
    "displayName": "Easter",
-   "date": {
+   "occasion": {
       "annualOther": {
          "calendar": "gregorian",
          "tag": "easter",
@@ -39,7 +39,7 @@
    "id": 3,
    "name": "Thanksgiving (U.S.)",
    "displayName": "Thanksgiving",
-   "date": {
+   "occasion": {
       "annualWeek": {
          "calendar": "gregorian",
          "month": 11,
@@ -52,7 +52,7 @@
    "id": 4,
    "name": "Halloween",
    "displayName": "Halloween",
-   "date": {
+   "occasion": {
       "annualDate": {
          "calendar": "gregorian",
          "month": 10,
@@ -64,7 +64,7 @@
    "id": 5,
    "name": "Hanukkah",
    "displayName": "Hanukkah",
-   "date": {
+   "occasion": {
       "annualDate": {
          "calendar": "hebrew",
          "month": 3,
@@ -76,7 +76,7 @@
    "id": 6,
    "name": "Kwanzaa",
    "displayName": "Kwanzaa",
-   "date": {
+   "occasion": {
       "annualDate": {
          "calendar": "gregorian",
          "month": 12,
@@ -88,7 +88,7 @@
    "id": 7,
    "name": "Valentine's Day",
    "displayName": "Valentine's Day",
-   "date": {
+   "occasion": {
       "annualDate": {
          "calendar": "gregorian",
          "month": 2,
@@ -100,7 +100,7 @@
    "id": 8,
    "name": "St. Patrick's Day",
    "displayName": "St. Patrick's Day",
-   "date": {
+   "occasion": {
       "annualDate": {
          "calendar": "gregorian",
          "month": 3,
@@ -112,7 +112,7 @@
    "id": 9,
    "name": "Chinese New Year",
    "displayName": "Chinese New Year",
-   "date": {
+   "occasion": {
       "annualDate": {
          "calendar": "chinese",
          "month": 1,
@@ -124,7 +124,7 @@
    "id": 10,
    "name": "Passover",
    "displayName": "Passover",
-   "date": {
+   "occasion": {
       "annualDate": {
          "calendar": "hebrew",
          "month": 8,
@@ -136,7 +136,7 @@
    "id": 11,
    "name": "Rosh Hashanah",
    "displayName": "Rosh Hashanah",
-   "date": {
+   "occasion": {
       "annualDate": {
          "calendar": "hebrew",
          "month": 1,
@@ -148,7 +148,7 @@
    "id": 12,
    "name": "Yom Kippur",
    "displayName": "Yom Kippur",
-   "date": {
+   "occasion": {
       "annualDate": {
          "calendar": "hebrew",
          "month": 1,
@@ -160,7 +160,7 @@
    "id": 13,
    "name": "Ramadan",
    "displayName": "Ramadan",
-   "date": {
+   "occasion": {
       "annualDate": {
          "calendar": "islamic",
          "month": 9,
@@ -172,7 +172,7 @@
    "id": 14,
    "name": "Eid Al-Fitr",
    "displayName": "Eid Al-Fitr",
-   "date": {
+   "occasion": {
       "annualDate": {
          "calendar": "islamic",
          "month": 10,
@@ -184,7 +184,7 @@
    "id": 15,
    "name": "Eid Al-Adha",
    "displayName": "Eid Al-Adha",
-   "date": {
+   "occasion": {
       "annualDate": {
          "calendar": "islamic",
          "month": 12,
@@ -196,7 +196,7 @@
    "id": 16,
    "name": "Mardi Gras",
    "displayName": "Mardi Gras",
-   "date": {
+   "occasion": {
       "annualOther": {
          "calendar": "gregorian",
          "tag": "easter",
@@ -208,7 +208,7 @@
    "id": 17,
    "name": "Ash Wednesday",
    "displayName": "Ash Wednesday",
-   "date": {
+   "occasion": {
       "annualOther": {
          "calendar": "gregorian",
          "tag": "easter",
@@ -220,7 +220,7 @@
    "id": 18,
    "name": "Good Friday",
    "displayName": "Good Friday",
-   "date": {
+   "occasion": {
       "annualOther": {
          "calendar": "gregorian",
          "tag": "easter",
@@ -232,7 +232,7 @@
    "id": 19,
    "name": "Memorial Day (U.S.)",
    "displayName": "Memorial Day",
-   "date": {
+   "occasion": {
       "annualWeek": {
          "calendar": "gregorian",
          "month": 5,
@@ -245,7 +245,7 @@
    "id": 20,
    "name": "Independence Day (U.S.)",
    "displayName": "Independence Day",
-   "date": {
+   "occasion": {
       "annualDate": {
          "calendar": "gregorian",
          "month": 7,
@@ -257,7 +257,7 @@
    "id": 21,
    "name": "Canada Day (Canada)",
    "displayName": "Canada Day",
-   "date": {
+   "occasion": {
       "annualDate": {
          "calendar": "gregorian",
          "month": 7,
@@ -269,7 +269,7 @@
    "id": 22,
    "name": "Bastille Day (France)",
    "displayName": "Bastille Day",
-   "date": {
+   "occasion": {
       "annualDate": {
          "calendar": "gregorian",
          "month": 7,
@@ -281,7 +281,7 @@
    "id": 23,
    "name": "Labor Day (U.S.)",
    "displayName": "Labor Day",
-   "date": {
+   "occasion": {
       "annualWeek": {
          "calendar": "gregorian",
          "month": 9,
@@ -294,7 +294,7 @@
    "id": 24,
    "name": "Thanksgiving (Canada)",
    "displayName": "Thanksgiving",
-   "date": {
+   "occasion": {
       "annualWeek": {
          "calendar": "gregorian",
          "month": 10,
@@ -307,7 +307,7 @@
    "id": 25,
    "name": "Mother's Day",
    "displayName": "Mother's Day",
-   "date": {
+   "occasion": {
       "annualWeek": {
          "calendar": "gregorian",
          "month": 5,
@@ -320,7 +320,7 @@
    "id": 26,
    "name": "Father's Day",
    "displayName": "Father's Day",
-   "date": {
+   "occasion": {
       "annualWeek": {
          "calendar": "gregorian",
          "month": 6,
