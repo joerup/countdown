@@ -10,7 +10,6 @@
 		013D84E72A8204A400A8DE1A /* CountdownTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B31ACF2A81E86600002F15 /* CountdownTimelineProvider.swift */; };
 		013D84EA2A82052A00A8DE1A /* CountdownWidgetIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B31ACD2A81E82C00002F15 /* CountdownWidgetIntent.swift */; };
 		0157B7D52A8758D2007CF704 /* CountdownRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0157B7D42A8758D2007CF704 /* CountdownRoot.swift */; };
-		0157B7D72A8887B5007CF704 /* ColorGradientMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0157B7D62A8887B5007CF704 /* ColorGradientMenu.swift */; };
 		015DD3C02A774807000EB3C0 /* CountdownApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015DD3BF2A774807000EB3C0 /* CountdownApp.swift */; };
 		015DD3C42A774809000EB3C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 015DD3C32A774809000EB3C0 /* Assets.xcassets */; };
 		015DD3C72A774809000EB3C0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 015DD3C62A774809000EB3C0 /* Preview Assets.xcassets */; };
@@ -67,7 +66,6 @@
 /* Begin PBXFileReference section */
 		013D84F52A820A0000A8DE1A /* CountdownWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CountdownWidgetExtension.entitlements; sourceTree = "<group>"; };
 		0157B7D42A8758D2007CF704 /* CountdownRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownRoot.swift; sourceTree = "<group>"; };
-		0157B7D62A8887B5007CF704 /* ColorGradientMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorGradientMenu.swift; sourceTree = "<group>"; };
 		015DD3BC2A774807000EB3C0 /* Countdown.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Countdown.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		015DD3BF2A774807000EB3C0 /* CountdownApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownApp.swift; sourceTree = "<group>"; };
 		015DD3C32A774809000EB3C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -126,14 +124,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0114EAA22A8FE0240013EE87 /* Destination Editors */ = {
+		0114EAA22A8FE0240013EE87 /* Occasion Editors */ = {
 			isa = PBXGroup;
 			children = (
 				015DD3D82A77483A000EB3C0 /* OccasionEditor.swift */,
 				015DD4202A79BBBA000EB3C0 /* DateEditor.swift */,
 				01C3C7D32A7CD14000475FC4 /* HolidayEditor.swift */,
 			);
-			path = "Destination Editors";
+			path = "Occasion Editors";
 			sourceTree = "<group>";
 		};
 		015DD3B32A774807000EB3C0 = {
@@ -187,7 +185,7 @@
 				01C208692AE049B500F798CD /* CountdownCarousel.swift */,
 				015DD3DA2A77483A000EB3C0 /* CountdownEditor.swift */,
 				01CE90AC2ADC5959000537C5 /* SettingsMenu.swift */,
-				0114EAA22A8FE0240013EE87 /* Destination Editors */,
+				0114EAA22A8FE0240013EE87 /* Occasion Editors */,
 				015DD3D62A77483A000EB3C0 /* Background Editors */,
 			);
 			path = Views;
@@ -198,7 +196,6 @@
 			children = (
 				015DD3D72A77483A000EB3C0 /* PhotoMenu.swift */,
 				01FA61952A8312EA003BDA2B /* UnsplashMenu.swift */,
-				0157B7D62A8887B5007CF704 /* ColorGradientMenu.swift */,
 			);
 			path = "Background Editors";
 			sourceTree = "<group>";
@@ -353,7 +350,6 @@
 				015DD3C02A774807000EB3C0 /* CountdownApp.swift in Sources */,
 				015DD3DC2A77483A000EB3C0 /* CountdownView.swift in Sources */,
 				01C2086A2AE049B500F798CD /* CountdownCarousel.swift in Sources */,
-				0157B7D72A8887B5007CF704 /* ColorGradientMenu.swift in Sources */,
 				015DD3DE2A77483A000EB3C0 /* PhotoMenu.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

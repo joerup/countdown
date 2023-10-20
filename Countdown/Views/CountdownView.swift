@@ -17,7 +17,7 @@ struct CountdownView: View {
     
     var countdowns: [Countdown]
     var sortedCountdowns: [Countdown] {
-        countdowns.sorted { $0.date < $1.date }
+        countdowns.filter { $0.date.midnight >= .now.midnight } .sorted { $0.date < $1.date }
     }
     
     @Binding var selectedCountdown: Countdown?

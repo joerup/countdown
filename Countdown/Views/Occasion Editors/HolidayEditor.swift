@@ -38,7 +38,7 @@ struct HolidayEditor: View {
                             .font(.system(.headline, weight: .medium))
                             .foregroundStyle(self.holiday == holiday ? .pink : .primary)
                         Spacer()
-                        Text(holiday.occasion.next.string)
+                        Text(holiday.occasion.next.dateString)
                             .font(.system(.headline, weight: .medium))
                             .foregroundStyle(self.holiday == holiday ? .gray : .gray)
                         if self.holiday == holiday {

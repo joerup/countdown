@@ -47,7 +47,7 @@ public final class Countdown {
         self.displayName = name
         self.type = .custom
         self.cards = [Card()]
-        self.occasion = .singleDate(date)
+        self.occasion = .now
     }
     
     public func addCard(_ card: Card) {

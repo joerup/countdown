@@ -27,12 +27,12 @@ public final class Clock: ObservableObject {
     }
     
     public func daysRemaining(for countdown: Countdown) -> Int {
-        let components = componentsRemaining(for: countdown)
+        let components = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: .now, to: countdown.date < .now ? .now : countdown.date.midnight)
         guard let day = components.day, let hour = components.hour, let minute = components.minute, let second = components.second else { return 0 }
-        return day + (hour == 0 && minute == 0 && second == 0 ? 0 : 1)
+        return day + (hour <= 0 && minute <= 0 && second <= 0 ? 0 : 1)
     }
     
     public func componentsRemaining(for countdown: Countdown) -> DateComponents {
-        Calendar.current.dateComponents([.day, .hour, .minute, .second], from: .now, to: .now.advanced(by: (timeRemaining(for: countdown) ?? 0) + 1))
+        Calendar.current.dateComponents([.day, .hour, .minute, .second], from: .now, to: countdown.date < .now ? .now : countdown.date)
     }
 }

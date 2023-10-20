@@ -50,7 +50,7 @@ struct OccasionEditor: View {
                             dismiss()
                         }
                         .fontWeight(.semibold)
-                        .disabled(occasion == nil)
+                        .disabled(occasion == nil || name.isEmpty)
                     }
                 }
         }

@@ -51,13 +51,15 @@ public struct TitleDisplay: View {
     private func date() -> some View {
         ZStack {
             if let tintColor = countdown.card?.tint {
-                TintedText(tint: tintColor) {
-                    Text("\(countdown.date.string)")
-                        .textCase(.uppercase)
-                        .font(.system(size: size/2))
-                        .fontWeight(.medium)
-                        .fontWidth(.condensed)
-                        .padding(.bottom, 5)
+                HStack(spacing: 3) {
+                    TintedText(tint: tintColor) {
+                        Text("\(countdown.date.dateString)\(countdown.occasion.includeTime ? " \(countdown.date.timeString)" : "")")
+                            .textCase(.uppercase)
+                            .font(.system(size: size/2))
+                            .fontWeight(.medium)
+                            .fontWidth(.condensed)
+                            .padding(.bottom, 5)
+                    }
                 }
                 .frame(height: size/2)
             }
