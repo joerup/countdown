@@ -24,9 +24,10 @@ public struct TitleDisplay: View {
     }
     
     public var body: some View {
-        VStack(alignment: alignment) {
+        VStack(alignment: alignment, spacing: size*0.15) {
             title()
             date()
+            Spacer(minLength: 0)
         }
         .id(clock.tick)
         .environment(\.colorScheme, .light)
@@ -40,8 +41,8 @@ public struct TitleDisplay: View {
                     .fontWeight(.bold)
                     .fontDesign(.rounded)
                     .foregroundStyle(tintColor)
+                    .lineLimit(2)
                     .multilineTextAlignment(alignment == .leading ? .leading : .center)
-                    .minimumScaleFactor(0.5)
             }
         }
     }

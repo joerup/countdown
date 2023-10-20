@@ -11,11 +11,21 @@ public final class Clock: ObservableObject {
     
     @Published public var tick: Bool
     
+    @Published public var active: Bool
+    
     private var times: [UUID : Double]
     
     public init() {
         self.tick = false
+        self.active = true
         self.times = [:]
+    }
+    
+    public func pause() {
+        active = false
+    }
+    public func start() {
+        active = true
     }
     
     public func setTimeRemaining(for countdown: Countdown) {

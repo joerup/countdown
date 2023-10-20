@@ -26,6 +26,15 @@ struct CountdownWidgetIntent: WidgetConfigurationIntent {
     }
 }
 
+enum CountdownWidgetType: Identifiable, Hashable {
+    case upcoming
+    case specific
+    
+    var id: Self {
+        return self
+    }
+}
+
 struct CountdownEntity: AppEntity, Identifiable, Hashable {
     var id: Countdown.ID
     var name: String
@@ -43,7 +52,6 @@ struct CountdownEntity: AppEntity, Identifiable, Hashable {
     static var defaultQuery = CountdownEntityQuery()
 }
 
-
 struct CountdownEntityQuery: EntityQuery {
     
     @MainActor
@@ -55,7 +63,6 @@ struct CountdownEntityQuery: EntityQuery {
             print("Failed to get countdowns")
             return []
         }
-        print(countdowns)
         return countdowns.map { CountdownEntity(from: $0) }
     }
     
@@ -68,7 +75,6 @@ struct CountdownEntityQuery: EntityQuery {
             print("Failed to get countdowns")
             return []
         }
-        print(countdowns)
-        return countdowns.map { CountdownEntity(from: $0) }
+        return countdowns.sorted(by: { $0.date < $1.date }).map { CountdownEntity(from: $0) }
     }
 }

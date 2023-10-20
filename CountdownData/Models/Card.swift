@@ -23,12 +23,12 @@ public final class Card {
         return countdown?.currentBackground
     }
     
-    private var tint: [Double] = [0.8,0.8,0.8]
+    private var tint: [Double] = Color.white.rgb
     public var tintColor: Color {
         return Color(rgb: tint)
     }
     
-    public var textStyle: TextStyle = TextStyle.serif
+    public var textStyle: TextStyle = TextStyle.standard
     public var textShadow: Double = 0
     
     public init() { }

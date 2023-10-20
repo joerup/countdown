@@ -28,10 +28,12 @@ struct CountdownRoot: View {
             .onAppear {
                 // Start the countdown timer
                 countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
-                    for countdown in countdowns {
-                        clock.setTimeRemaining(for: countdown)
+                    if clock.active {
+                        for countdown in countdowns {
+                            clock.setTimeRemaining(for: countdown)
+                        }
+                        clock.tick.toggle()
                     }
-                    clock.tick.toggle()
                 }
             }
             .onAppear {

@@ -31,6 +31,7 @@ public struct CounterDisplay: View {
     
     public var body: some View {
         VStack(spacing: 0) {
+            Spacer(minLength: 0)
             Group {
                 let daysRemaining = clock.daysRemaining(for: countdown)
                 let componentsRemaining = clock.componentsRemaining(for: countdown)
@@ -52,6 +53,7 @@ public struct CounterDisplay: View {
                             numberUnit(componentsRemaining.minute, unit: "m", size: size/4)
                             numberUnit(componentsRemaining.second, unit: "s", size: size/4)
                         }
+                        .blur(radius: clock.active ? 0 : 3)
                     }
                 }
             }
@@ -84,10 +86,16 @@ public struct CounterDisplay: View {
                     .fontWidth(.condensed)
                     .foregroundStyle(tintColor)
                     .monospacedDigit()
-                Text(unit)
-                    .font(.system(size: size*5/6, weight: .semibold))
-                    .foregroundStyle(.thinMaterial)
-                    .fontWidth(.condensed)
+                ZStack {
+                    Text(unit)
+                        .font(.system(size: size*5/6, weight: .semibold))
+                        .foregroundStyle(tintColor)
+                        .fontWidth(.condensed)
+                    Text(unit)
+                        .font(.system(size: size*5/6, weight: .semibold))
+                        .foregroundStyle(.thinMaterial)
+                        .fontWidth(.condensed)
+                }
             }
         }
     }

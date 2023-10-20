@@ -11,6 +11,10 @@ import CountdownUI
 
 struct CountdownGrid: View {
     
+    @EnvironmentObject var clock: Clock
+    
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    
     var countdowns: [Countdown]
     
     @Binding var selectedCountdown: Countdown?
@@ -23,11 +27,15 @@ struct CountdownGrid: View {
                 .padding(50)
         } else {
             ScrollView {
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2)) {
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: horizontalSizeClass == .compact ? 2 : 4)) {
                     ForEach(countdowns) { countdown in
                         Button {
-                            withAnimation {
+                            clock.pause()
+                            withAnimation(.easeInOut(duration: 0.35)) {
                                 self.selectedCountdown = countdown
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                                clock.start()
                             }
                         } label: {
                             CountdownSquare(countdown: countdown)

@@ -17,18 +17,22 @@ public struct CountdownSquare: View {
     }
     
     public var body: some View {
-        VStack(alignment: .leading) {
-            TitleDisplay(countdown: countdown, size: 20, alignment: .leading)
-            Spacer(minLength: 0)
-            HStack {
-                Spacer()
-                CounterDisplay(countdown: countdown, size: 75)
+        GeometryReader { geometry in
+            VStack(alignment: .leading, spacing: 0) {
+                TitleDisplay(countdown: countdown, size: geometry.size.height*0.135, alignment: .leading)
+                    .frame(height: geometry.size.height*0.5)
+                HStack(alignment: .bottom) {
+                    Spacer()
+                    CounterDisplay(countdown: countdown, size: geometry.size.height*0.5)
+                }
+                .frame(height: geometry.size.height*0.5)
             }
-            .frame(height: 75)
         }
         .padding([.horizontal, .top])
+        .padding(.bottom, 7)
         .background(BackgroundDisplay(countdown: countdown, blurRadius: 1))
         .cornerRadius(20)
         .aspectRatio(1.0, contentMode: .fill)
+        .frame(maxWidth: 200)
     }
 }

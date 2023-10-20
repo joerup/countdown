@@ -23,8 +23,6 @@ public struct BackgroundDisplay: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .blur(radius: blurRadius)
-            case .gradient(let colors):
-                LinearGradient(colors: colors, startPoint: .top, endPoint: .bottom)
             case nil:
                 Rectangle().fill(Constants.color)
             }

@@ -11,6 +11,8 @@ import CountdownUI
 
 struct CountdownCarousel: View {
     
+    @EnvironmentObject var clock: Clock
+    
     var countdowns: [Countdown]
     
     @Binding var selectedCountdown: Countdown?
@@ -91,6 +93,7 @@ struct CountdownCarousel: View {
     private func cardGesture(size: CGSize) -> some Gesture {
         DragGesture()
             .onChanged { value in
+                clock.pause()
                 self.offset = value.translation
                 if offsetScale >= 0.7 {
                     withAnimation {
@@ -100,7 +103,7 @@ struct CountdownCarousel: View {
                 }
             }
             .onEnded { value in
-                withAnimation {
+                withAnimation(.easeInOut(duration: 0.35)) {
                     if abs(offset.height) > 100 {
                         self.selectedCountdown = nil
                     }
@@ -129,12 +132,15 @@ struct CountdownCarousel: View {
                     }
                 }
                 else {
-                    withAnimation {
+                    withAnimation(.easeInOut(duration: 0.35)) {
                         if abs(offset.width) > 100 {
                             self.selectedCountdown = nil
                         }
                         self.offset = .zero
                     }
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                    clock.start()
                 }
             }
     }
@@ -154,8 +160,12 @@ struct CountdownCarousel: View {
             }
             Spacer()
             Button {
-                withAnimation {
+                clock.pause()
+                withAnimation(.easeInOut(duration: 0.35)) {
                     selectedCountdown = nil
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                    clock.start()
                 }
             } label: {
                 Image(systemName: "xmark.circle.fill")

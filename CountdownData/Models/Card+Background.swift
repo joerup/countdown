@@ -13,7 +13,6 @@ extension Card {
     public enum Background {
         
         case photo(_ photo: UIImage)
-        case gradient(_ colors: [Color])
         
         var data: BackgroundData? {
             switch self {
@@ -21,8 +20,6 @@ extension Card {
                 if let data = compress(photo) {
                     return .photo(data)
                 }
-            case .gradient(let colors):
-                return .gradient(colors)
             }
             return nil
         }
@@ -42,7 +39,6 @@ extension Card {
     public enum BackgroundData: Codable, Hashable {
         
         case photo(_ data: Data)
-        case gradient(_ colors: [Color])
         
         public var background: Background? {
             switch self {
@@ -50,8 +46,6 @@ extension Card {
                 if let photo = UIImage(data: data) {
                     return .photo(photo)
                 }
-            case .gradient(let colors):
-                return .gradient(colors)
             }
             return nil
         }
