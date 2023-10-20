@@ -23,18 +23,22 @@ public final class Card {
         return countdown?.currentBackground
     }
     
-    private var _tint: [Double] = Color.gray.rgb
-    public var tint: Color {
-        get { Color(rgb: _tint) }
-        set { _tint = newValue.rgb }
+    private var tint: [Double] = [0.8,0.8,0.8]
+    public var tintColor: Color {
+        return Color(rgb: tint)
     }
     
     public var textStyle: TextStyle = TextStyle.serif
+    public var textShadow: Double = 0
     
     public init() { }
     
     public func setBackground(_ background: Background) {
         self.backgroundData = background.data
+        countdown?.currentBackground = background
+    }
+    public func setTintColor(_ color: Color) {
+        self.tint = color.rgb
     }
 }
 

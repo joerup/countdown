@@ -12,19 +12,19 @@ import ConfettiSwiftUI
 public struct CountdownCard: View {
     
     var countdown: Countdown
-    var editing: Bool
+    var scale: Double
     
     @State private var confettiTrigger: Int = 0
     
-    public init(countdown: Countdown, editing: Bool = false) {
+    public init(countdown: Countdown, scale: Double = 1.0) {
         self.countdown = countdown
-        self.editing = editing
+        self.scale = scale
     }
     
     public var body: some View {
         GeometryReader { geometry in
             VStack {
-                TitleDisplay(countdown: countdown, size: applyScale(45))
+                TitleDisplay(countdown: countdown, size: applyScale(40))
                 Spacer()
                 CounterDisplay(countdown: countdown, type: .full, size: applyScale(150))
             }
@@ -45,7 +45,7 @@ public struct CountdownCard: View {
     }
     
     private func applyScale(_ value: CGFloat) -> CGFloat {
-        return editing ? 0.75 * value : value
+        return scale * value
     }
     
     private func selectButton<Content: View>(active: Bool, action: @escaping () -> Void, label: () -> Content) -> some View {

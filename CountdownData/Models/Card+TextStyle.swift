@@ -11,9 +11,12 @@ import SwiftUI
 extension Card {
     
     public enum TextStyle: Int, Codable, Identifiable, CaseIterable {
+        case standard
+        case round
         case serif
         case mono
-        case round
+        case expanded
+        case compressed
         
         public var design: Font.Design {
             switch self {
@@ -23,23 +26,27 @@ extension Card {
                 return .monospaced
             case .round:
                 return .rounded
+            default:
+                return .default
             }
         }
         
         public var weight: Font.Weight {
             switch self {
-            case .serif:
+            case .serif, .round:
                 return .heavy
-            case .mono:
+            default:
                 return .bold
-            case .round:
-                return .heavy
             }
         }
         
         public var width: Font.Width {
             switch self {
-            case .serif, .mono, .round:
+            case .expanded:
+                return .expanded
+            case .compressed:
+                return .condensed
+            default:
                 return .standard
             }
         }

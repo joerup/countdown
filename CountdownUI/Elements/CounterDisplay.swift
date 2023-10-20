@@ -63,29 +63,27 @@ public struct CounterDisplay: View {
     
     private func number(_ value: Int, size: CGFloat) -> some View {
         ZStack {
-            if let tintColor = countdown.card?.tint, let textStyle = countdown.card?.textStyle {
-                TintedText(tint: tintColor) {
-                    Text(String(value))
-                        .font(.system(size: size))
-                        .fontDesign(textStyle.design)
-                        .fontWeight(textStyle.weight)
-                        .fontWidth(textStyle.width)
-                        .lineLimit(0).minimumScaleFactor(0.5)
-                }
+            if let tintColor = countdown.card?.tintColor, let textStyle = countdown.card?.textStyle {
+                Text(String(value))
+                    .font(.system(size: size))
+                    .fontDesign(textStyle.design)
+                    .fontWeight(textStyle.weight)
+                    .fontWidth(textStyle.width)
+                    .foregroundStyle(tintColor)
+                    .lineLimit(0).minimumScaleFactor(0.5)
             }
         }
     }
     
     private func numberUnit(_ value: Int?, unit: String, size: CGFloat) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 1) {
-            if let tintColor = countdown.card?.tint {
-                TintedText(tint: tintColor) {
-                    Text(String(format: "%02i", abs(value ?? 0)))
-                        .font(.system(size: size))
-                        .fontWeight(.bold)
-                        .fontWidth(.condensed)
-                        .monospacedDigit()
-                }
+            if let tintColor = countdown.card?.tintColor {
+                Text(String(format: "%02i", abs(value ?? 0)))
+                    .font(.system(size: size))
+                    .fontWeight(.bold)
+                    .fontWidth(.condensed)
+                    .foregroundStyle(tintColor)
+                    .monospacedDigit()
                 Text(unit)
                     .font(.system(size: size*5/6, weight: .semibold))
                     .foregroundStyle(.thinMaterial)

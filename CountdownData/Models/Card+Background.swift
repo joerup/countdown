@@ -29,7 +29,7 @@ extension Card {
         
         private func compress(_ photo: UIImage, compressionQuality: Double = 1.0) -> Data? {
             if let data = photo.jpegData(compressionQuality: compressionQuality) {
-                if data.count >= 2000000 {
+                if data.count >= 1000000 {
                     return compress(photo, compressionQuality: compressionQuality*0.8)
                 } else {
                     return data

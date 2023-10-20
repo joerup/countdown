@@ -184,9 +184,9 @@
 				01C2086B2AE04B8B00F798CD /* CountdownGrid.swift */,
 				01C208692AE049B500F798CD /* CountdownCarousel.swift */,
 				015DD3DA2A77483A000EB3C0 /* CountdownEditor.swift */,
-				01CE90AC2ADC5959000537C5 /* SettingsMenu.swift */,
 				0114EAA22A8FE0240013EE87 /* Occasion Editors */,
 				015DD3D62A77483A000EB3C0 /* Background Editors */,
+				01CE90AC2ADC5959000537C5 /* SettingsMenu.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
