@@ -59,15 +59,16 @@ struct CountdownView: View {
         .searchable(text: $searchText, isPresented: $showSearch, placement: .sidebar)
         .opacity(selectedCountdown == nil ? 1 : 0)
         .overlay {
-            ZStack {
-                if let selectedCountdown {
-                    CountdownCarousel(countdowns: sortedCountdowns, selectedCountdown: $selectedCountdown, editing: $editing)
-                }
+            if selectedCountdown != nil {
+                CountdownCarousel(countdowns: sortedCountdowns, selectedCountdown: $selectedCountdown, editing: $editing)
             }
         }
         .tint(.pink)
         .sheet(item: $newCountdown) { type in
-            OccasionEditor(type: type)
+            OccasionEditor(type: type) { countdown in
+                self.selectedCountdown = countdown
+                self.editing = true
+            }
         }
         .sheet(isPresented: $showSettings) {
             SettingsMenu()
@@ -107,7 +108,7 @@ struct CountdownView: View {
         ToolbarItem(placement: .topBarTrailing) {
             Menu {
                 ForEach(EventType.allCases) { type in
-                    Button(type.rawValue.capitalized) {
+                    Button(type.displayName) {
                         newCountdown = type
                     }
                 }

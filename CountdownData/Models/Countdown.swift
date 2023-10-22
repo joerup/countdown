@@ -23,8 +23,11 @@ public final class Countdown {
         occasion.date
     }
     
+    public var isActive: Bool {
+        return date > .now
+    }
     public var isComplete: Bool {
-        return date <= .now
+        return !isActive
     }
     public var isToday: Bool {
         return date.midnight == .now.midnight
@@ -98,6 +101,7 @@ public final class Countdown {
     }
     
     public func fetchBackground() async {
+        currentBackground = .loading
         currentBackground = await card?.getBackground()
     }
 }

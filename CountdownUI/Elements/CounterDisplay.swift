@@ -25,7 +25,6 @@ public struct CounterDisplay: View {
     
     public enum DisplayType {
         case days
-        case hms
         case full
     }
     
@@ -38,16 +37,6 @@ public struct CounterDisplay: View {
                 switch type {
                 case .days:
                     number(daysRemaining, size: size * (1-CGFloat(String(daysRemaining).count)/10))
-                case .hms:
-                    ZStack {
-                        numberUnit(componentsRemaining.second, unit: "s", size: medium(ignoreWidth: true)).opacity(0)
-                        HStack {
-                            numberUnit(componentsRemaining.hour, unit: "h", size: medium())
-                            numberUnit(componentsRemaining.minute, unit: "m", size: medium())
-                            numberUnit(componentsRemaining.second, unit: "s", size: medium())
-                        }
-                    }
-                    .padding(.vertical)
                 case .full:
                     VStack {
                         number(componentsRemaining.day, size: size * (1-CGFloat(String(componentsRemaining.day ?? 0).count)/10))

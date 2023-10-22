@@ -23,16 +23,20 @@ struct OccasionEditor: View {
     @State private var displayName: String = ""
     @State private var occasion: Occasion?
     
+    var onCreate: (Countdown) -> Void
+    
     init(countdown: Countdown) {
         self.countdown = countdown
         self.type = countdown.type
+        self.onCreate = { _ in }
         self._name = State(initialValue: countdown.name)
         self._displayName = State(initialValue: countdown.displayName)
         self._occasion = State(initialValue: countdown.occasion)
     }
-    init(type: EventType) {
+    init(type: EventType, onCreate: @escaping (Countdown) -> Void) {
         self.countdown = nil
         self.type = type
+        self.onCreate = onCreate
     }
     
     var body: some View {
@@ -81,6 +85,7 @@ struct OccasionEditor: View {
             let countdown = Countdown(name: name, displayName: displayName, type: type, occasion: occasion)
             clock.scheduleNotification(for: countdown)
             modelContext.insert(countdown)
+            onCreate(countdown)
         }
     }
 }

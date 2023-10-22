@@ -47,11 +47,15 @@ struct CardEditor: View {
         } message: {
             Text("Choose a new background")
         }
-        .photoMenu(isPresented: $showPhotoLibrary) { photo in
+        .photoMenu(isPresented: $showPhotoLibrary) {
+            card.loadingBackground()
+        } onReturn: { photo in
             card.setBackground(.photo(photo))
             UIImpactFeedbackGenerator().impactOccurred()
         }
-        .unsplashMenu(isPresented: $showUnsplashLibrary) { link in
+        .unsplashMenu(isPresented: $showUnsplashLibrary) {
+            card.loadingBackground()
+        } onReturn: { link in
             card.setBackground(.photoLink(link))
             UIImpactFeedbackGenerator().impactOccurred()
         }
@@ -71,6 +75,7 @@ struct CardEditor: View {
         NavigationStack {
             ScrollView {
                 VStack {
+                    
                     ScrollView(.horizontal) {
                         HStack {
                             ForEach(Card.TextStyle.allCases, id: \.self) { style in
@@ -113,7 +118,6 @@ struct CardEditor: View {
                                 }
                             }
                             colorCircle(AngularGradient(colors: [.red,.orange,.yellow,.green,.mint,.teal,.cyan,.blue,.purple,.pink], center: .center))
-                                .frame(width: 50, height: 50)
                                 .overlay(ColorPicker("", selection: $tintColor, supportsOpacity: false).labelsHidden().opacity(0.015))
                         }
                     }
@@ -133,14 +137,14 @@ struct CardEditor: View {
     }
     
     private func circle(_ icon: String) -> some View {
-        Image(systemName: icon)
-            .symbolRenderingMode(.multicolor)
-            .imageScale(.large)
-            .fontWeight(.semibold)
-            .padding()
-            .aspectRatio(1.0, contentMode: .fit)
-            .background(Color.gray.clipShape(Circle()))
-            .shadow(radius: 5)
+        ZStack {
+            Image(systemName: icon).foregroundStyle(.foreground)
+            Image(systemName: icon).foregroundStyle(.tint).opacity(0.5)
+        }
+        .imageScale(.large)
+        .fontWeight(.semibold)
+        .frame(width: 50, height: 50)
+        .background(Circle().fill(.fill))
     }
     
     private func colorCircle(_ color: some ShapeStyle) -> some View {

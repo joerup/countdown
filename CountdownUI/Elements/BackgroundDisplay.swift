@@ -23,10 +23,18 @@ public struct BackgroundDisplay: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .blur(radius: blurRadius)
+            case .loading:
+                Rectangle().fill(Constants.color)
+                    .overlay(ProgressView("Loading"))
             case nil:
                 Rectangle().fill(Constants.color)
             }
         }
         .id(clock.tick)
+        .onChange(of: countdown.card?.backgroundData) { _, _ in
+            Task {
+                await countdown.fetchBackground()
+            }
+        }
     }
 }

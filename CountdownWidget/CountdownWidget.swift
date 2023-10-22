@@ -25,7 +25,7 @@ struct CountdownWidget: Widget {
                         CountdownSquare(countdown: countdown)
                             .environmentObject(clock)
                             .onAppear {
-                                clock.setTimeRemaining(for: countdown)
+                                clock.start(countdowns: [countdown])
                                 clock.tick.toggle()
                             }
                     }

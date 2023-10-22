@@ -15,12 +15,35 @@ public final class Clock: ObservableObject {
     
     @Published public var active: Bool
     
+    private var timer: Timer?
+    
     private var times: [UUID : Double]
     
     public init() {
         self.tick = false
         self.active = true
         self.times = [:]
+    }
+    deinit {
+        stop()
+    }
+    
+    public func start(countdowns: [Countdown]) {
+        timer?.invalidate()
+        let delay: Double = 1 - Double(Date.now.component(.nanosecond))/1E9
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+                if self.active {
+                    for countdown in countdowns {
+                        self.setTimeRemaining(for: countdown)
+                    }
+                    self.tick.toggle()
+                }
+            }
+        }
+    }
+    public func stop() {
+        timer?.invalidate()
     }
     
     public func pause() {
@@ -31,6 +54,7 @@ public final class Clock: ObservableObject {
             self.active = true
         }
     }
+    
     public func pause(execute: () -> Void) {
         pause()
         withAnimation(.easeInOut(duration: 0.35)) {
@@ -51,13 +75,13 @@ public final class Clock: ObservableObject {
     }
     
     public func daysRemaining(for countdown: Countdown) -> Int {
-        let components = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: .now, to: countdown.date < .now ? .now : countdown.date.midnight)
+        let components = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: .now, to: countdown.date < .now ? .now : countdown.date.midnight.advanced(by: 1))
         guard let day = components.day, let hour = components.hour, let minute = components.minute, let second = components.second else { return 0 }
         return day + (hour <= 0 && minute <= 0 && second <= 0 ? 0 : 1)
     }
     
     public func componentsRemaining(for countdown: Countdown) -> DateComponents {
-        Calendar.current.dateComponents([.day, .hour, .minute, .second], from: .now, to: countdown.date < .now ? .now : countdown.date)
+        Calendar.current.dateComponents([.day, .hour, .minute, .second], from: .now, to: countdown.date < .now ? .now : countdown.date.advanced(by: 1))
     }
     
     
@@ -74,7 +98,7 @@ public final class Clock: ObservableObject {
     }
     
     public func scheduleNotification(for countdown: Countdown) {
-        guard let components = countdown.occasion.components else { return }
+        guard countdown.isActive, let components = countdown.occasion.components else { return }
         
         let content = UNMutableNotificationContent()
         content.title = countdown.displayName

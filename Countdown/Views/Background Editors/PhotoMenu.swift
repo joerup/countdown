@@ -12,40 +12,30 @@ struct PhotoMenu: ViewModifier {
     
     @Binding var isPresented: Bool
     
-    var onSelect: (Data) -> Void
+    var onSelect: () -> Void
+    var onReturn: (Data) -> Void
     
     @State private var photoItem: PhotosPickerItem?
     
     func body(content: Content) -> some View {
         content
-            .photosPicker(isPresented: $isPresented, selection: $photoItem)
+            .photosPicker(isPresented: $isPresented, selection: $photoItem, matching: .images)
             .onChange(of: photoItem) {
+                onSelect()
                 Task {
                     if let data = try? await photoItem?.loadTransferable(type: Data.self) {
-                        if let image = UIImage(data: data), let photoData = compress(image) {
-                            self.onSelect(photoData)
-                            return
+                        // limit to 750 kB for safe storage in CloudKit
+                        if let image = UIImage(data: data), let photoData = image.compressed(size: 750000) {
+                            onReturn(photoData)
                         }
                     }
-                    print("Failed")
                 }
             }
-    }
-    
-    private func compress(_ photo: UIImage, compressionQuality: Double = 1.0) -> Data? {
-        if let data = photo.jpegData(compressionQuality: compressionQuality) {
-            if data.count >= 750000 { // limit to about 750 KB, otherwise
-                return compress(photo, compressionQuality: compressionQuality*0.8)
-            } else {
-                return data
-            }
-        }
-        return nil
     }
 }
 
 extension View {
-    func photoMenu(isPresented: Binding<Bool>, onSelect: @escaping (Data) -> Void) -> some View {
-        modifier(PhotoMenu(isPresented: isPresented, onSelect: onSelect))
+    func photoMenu(isPresented: Binding<Bool>, onSelect: @escaping () -> Void, onReturn: @escaping (Data) -> Void) -> some View {
+        modifier(PhotoMenu(isPresented: isPresented, onSelect: onSelect, onReturn: onReturn))
     }
 }

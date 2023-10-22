@@ -18,6 +18,37 @@ public extension GeometryProxy {
     }
 }
 
+public extension UIImage {
+
+    func resized(withPercentage percentage: CGFloat) -> UIImage? {
+        let canvasSize = CGSize(width: size.width * percentage, height: size.height * percentage)
+        UIGraphicsBeginImageContextWithOptions(canvasSize, false, scale)
+        defer { UIGraphicsEndImageContext() }
+        draw(in: CGRect(origin: .zero, size: canvasSize))
+        return UIGraphicsGetImageFromCurrentImageContext()
+    }
+
+    func compressed(size: Double) -> Data? {
+        guard let minimum = jpegData(compressionQuality: 0) else { return nil }
+        var image: UIImage?
+        var data: Data?
+        
+        if Double(minimum.count) > size {
+            data = minimum
+            image = UIImage(data: minimum)
+            while Double(data?.count ?? 0) > size {
+                print("looping \(data?.count ?? 0)")
+                image = image?.resized(withPercentage: 0.9)
+                data = image?.jpegData(compressionQuality: 0)
+            }
+            return data
+        }
+        else {
+            return minimum
+        }
+    }
+}
+
 public extension Int {
     
     var ordinalString: String {

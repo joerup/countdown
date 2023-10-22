@@ -10,6 +10,8 @@ import CountdownData
 
 public struct CountdownCard: View {
     
+    @EnvironmentObject var clock: Clock
+    
     var countdown: Countdown
     
     public init(countdown: Countdown) {
@@ -21,12 +23,13 @@ public struct CountdownCard: View {
             VStack {
                 TitleDisplay(countdown: countdown, size: 40)
                 Spacer()
-                CounterDisplay(countdown: countdown, type: countdown.under24Hr ? .hms : .full, size: 150)
+                CounterDisplay(countdown: countdown, type: .full, size: 150)
             }
             .padding(.bottom, 50)
             .padding(.top, 80)
             .padding(20)
             .frame(width: geometry.size.width)
+//            .confettiCannon(counter: 1, num: 100, rainHeight: 1000, openingAngle: .zero, closingAngle: .radians(2 * .pi))
             .background {
                 BackgroundDisplay(countdown: countdown)
                     .onTapGesture {

@@ -13,6 +13,15 @@ public enum EventType: String, Codable, CaseIterable, Identifiable {
     case holiday
     case custom
     
+    public var displayName: String {
+        switch self {
+        case .holiday:
+            return "Holiday"
+        case .custom:
+            return "Event"
+        }
+    }
+    
     public var id: Self { self }
     
 }

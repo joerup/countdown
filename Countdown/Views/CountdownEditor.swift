@@ -58,9 +58,7 @@ struct CountdownEditor: View {
             Button("Delete", role: .destructive) {
                 clock.unscheduleNotifications(for: countdown)
                 modelContext.delete(countdown)
-                withAnimation {
-                    onDelete()
-                }
+                onDelete()
             }
         } message: {
             Text("Are you sure you want to delete this countdown? This action cannot be undone.")

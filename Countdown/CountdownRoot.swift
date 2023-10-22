@@ -20,8 +20,6 @@ struct CountdownRoot: View {
     
     @StateObject private var clock: Clock = Clock()
     
-    @State private var countdownTimer: Timer?
-    
     @State private var isLoaded: Bool = false
     
     var body: some View {
@@ -34,18 +32,13 @@ struct CountdownRoot: View {
         }
         .environmentObject(clock)
         .onAppear {
-            // Start the countdown timer
-            countdownTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
-                if clock.active {
-                    for countdown in countdowns {
-                        clock.setTimeRemaining(for: countdown)
-                    }
-                    clock.tick.toggle()
-                }
-            }
+            // Start the clock
+            clock.start(countdowns: countdowns)
         }
         .onAppear {
+            // Schedule all notifications
             clock.scheduleNotifications(for: countdowns)
+            // Add cards to empty countdowns
             for countdown in countdowns {
                 if let cards = countdown.cards {
                     if cards.isEmpty {
@@ -57,6 +50,7 @@ struct CountdownRoot: View {
             }
         }
         .task {
+            // Fetch countdown backgrounds
             for countdown in countdowns {
                 await countdown.fetchBackground()
             }
@@ -74,6 +68,15 @@ struct CountdownRoot: View {
             // Set the background timer
             oldCountdown?.stopCardTimer()
             newCountdown?.startCardTimer()
+        }
+        .onChange(of: countdowns) { oldCountdowns, newCountdowns in
+            // Set notification and background for any new countdowns
+            if let countdown = newCountdowns.first(where: { !oldCountdowns.contains($0) }) {
+                clock.scheduleNotification(for: countdown)
+                Task {
+                    await countdown.fetchBackground()
+                }
+            }
         }
     }
     

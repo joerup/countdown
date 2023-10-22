@@ -33,7 +33,7 @@ struct CountdownCarousel: View {
     
     @State private var offset: CGSize = .zero
     private var offsetScale: CGFloat {
-        1 - pow(offset.height, 2)/1E5
+        1 - min(offset.height/1000, 1)
     }
     private var editingScale: CGFloat {
         editing ? 0.7 : 1
@@ -82,10 +82,17 @@ struct CountdownCarousel: View {
         VStack(spacing: 0) {
             VStack(spacing: 0) {
                 if editing, let selectedCountdown {
-                    CountdownEditor(countdown: selectedCountdown, editing: $editing, onDelete: { self.selectedCountdown = nil })
+                    CountdownEditor(countdown: selectedCountdown, editing: $editing, onDelete: {
+                        clock.pause {
+                            self.selectedCountdown = nil
+                            self.editing = false
+                        }
+                    })
                     Spacer(minLength: 0)
                 } else {
-                    cardButtons
+                    if offset == .zero {
+                        cardButtons
+                    }
                     Spacer(minLength: 0)
                 }
             }
@@ -97,21 +104,21 @@ struct CountdownCarousel: View {
                 Spacer(minLength: 0)
                 if editing, let card = selectedCountdown?.card {
                     CardEditor(card: card)
-                        .opacity(offset == .zero ? 1 : 0.5)
-                        .animation(.default, value: offset)
                         .padding(.bottom)
-                }
-                HStack {
-                    ForEach(countdowns, id: \.self) { countdown in
-                        Group {
-                            if editing {
-                                Circle().fill(.foreground)
-                            } else {
-                                Circle().fill(.white)
+                    Spacer(minLength: 0)
+                } else {
+                    HStack {
+                        ForEach(countdowns, id: \.self) { countdown in
+                            Group {
+                                if editing {
+                                    Circle().fill(.foreground)
+                                } else {
+                                    Circle().fill(.white)
+                                }
                             }
+                            .opacity(countdown == selectedCountdown ? 0.7 : 0.4)
+                            .frame(width: 10)
                         }
-                        .opacity(countdown == selectedCountdown ? 0.7 : 0.4)
-                        .frame(width: 10)
                     }
                 }
             }
@@ -121,7 +128,7 @@ struct CountdownCarousel: View {
     
     private func cardDisplay(countdown: Countdown, size: CGSize) -> some View {
         CountdownCard(countdown: countdown)
-            .clipShape(RoundedRectangle(cornerRadius: 30))
+            .clipShape(RoundedRectangle(cornerRadius: offset == .zero && !editing ? 0 : 40))
             .shadow(radius: 10)
             .offset(offset)
             .scaleEffect(totalScale)
