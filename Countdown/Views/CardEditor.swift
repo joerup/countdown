@@ -44,6 +44,7 @@ struct CardEditor: View {
         .confirmationDialog("Change background", isPresented: $editBackground) {
             Button("Photo Library") { showPhotoLibrary.toggle() }
             Button("Unsplash") { showUnsplashLibrary.toggle() }
+            Button("None") { card.setBackground(nil) }
         } message: {
             Text("Choose a new background")
         }

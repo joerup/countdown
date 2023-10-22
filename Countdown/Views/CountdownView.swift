@@ -18,12 +18,12 @@ struct CountdownView: View {
     var countdowns: [Countdown]
     var sortedCountdowns: [Countdown] {
         if !searchText.isEmpty {
-            return countdowns.filter {  $0.name.lowercased().starts(with: searchText.lowercased()) }
-                 + countdowns.filter { $0.name.lowercased().contains(searchText.lowercased()) && !$0.name.lowercased().starts(with: searchText.lowercased()) }
+            return countdowns.filter {  $0.name.lowercased().starts(with: searchText.lowercased()) } .sorted()
+            + countdowns.filter { $0.name.lowercased().contains(searchText.lowercased()) && !$0.name.lowercased().starts(with: searchText.lowercased()) } .sorted()
         } else if showArchive {
-            return countdowns.filter { $0.date.midnight < .now.midnight } .sorted { $0.date > $1.date }
+            return countdowns.filter { $0.isComplete } .sorted().reversed()
         } else {
-            return countdowns.filter { $0.date.midnight >= .now.midnight } .sorted { $0.date < $1.date }
+            return countdowns.filter { !$0.isPastDay } .sorted()
         }
     }
     

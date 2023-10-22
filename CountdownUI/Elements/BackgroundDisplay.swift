@@ -23,10 +23,7 @@ public struct BackgroundDisplay: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .blur(radius: blurRadius)
-            case .loading:
-                Rectangle().fill(Constants.color)
-                    .overlay(ProgressView("Loading"))
-            case nil:
+            case .loading, nil:
                 Rectangle().fill(Constants.color)
             }
         }

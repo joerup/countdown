@@ -60,7 +60,7 @@ struct CountdownRoot: View {
         }
         .onOpenURL { url in
             // Set the selected countdown from a widget
-            if let countdown = countdowns.first(where: { $0.name == url.lastPathComponent }) {
+            if let countdown = countdowns.first(where: { $0.id.uuidString == url.lastPathComponent }) {
                 selectedCountdown = countdown
             }
         }

@@ -17,15 +17,13 @@ struct CountdownTimelineProvider: AppIntentTimelineProvider {
     typealias Entry = CountdownWidgetEntry
     
     @MainActor
-    func countdowns(for configuration: CountdownWidgetIntent) -> [Countdown] {
+    func countdowns(for configuration: CountdownWidgetIntent) async -> [Countdown] {
         var countdowns: [Countdown] = []
         if let id = configuration.countdown?.id {
-            countdowns = (try? modelContainer?.mainContext.fetch(FetchDescriptor<Countdown>(predicate: #Predicate { $0.id == id })).sorted(by: { $0.date < $1.date })) ?? []
+            countdowns = (try? modelContainer?.mainContext.fetch(FetchDescriptor<Countdown>(predicate: #Predicate { $0.id == id })).sorted()) ?? []
         }
-        Task {
-            for countdown in countdowns {
-                await countdown.fetchBackground()
-            }
+        for countdown in countdowns {
+            await countdown.fetchBackground()
         }
         return countdowns
     }
@@ -37,14 +35,14 @@ struct CountdownTimelineProvider: AppIntentTimelineProvider {
     
     @MainActor
     func snapshot(for configuration: CountdownWidgetIntent, in context: Context) async -> Entry {
-        let countdowns = countdowns(for: configuration)
+        let countdowns = await countdowns(for: configuration)
         guard let countdown = countdowns.first else { return .empty }
         return CountdownWidgetEntry(date: .now, countdown: countdown)
     }
     
     @MainActor
     func timeline(for configuration: CountdownWidgetIntent, in context: Context) async -> Timeline<Entry> {
-        let countdowns = countdowns(for: configuration)
+        let countdowns = await countdowns(for: configuration)
         guard let countdown = countdowns.first else { return Timeline(entries: [.empty], policy: .never) }
         let entry = CountdownWidgetEntry(date: .tomorrow.midnight, countdown: countdown)
         return Timeline(entries: [entry], policy: .atEnd)

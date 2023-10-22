@@ -24,21 +24,18 @@ struct CountdownWidget: Widget {
                     .containerBackground(for: .widget) {
                         CountdownSquare(countdown: countdown)
                             .environmentObject(clock)
-                            .onAppear {
-                                clock.start(countdowns: [countdown])
-                                clock.tick.toggle()
-                            }
                     }
-                    .widgetURL(URL(string: "countdown:///\(countdown.id)"))
+                    .widgetURL(URL(string: "countdown:///\(countdown.id.uuidString)"))
             } else {
                 Text("Select a countdown")
                     .fontDesign(.rounded)
                     .fontWeight(.bold)
+                    .multilineTextAlignment(.center)
                     .containerBackground(.background, for: .widget)
             }
         }
         .configurationDisplayName("Countdown")
-        .description("Show a countdown on your home screen.")
+        .description("Select a countdown to display.")
         .supportedFamilies([.systemSmall])
     }
 }

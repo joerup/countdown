@@ -106,13 +106,14 @@ public final class Countdown {
     }
 }
 
-extension Countdown: Identifiable { }
-
-extension Countdown: Hashable {
-    public static func == (lhs: Countdown, rhs: Countdown) -> Bool {
-        return lhs.id == rhs.id 
-    }
+extension Countdown: Identifiable, Equatable, Comparable, Hashable {
     
+    public static func == (lhs: Countdown, rhs: Countdown) -> Bool {
+        return lhs.id == rhs.id
+    }
+    public static func < (lhs: Countdown, rhs: Countdown) -> Bool {
+        return lhs.date < rhs.date
+    }
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }

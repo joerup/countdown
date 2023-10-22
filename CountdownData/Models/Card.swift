@@ -29,7 +29,7 @@ public final class Card {
     public func loadingBackground() {
         countdown?.currentBackground = .loading
     }
-    public func setBackground(_ data: BackgroundData) {
+    public func setBackground(_ data: BackgroundData?) {
         self.backgroundData = data
     }
     public func getBackground() async -> Background? {
