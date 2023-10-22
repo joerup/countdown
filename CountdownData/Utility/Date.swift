@@ -8,6 +8,7 @@
 import Foundation
 
 public extension Date {
+    
     var dateString: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = timeIntervalSinceNow < 86400*365 ? "EEE MMM dd" : "EEE MMM dd YYYY"
@@ -82,5 +83,12 @@ public extension Date {
     }
     static func currentDay(_ identifier: Calendar.Identifier) -> Int {
         return Calendar(identifier: identifier).component(.day, from: .now)
+    }
+    
+    static var tomorrow: Date {
+        return Calendar.current.date(byAdding: .day, value: 1, to: .now) ?? .now
+    }
+    static var yesterday: Date {
+        return Calendar.current.date(byAdding: .day, value: -1, to: .now) ?? .now
     }
 }

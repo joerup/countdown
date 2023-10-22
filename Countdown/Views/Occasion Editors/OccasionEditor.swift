@@ -14,6 +14,8 @@ struct OccasionEditor: View {
     
     @Environment(\.dismiss) var dismiss
     
+    @EnvironmentObject var clock: Clock
+    
     var countdown: Countdown?
     var type: EventType
     
@@ -74,8 +76,10 @@ struct OccasionEditor: View {
             countdown.displayName = displayName
             countdown.type = type
             countdown.occasion = occasion
+            clock.scheduleNotification(for: countdown)
         } else {
             let countdown = Countdown(name: name, displayName: displayName, type: type, occasion: occasion)
+            clock.scheduleNotification(for: countdown)
             modelContext.insert(countdown)
         }
     }

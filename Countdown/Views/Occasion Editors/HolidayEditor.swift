@@ -19,7 +19,7 @@ struct HolidayEditor: View {
     @State private var search: String = ""
     
     var sortedHolidays: [Holiday] {
-        Holiday.all.sorted { $0.occasion.next < $1.occasion.next }
+        Holiday.all.sorted { $0.occasion.date < $1.occasion.date }
     }
     var filteredHolidays: [Holiday] {
         sortedHolidays.filter { $0.name.lowercased().contains(search.lowercased()) }
@@ -38,7 +38,7 @@ struct HolidayEditor: View {
                             .font(.system(.headline, weight: .medium))
                             .foregroundStyle(self.holiday == holiday ? .pink : .primary)
                         Spacer()
-                        Text(holiday.occasion.next.dateString)
+                        Text(holiday.occasion.date.dateString)
                             .font(.system(.headline, weight: .medium))
                             .foregroundStyle(self.holiday == holiday ? .gray : .gray)
                         if self.holiday == holiday {

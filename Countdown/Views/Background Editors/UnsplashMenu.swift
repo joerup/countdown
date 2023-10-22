@@ -15,33 +15,22 @@ struct UnsplashMenu: ViewModifier {
     
     @Binding var isPresented: Bool
     
-    var onSelect: (UIImage) -> Void
+    var onSelect: (URL) -> Void
     
     func body(content: Content) -> some View {
         content
             .sheet(isPresented: $isPresented) {
                 UnsplashPhotoPickerView(configuration: configuration) { photos in
                     if let photo = photos.first, let url = photo.urls[.regular] {
-                        Task {
-                            if let image = await loadImage(url: url) {
-                                onSelect(image)
-                            }
-                        }
+                        onSelect(url)
                     }
                 }
             }
     }
-    
-    func loadImage(url: URL) async -> UIImage? {
-        if let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
-            return image
-        }
-        return nil
-    }
 }
 
 extension View {
-    func unsplashMenu(isPresented: Binding<Bool>, onSelect: @escaping (UIImage) -> Void) -> some View {
+    func unsplashMenu(isPresented: Binding<Bool>, onSelect: @escaping (URL) -> Void) -> some View {
         modifier(UnsplashMenu(isPresented: isPresented, onSelect: onSelect))
     }
 }

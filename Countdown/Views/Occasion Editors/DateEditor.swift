@@ -41,8 +41,8 @@ struct DateEditor: View {
         }
         .onAppear {
             if let occasion {
-                self.date = occasion.next
-                self.time = occasion.next
+                self.date = occasion.date
+                self.time = occasion.date
                 self.includeTime = occasion.includeTime
                 self.repeatAnnually = occasion.repeatAnnually
             } else {

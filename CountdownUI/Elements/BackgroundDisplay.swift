@@ -17,7 +17,7 @@ public struct BackgroundDisplay: View {
     
     public var body: some View {
         Group {
-            switch countdown.card?.background {
+            switch countdown.currentBackground {
             case .photo(let photo):
                 Image(uiImage: photo)
                     .resizable()

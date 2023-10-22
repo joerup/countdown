@@ -20,7 +20,26 @@ public final class Countdown {
     public var occasion: Occasion = Occasion.now
     
     public var date: Date {
-        occasion.next
+        occasion.date
+    }
+    
+    public var isComplete: Bool {
+        return date <= .now
+    }
+    public var isToday: Bool {
+        return date.midnight == .now.midnight
+    }
+    public var wasToday: Bool {
+        return isToday && isComplete
+    }
+    public var isPastDay: Bool {
+        return date.midnight < .now.midnight
+    }
+    public var isFutureDay: Bool {
+        return date.midnight > .now.midnight
+    }
+    public var under24Hr: Bool {
+        return Calendar.current.date(byAdding: .day, value: 1, to: .now) ?? .now >= date
     }
     
     @Relationship(deleteRule: .cascade, inverse: \Card.countdown) public var cards: [Card]?
@@ -76,6 +95,10 @@ public final class Countdown {
         } else {
             self.cardIndex = 0
         }
+    }
+    
+    public func fetchBackground() async {
+        currentBackground = await card?.getBackground()
     }
 }
 

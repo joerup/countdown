@@ -15,13 +15,6 @@ public final class Card {
     public var countdown: Countdown?
     
     @Attribute(.externalStorage) private var backgroundData: BackgroundData?
-    public var background: Background? {
-        if let background = countdown?.currentBackground {
-            return background
-        }
-        countdown?.currentBackground = backgroundData?.background
-        return countdown?.currentBackground
-    }
     
     private var tint: [Double] = Color.white.rgb
     public var tintColor: Color {
@@ -33,9 +26,14 @@ public final class Card {
     
     public init() { }
     
-    public func setBackground(_ background: Background) {
-        self.backgroundData = background.data
-        countdown?.currentBackground = background
+    public func setBackground(_ data: BackgroundData) {
+        self.backgroundData = data
+        Task {
+            countdown?.currentBackground = await data.background()
+        }
+    }
+    public func getBackground() async -> Background? {
+        return await backgroundData?.background()
     }
     public func setTintColor(_ color: Color) {
         self.tint = color.rgb

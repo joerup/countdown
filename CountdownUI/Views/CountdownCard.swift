@@ -7,30 +7,25 @@
 
 import SwiftUI
 import CountdownData
-import ConfettiSwiftUI
 
 public struct CountdownCard: View {
     
     var countdown: Countdown
-    var scale: Double
     
-    @State private var confettiTrigger: Int = 0
-    
-    public init(countdown: Countdown, scale: Double = 1.0) {
+    public init(countdown: Countdown) {
         self.countdown = countdown
-        self.scale = scale
     }
     
     public var body: some View {
         GeometryReader { geometry in
             VStack {
-                TitleDisplay(countdown: countdown, size: applyScale(40))
+                TitleDisplay(countdown: countdown, size: 40)
                 Spacer()
-                CounterDisplay(countdown: countdown, type: .full, size: applyScale(150))
+                CounterDisplay(countdown: countdown, type: countdown.under24Hr ? .hms : .full, size: 150)
             }
-            .padding(.bottom, applyScale(50))
-            .padding(.top, applyScale(70))
-            .padding(applyScale(20))
+            .padding(.bottom, 50)
+            .padding(.top, 80)
+            .padding(20)
             .frame(width: geometry.size.width)
             .background {
                 BackgroundDisplay(countdown: countdown)
@@ -42,10 +37,6 @@ public struct CountdownCard: View {
                     }
             }
         }
-    }
-    
-    private func applyScale(_ value: CGFloat) -> CGFloat {
-        return scale * value
     }
     
     private func selectButton<Content: View>(active: Bool, action: @escaping () -> Void, label: () -> Content) -> some View {

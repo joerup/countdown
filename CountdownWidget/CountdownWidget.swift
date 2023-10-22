@@ -31,12 +31,10 @@ struct CountdownWidget: Widget {
                     }
                     .widgetURL(URL(string: "countdown:///\(countdown.id)"))
             } else {
-                Text("No countdowns")
+                Text("Select a countdown")
                     .fontDesign(.rounded)
                     .fontWeight(.bold)
-                    .containerBackground(for: .widget) {
-                        Color.white
-                    }
+                    .containerBackground(.background, for: .widget)
             }
         }
         .configurationDisplayName("Countdown")

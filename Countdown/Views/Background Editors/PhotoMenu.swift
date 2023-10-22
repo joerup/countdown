@@ -12,7 +12,7 @@ struct PhotoMenu: ViewModifier {
     
     @Binding var isPresented: Bool
     
-    var onSelect: (UIImage) -> Void
+    var onSelect: (Data) -> Void
     
     @State private var photoItem: PhotosPickerItem?
     
@@ -22,8 +22,8 @@ struct PhotoMenu: ViewModifier {
             .onChange(of: photoItem) {
                 Task {
                     if let data = try? await photoItem?.loadTransferable(type: Data.self) {
-                        if let image = UIImage(data: data) {
-                            self.onSelect(image)
+                        if let image = UIImage(data: data), let photoData = compress(image) {
+                            self.onSelect(photoData)
                             return
                         }
                     }
@@ -31,10 +31,21 @@ struct PhotoMenu: ViewModifier {
                 }
             }
     }
+    
+    private func compress(_ photo: UIImage, compressionQuality: Double = 1.0) -> Data? {
+        if let data = photo.jpegData(compressionQuality: compressionQuality) {
+            if data.count >= 750000 { // limit to about 750 KB, otherwise
+                return compress(photo, compressionQuality: compressionQuality*0.8)
+            } else {
+                return data
+            }
+        }
+        return nil
+    }
 }
 
 extension View {
-    func photoMenu(isPresented: Binding<Bool>, onSelect: @escaping (UIImage) -> Void) -> some View {
+    func photoMenu(isPresented: Binding<Bool>, onSelect: @escaping (Data) -> Void) -> some View {
         modifier(PhotoMenu(isPresented: isPresented, onSelect: onSelect))
     }
 }

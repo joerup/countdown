@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CountdownData
+import ConfettiSwiftUI
 
 public struct TitleDisplay: View {
     
@@ -16,6 +17,8 @@ public struct TitleDisplay: View {
     
     var size: CGFloat
     var alignment: HorizontalAlignment
+    
+    @State private var confettiTrigger: Int = 0
     
     public init(countdown: Countdown, size: CGFloat, alignment: HorizontalAlignment = .center) {
         self.countdown = countdown
@@ -29,8 +32,22 @@ public struct TitleDisplay: View {
             date()
             Spacer(minLength: 0)
         }
+        .onAppear {
+            if countdown.date < .now && countdown.date.advanced(by: 0.1) >= .now {
+                UIImpactFeedbackGenerator().impactOccurred()
+                UIImpactFeedbackGenerator().impactOccurred()
+                UIImpactFeedbackGenerator().impactOccurred()
+                confettiTrigger += 1
+            }
+        }
         .id(clock.tick)
         .environment(\.colorScheme, .light)
+        .confettiCannon(counter: $confettiTrigger, num: 100, rainHeight: 1000, openingAngle: .zero, closingAngle: .radians(2 * .pi))
+        .onAppear {
+            if countdown.wasToday {
+                confettiTrigger += 1
+            }
+        }
     }
     
     private func title() -> some View {

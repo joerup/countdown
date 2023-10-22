@@ -44,7 +44,7 @@ public enum Occasion: Codable, Hashable, Equatable {
     // Placeholder
     public static let now = Self.annualDate(calendar: "gregorian", month: Date.currentMonth, day: Date.currentDay)
     
-    public var next: Date {
+    private var next: (date: Date, components: DateComponents)? {
         switch self {
         case .singleTime(let calendar, let year, let month, let day, let hour, let minute):
             return single(calendar: Calendar.Identifier(calendar), year: year, month: month, day: day, hour: hour, minute: minute)
@@ -63,6 +63,13 @@ public enum Occasion: Codable, Hashable, Equatable {
         }
     }
     
+    public var date: Date {
+        next?.date ?? .distantFuture
+    }
+    public var components: DateComponents? {
+        next?.components
+    }
+    
     public var includeTime: Bool {
         switch self {
         case .singleTime(_,_,_,_,_,_), .annualTime(_,_,_,_,_): return true
@@ -76,113 +83,80 @@ public enum Occasion: Codable, Hashable, Equatable {
         }
     }
     
-    private func single(calendar identifier: Calendar.Identifier, year: Int, month: Int, day: Int, hour: Int = 0, minute: Int = 0) -> Date {
+    private func single(calendar identifier: Calendar.Identifier, year: Int, month: Int, day: Int, hour: Int = 0, minute: Int = 0) -> (date: Date, components: DateComponents)? {
         let calendar = Calendar(identifier: identifier)
-        var components = DateComponents()
-        
-        components.year = year
-        components.month = month
-        components.day = day
-        components.hour = hour
-        components.minute = minute
-        
+        let components = DateComponents(year: year, month: month, day: day, hour: hour, minute: minute)
         if let date = calendar.date(from: components) {
-            return date
+            return (date, components)
         }
-        return .now
+        return nil
     }
     
-    private func annual(calendar identifier: Calendar.Identifier, year: Int? = nil, month: Int, day: Int, hour: Int = 0, minute: Int = 0) -> Date {
+    private func annual(calendar identifier: Calendar.Identifier, year: Int? = nil, month: Int, day: Int, hour: Int = 0, minute: Int = 0) -> (date: Date, components: DateComponents)? {
         let calendar = Calendar(identifier: identifier)
-        var components = DateComponents()
         let year = year ?? Date.currentYear(identifier)
-        
-        components.year = year
-        components.month = month
-        components.day = day
-        components.hour = hour
-        components.minute = minute
-         
+        let components = DateComponents(year: year, month: month, day: day, hour: hour, minute: minute)
         if let date = calendar.date(from: components) {
             if date.midnight < .now.midnight {
                 return annual(calendar: identifier, year: year+1, month: month, day: day, hour: hour, minute: minute)
             } else {
-                return date
+                return (date, components)
             }
         }
-        return .now
+        return nil
     }
     
-    private func annual(calendar identifier: Calendar.Identifier, year: Int? = nil, month: Int, week: Int, weekday: Int) -> Date {
+    private func annual(calendar identifier: Calendar.Identifier, year: Int? = nil, month: Int, week: Int, weekday: Int) -> (date: Date, components: DateComponents)? {
         let calendar = Calendar(identifier: identifier)
-        var components = DateComponents()
         let year = year ?? Date.currentYear(identifier)
-        
-        components.year = year
-        components.month = month
-        components.weekdayOrdinal = week
-        components.weekday = weekday
-         
+        let components = DateComponents(year: year, month: month, weekday: weekday, weekdayOrdinal: week)
         if let date = calendar.date(from: components) {
             if date.midnight < .now.midnight {
                 return annual(calendar: identifier, year: year+1, month: month, week: week, weekday: weekday)
             } else {
-                return date
+                return (date, components)
             }
         }
-        return .now
+        return nil
     }
     
-    private func annual(calendar identifier: Calendar.Identifier, year: Int? = nil, month: Int, weekday: Int, after: Bool, day: Int) -> Date {
+    private func annual(calendar identifier: Calendar.Identifier, year: Int? = nil, month: Int, weekday: Int, after: Bool, day: Int) -> (date: Date, components: DateComponents)? {
         let calendar = Calendar(identifier: identifier)
-        var components = DateComponents()
         let year = year ?? Date.currentYear(identifier)
-        
-        components.year = year
-        components.month = month
-        components.day = day
-        
+        let components = DateComponents(year: year, month: month, day: day)
         let baseDate = calendar.date(from: components) ?? .now
         let baseWeekday = baseDate.component(.weekday)
         let offset = (after ? 1 : -1) * (baseWeekday - weekday + 7) % 7
-         
         if let date = calendar.date(byAdding: .day, value: offset, to: baseDate) {
             if date.midnight < .now.midnight {
                 return annual(calendar: identifier, year: year+1, month: month, weekday: weekday, after: after, day: day)
             } else {
-                return date
+                return (date, components)
             }
         }
-        return .now
+        return nil
     }
     
-    private func annual(calendar identifier: Calendar.Identifier, year: Int? = nil, tag: String, offset: Int) -> Date {
+    private func annual(calendar identifier: Calendar.Identifier, year: Int? = nil, tag: String, offset: Int) -> (date: Date, components: DateComponents)? {
         let calendar = Calendar(identifier: identifier)
-        var components = DateComponents()
         let year = year ?? Date.currentYear(identifier)
-        
-        var dateComponents: (year: Int, month: Int, day: Int)?
+        var components: DateComponents?
         switch tag {
-        case "easter": dateComponents = easter(for: year)
-        default: dateComponents = nil
+        case "easter": components = easter(for: year)
+        default: components = nil
         }
-        guard let dateComponents else { return .now }
-        
-        components.year = dateComponents.year
-        components.month = dateComponents.month
-        components.day = dateComponents.day
-        
+        guard let components else { return nil }
         if let baseDate = calendar.date(from: components), let date = calendar.date(byAdding: .day, value: offset, to: baseDate) {
             if date.midnight < .now.midnight {
                 return annual(calendar: identifier, year: year+1, tag: tag, offset: offset)
             } else {
-                return date
+                return (date, components)
             }
         }
-        return .now
+        return nil
     }
     
-    private func easter(for year: Int) -> (year: Int, month: Int, day: Int) {
+    private func easter(for year: Int) -> DateComponents {
         let a = year % 19
         let b = year / 100
         let c = year % 100
@@ -196,6 +170,6 @@ public enum Occasion: Codable, Hashable, Equatable {
         let m = (a + 11 * h + 19 * l) / 433
         let month = (h + l - 7 * m + 90) / 25
         let day = (h + l - 7 * m + 33 * month + 19) % 32
-        return (year, month, day)
+        return DateComponents(year: year, month: month, day: day)
     }
 }

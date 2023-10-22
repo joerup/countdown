@@ -39,19 +39,25 @@ public struct CounterDisplay: View {
                 case .days:
                     number(daysRemaining, size: size * (1-CGFloat(String(daysRemaining).count)/10))
                 case .hms:
-                    HStack {
-                        numberUnit(componentsRemaining.hour, unit: "h", size: size)
-                        numberUnit(componentsRemaining.minute, unit: "m", size: size)
-                        numberUnit(componentsRemaining.second, unit: "s", size: size)
+                    ZStack {
+                        numberUnit(componentsRemaining.second, unit: "s", size: medium(ignoreWidth: true)).opacity(0)
+                        HStack {
+                            numberUnit(componentsRemaining.hour, unit: "h", size: medium())
+                            numberUnit(componentsRemaining.minute, unit: "m", size: medium())
+                            numberUnit(componentsRemaining.second, unit: "s", size: medium())
+                        }
                     }
+                    .padding(.vertical)
                 case .full:
                     VStack {
-                        number(daysRemaining, size: size * (1-CGFloat(String(daysRemaining).count)/10))
-                        HStack {
-                            numberUnit(componentsRemaining.day, unit: "d", size: size/4)
-                            numberUnit(componentsRemaining.hour, unit: "h", size: size/4)
-                            numberUnit(componentsRemaining.minute, unit: "m", size: size/4)
-                            numberUnit(componentsRemaining.second, unit: "s", size: size/4)
+                        number(componentsRemaining.day, size: size * (1-CGFloat(String(componentsRemaining.day ?? 0).count)/10))
+                        ZStack {
+                            numberUnit(componentsRemaining.second, unit: "s", size: smaller(ignoreWidth: true)).opacity(0)
+                            HStack {
+                                numberUnit(componentsRemaining.hour, unit: "h", size: smaller())
+                                numberUnit(componentsRemaining.minute, unit: "m", size: smaller())
+                                numberUnit(componentsRemaining.second, unit: "s", size: smaller())
+                            }
                         }
                         .blur(radius: clock.active ? 0 : 3)
                     }
@@ -63,39 +69,44 @@ public struct CounterDisplay: View {
         }
     }
     
-    private func number(_ value: Int, size: CGFloat) -> some View {
-        ZStack {
-            if let tintColor = countdown.card?.tintColor, let textStyle = countdown.card?.textStyle {
-                Text(String(value))
-                    .font(.system(size: size))
-                    .fontDesign(textStyle.design)
-                    .fontWeight(textStyle.weight)
-                    .fontWidth(textStyle.width)
-                    .foregroundStyle(tintColor)
-                    .lineLimit(0).minimumScaleFactor(0.5)
-            }
+    private func smaller(ignoreWidth: Bool = false) -> CGFloat {
+        return (countdown.card?.textStyle.width == .expanded && !ignoreWidth ? size*0.85 : size) * 0.3
+    }
+    private func medium(ignoreWidth: Bool = false) -> CGFloat {
+        return (countdown.card?.textStyle.width == .expanded && !ignoreWidth ? size*0.85 : size) * 0.4
+    }
+    
+    @ViewBuilder
+    private func number(_ value: Int?, size: CGFloat) -> some View {
+        if let value, let tintColor = countdown.card?.tintColor, let textStyle = countdown.card?.textStyle {
+            Text(String(value))
+                .font(.system(size: size))
+                .fontDesign(textStyle.design)
+                .fontWeight(textStyle.weight)
+                .fontWidth(textStyle.width)
+                .foregroundStyle(tintColor)
+                .lineLimit(0).minimumScaleFactor(0.5)
         }
     }
     
     private func numberUnit(_ value: Int?, unit: String, size: CGFloat) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 1) {
-            if let tintColor = countdown.card?.tintColor {
-                Text(String(format: "%02i", abs(value ?? 0)))
+            if let value, let tintColor = countdown.card?.tintColor, let textStyle = countdown.card?.textStyle {
+                Text(String(format: "%02i", abs(value)))
                     .font(.system(size: size))
-                    .fontWeight(.bold)
-                    .fontWidth(.condensed)
+                    .fontDesign(textStyle.design)
+                    .fontWeight(textStyle.weight)
+                    .fontWidth(textStyle.width)
                     .foregroundStyle(tintColor)
                     .monospacedDigit()
                 ZStack {
-                    Text(unit)
-                        .font(.system(size: size*5/6, weight: .semibold))
-                        .foregroundStyle(tintColor)
-                        .fontWidth(.condensed)
-                    Text(unit)
-                        .font(.system(size: size*5/6, weight: .semibold))
-                        .foregroundStyle(.thinMaterial)
-                        .fontWidth(.condensed)
+                    Text(unit).foregroundStyle(tintColor)
+                    Text(unit).foregroundStyle(.thinMaterial)
                 }
+                .font(.system(size: size*5/6, weight: .semibold))
+                .fontDesign(textStyle.design)
+                .fontWeight(textStyle.weight)
+                .fontWidth(textStyle.width)
             }
         }
     }

@@ -11,40 +11,26 @@ import SwiftUI
 extension Card {
     
     public enum Background {
-        
         case photo(_ photo: UIImage)
-        
-        var data: BackgroundData? {
-            switch self {
-            case .photo(let photo):
-                if let data = compress(photo) {
-                    return .photo(data)
-                }
-            }
-            return nil
-        }
-        
-        private func compress(_ photo: UIImage, compressionQuality: Double = 1.0) -> Data? {
-            if let data = photo.jpegData(compressionQuality: compressionQuality) {
-                if data.count >= 1000000 {
-                    return compress(photo, compressionQuality: compressionQuality*0.8)
-                } else {
-                    return data
-                }
-            }
-            return nil
-        }
     }
     
     public enum BackgroundData: Codable, Hashable {
         
         case photo(_ data: Data)
+        case photoLink(_ url: URL)
         
-        public var background: Background? {
+        public func background() async -> Background? {
+            print("FETCHING BACKGROUND INFO")
             switch self {
             case .photo(let data):
+                print("FROM DATA")
                 if let photo = UIImage(data: data) {
                     return .photo(photo)
+                }
+            case .photoLink(let url):
+                print("FROM LINK")
+                if let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
+                    return .photo(image)
                 }
             }
             return nil

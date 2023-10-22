@@ -17,31 +17,50 @@ struct CountdownView: View {
     
     var countdowns: [Countdown]
     var sortedCountdowns: [Countdown] {
-        countdowns.filter { $0.date.midnight >= .now.midnight } .sorted { $0.date < $1.date }
+        if !searchText.isEmpty {
+            return countdowns.filter {  $0.name.lowercased().starts(with: searchText.lowercased()) }
+                 + countdowns.filter { $0.name.lowercased().contains(searchText.lowercased()) && !$0.name.lowercased().starts(with: searchText.lowercased()) }
+        } else if showArchive {
+            return countdowns.filter { $0.date.midnight < .now.midnight } .sorted { $0.date > $1.date }
+        } else {
+            return countdowns.filter { $0.date.midnight >= .now.midnight } .sorted { $0.date < $1.date }
+        }
     }
     
     @Binding var selectedCountdown: Countdown?
     
     @State private var editing: Bool = false
-    @State private var showSettings: Bool = false
-    @State private var newCountdown: EventType? = nil
     
-    @State private var confettiTrigger: Int = 0
+    @State private var showSettings: Bool = false
+    @State private var showArchive: Bool = false
+    @State private var showSearch: Bool = false
+    
+    @State private var searchText: String = ""
+    
+    @State private var newCountdown: EventType? = nil
     
     var body: some View {
         NavigationStack {
             CountdownGrid(countdowns: sortedCountdowns, selectedCountdown: $selectedCountdown)
                 .navigationBarTitleDisplayMode(.inline)
+                .overlay {
+                    if sortedCountdowns.isEmpty {
+                        Text(!searchText.isEmpty ? "No matching countdowns found." : showArchive ? "Completed countdowns will appear here." : "No countdowns are currently active!")
+                            .font(.system(.body, design: .rounded, weight: .semibold))
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(.gray)
+                            .padding(50)
+                    }
+                }
                 .toolbar {
                     headerButtons
                 }
         }
+        .searchable(text: $searchText, isPresented: $showSearch, placement: .sidebar)
         .opacity(selectedCountdown == nil ? 1 : 0)
         .overlay {
-            if let selectedCountdown {
-                if editing {
-                    CountdownEditor(countdown: selectedCountdown, editing: $editing, onDelete: { self.selectedCountdown = nil })
-                } else {
+            ZStack {
+                if let selectedCountdown {
                     CountdownCarousel(countdowns: sortedCountdowns, selectedCountdown: $selectedCountdown, editing: $editing)
                 }
             }
@@ -67,6 +86,22 @@ struct CountdownView: View {
                 showSettings.toggle()
             } label: {
                 Image(systemName: "gearshape.fill")
+            }
+        }
+        ToolbarItem(placement: .topBarLeading) {
+            Button {
+                showArchive.toggle()
+            } label: {
+                Image(systemName: "archivebox\(showArchive ? ".fill" : "")")
+                    .fontWeight(.medium)
+            }
+        }
+        ToolbarItem(placement: .topBarTrailing) {
+            Button {
+                showSearch.toggle()
+            } label: {
+                Image(systemName: "magnifyingglass")
+                    .fontWeight(.medium)
             }
         }
         ToolbarItem(placement: .topBarTrailing) {
