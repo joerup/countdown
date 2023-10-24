@@ -26,15 +26,21 @@ struct CountdownEditor: View {
     
     var body: some View {
         HStack {
-            Button("", systemImage: "calendar") {
+            Button {
                 clock.pause {
                     editDestination.toggle()
                 }
+            } label: {
+                Image(systemName: "calendar")
+                    .padding(5)
             }
-            Button("", systemImage: "trash") {
+            Button {
                 clock.pause {
                     deleteCountdown.toggle()
                 }
+            } label: {
+                Image(systemName: "trash")
+                    .padding(5)
             }
             Spacer()
             Button {

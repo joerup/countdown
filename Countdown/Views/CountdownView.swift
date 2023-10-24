@@ -56,7 +56,7 @@ struct CountdownView: View {
                     headerButtons
                 }
         }
-        .searchable(text: $searchText, isPresented: $showSearch, placement: .sidebar)
+        .searchable(text: $searchText, isPresented: $showSearch, placement: .navigationBarDrawer)
         .opacity(selectedCountdown == nil ? 1 : 0)
         .overlay {
             if selectedCountdown != nil {

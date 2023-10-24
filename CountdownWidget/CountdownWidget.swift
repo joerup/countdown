@@ -25,9 +25,9 @@ struct CountdownWidget: Widget {
                         CountdownSquare(countdown: countdown)
                             .environmentObject(clock)
                     }
-                    .widgetURL(URL(string: "countdown:///\(countdown.id.uuidString)"))
+                    .widgetURL(URL(string: "countdown:///\(countdown.name)"))
             } else {
-                Text("Select a countdown")
+                Text("No countdowns")
                     .fontDesign(.rounded)
                     .fontWeight(.bold)
                     .multilineTextAlignment(.center)

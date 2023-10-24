@@ -20,29 +20,32 @@ struct CountdownGrid: View {
     @Binding var selectedCountdown: Countdown?
     
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: horizontalSizeClass == .compact ? 2 : 4)) {
-                ForEach(countdowns) { countdown in
-                    Button {
-                        UIImpactFeedbackGenerator().impactOccurred()
-                        clock.pause {
-                            self.selectedCountdown = countdown
-                        }
-                    } label: {
-                        CountdownSquare(countdown: countdown)
-                            .background(Color.blue.opacity(0.2))
-                            .clipShape(RoundedRectangle(cornerRadius: 20))
-                            .scrollTransition { content, phase in
-                                content
-                                    .scaleEffect(phase.isIdentity ? 1 : 0.9)
-                                    .blur(radius: phase.isIdentity ? 0 : 2)
+        GeometryReader { geometry in
+            ScrollView {
+                let columns = horizontalSizeClass == .compact ? 2 : Int(geometry.size.width/180)
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: columns)) {
+                    ForEach(countdowns) { countdown in
+                        Button {
+                            UIImpactFeedbackGenerator().impactOccurred()
+                            clock.pause {
+                                self.selectedCountdown = countdown
                             }
+                        } label: {
+                            CountdownSquare(countdown: countdown)
+                                .background(Color.blue.opacity(0.2))
+                                .clipShape(RoundedRectangle(cornerRadius: 20))
+                                .scrollTransition { content, phase in
+                                    content
+                                        .scaleEffect(phase.isIdentity ? 1 : 0.9)
+                                        .blur(radius: phase.isIdentity ? 0 : 2)
+                                }
+                        }
+                        .shadow(radius: 10)
+                        .padding(5)
                     }
-                    .shadow(radius: 10)
-                    .padding(5)
                 }
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
         }
     }
 }

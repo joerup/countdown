@@ -49,7 +49,7 @@ struct HolidayEditor: View {
                 }
             }
         }
-        .searchable(text: $search, prompt: "Search for holidays")
+        .searchable(text: $search, placement: .navigationBarDrawer, prompt: "Search for holidays")
         .onAppear {
             self.holiday = Holiday.get(name)
         }

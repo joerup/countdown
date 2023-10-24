@@ -33,7 +33,7 @@ struct CountdownCarousel: View {
     
     @State private var offset: CGSize = .zero
     private var offsetScale: CGFloat {
-        1 - min(offset.height/1000, 1)
+        1 - min(abs(offset.height)/1000, 1)
     }
     private var editingScale: CGFloat {
         editing ? 0.7 : 1

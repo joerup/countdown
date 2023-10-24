@@ -45,6 +45,7 @@ struct CountdownEntity: AppEntity, Identifiable, Hashable {
 
 struct CountdownEntityQuery: EntityQuery {
     
+    // get countdown corresponding to id
     @MainActor
     func entities(for identifiers: [CountdownEntity.ID]) async throws -> [CountdownEntity] {
         guard
@@ -57,6 +58,7 @@ struct CountdownEntityQuery: EntityQuery {
         return countdowns.sorted().map { CountdownEntity(from: $0) }
     }
     
+    // get list of countdowns to select from
     @MainActor
     func suggestedEntities() async throws -> [CountdownEntity] {
         guard

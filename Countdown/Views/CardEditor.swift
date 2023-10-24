@@ -32,22 +32,23 @@ struct CardEditor: View {
             iconButton("photo") {
                 editBackground.toggle()
             }
+            .confirmationDialog("Change background", isPresented: $editBackground) {
+                Button("Photo Library") { showPhotoLibrary.toggle() }
+                Button("Unsplash") { showUnsplashLibrary.toggle() }
+                Button("None") { card.setBackground(nil) }
+            } message: {
+                Text("Choose a new background")
+            }
+            
             iconButton("textformat") {
                 editText.toggle()
+            }
+            .sheet(isPresented: $editText) {
+                textEditor
             }
         }
         .padding(.horizontal)
         .tint(card.tintColor)
-        .popover(isPresented: $editText) {
-            textEditor
-        }
-        .confirmationDialog("Change background", isPresented: $editBackground) {
-            Button("Photo Library") { showPhotoLibrary.toggle() }
-            Button("Unsplash") { showUnsplashLibrary.toggle() }
-            Button("None") { card.setBackground(nil) }
-        } message: {
-            Text("Choose a new background")
-        }
         .photoMenu(isPresented: $showPhotoLibrary) {
             card.loadingBackground()
         } onReturn: { photo in
