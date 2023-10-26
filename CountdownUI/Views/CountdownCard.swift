@@ -1,6 +1,6 @@
 //
 //  CardView.swift
-//  CountdownTime
+//  CountdownUI
 //
 //  Created by Joe Rupertus on 5/6/23.
 //

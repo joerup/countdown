@@ -10,7 +10,7 @@ import SwiftData
 import CountdownData
 
 @main
-struct CountdownTimeApp: App {
+struct CountdownApp: App {
     
     var body: some Scene {
         WindowGroup {

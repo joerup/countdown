@@ -1,6 +1,6 @@
 //
 //  CountdownGrid.swift
-//  CountdownTime
+//  Countdown
 //
 //  Created by Joe Rupertus on 10/18/23.
 //
@@ -36,8 +36,8 @@ struct CountdownGrid: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 20))
                                 .scrollTransition { content, phase in
                                     content
-                                        .scaleEffect(phase.isIdentity ? 1 : 0.9)
-                                        .blur(radius: phase.isIdentity ? 0 : 2)
+                                        .scaleEffect(phase.isIdentity ? 1 : 0.8)
+                                        .blur(radius: phase.isIdentity ? 0 : 3)
                                 }
                         }
                         .shadow(radius: 10)

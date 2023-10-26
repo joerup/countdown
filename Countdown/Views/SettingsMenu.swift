@@ -1,6 +1,6 @@
 //
 //  SettingsMenu.swift
-//  CountdownTime
+//  Countdown
 //
 //  Created by Joe Rupertus on 10/15/23.
 //

@@ -1,6 +1,6 @@
 //
 //  Clock.swift
-// 
+//  CountdownData
 //
 //  Created by Joe Rupertus on 10/19/23.
 //

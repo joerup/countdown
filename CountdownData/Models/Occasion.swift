@@ -1,6 +1,6 @@
 //
 //  Occasion.swift
-//  CountdownTime
+//  CountdownData
 //
 //  Created by Joe Rupertus on 8/18/23.
 //

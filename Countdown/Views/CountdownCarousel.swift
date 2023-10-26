@@ -1,6 +1,6 @@
 //
 //  CountdownCarousel.swift
-//  CountdownTime
+//  Countdown
 //
 //  Created by Joe Rupertus on 10/18/23.
 //

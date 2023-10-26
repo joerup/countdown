@@ -1,6 +1,6 @@
 //
 //  DateEditor.swift
-//  CountdownTime
+//  Countdown
 //
 //  Created by Joe Rupertus on 8/1/23.
 //

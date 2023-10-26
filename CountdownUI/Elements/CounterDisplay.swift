@@ -1,6 +1,6 @@
 //
 //  CounterDisplay.swift
-//  CountdownTime
+//  CountdownUI
 //
 //  Created by Joe Rupertus on 7/30/23.
 //

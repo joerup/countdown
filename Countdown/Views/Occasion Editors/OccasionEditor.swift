@@ -1,6 +1,6 @@
 //
 //  OccasionEditor.swift
-//  CountdownTime
+//  Countdown
 //
 //  Created by Joe Rupertus on 7/20/23.
 //

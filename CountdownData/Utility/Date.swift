@@ -1,6 +1,6 @@
 //
 //  Date.swift
-//
+//  CountdownData
 //
 //  Created by Joe Rupertus on 10/19/23.
 //
@@ -11,7 +11,7 @@ public extension Date {
     
     var dateString: String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = timeIntervalSinceNow < 86400*365 ? "EEE MMM dd" : "EEE MMM dd YYYY"
+        dateFormatter.dateFormat = timeIntervalSinceNow < 86400*365 ? "EEE MMM d" : "EEE MMM d YYYY"
         return dateFormatter.string(from: self)
     }
     var timeString: String {

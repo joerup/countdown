@@ -1,6 +1,6 @@
 //
 //  PhotoMenu.swift
-//  CountdownTime
+//  Countdown
 //
 //  Created by Joe Rupertus on 7/22/23.
 //

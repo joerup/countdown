@@ -1,6 +1,6 @@
 //
 //  CountdownView.swift
-//  CountdownTime
+//  Countdown
 //
 //  Created by Joe Rupertus on 5/7/23.
 //

@@ -34,10 +34,10 @@ struct CountdownRoot: View {
         .onAppear {
             // Start the clock
             clock.start(countdowns: countdowns)
-        }
-        .onAppear {
+            
             // Schedule all notifications
             clock.scheduleNotifications(for: countdowns)
+            
             // Add cards to empty countdowns
             for countdown in countdowns {
                 if let cards = countdown.cards {

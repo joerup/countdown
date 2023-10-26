@@ -1,6 +1,6 @@
 //
 //  EventType.swift
-//  CountdownTime
+//  CountdownData
 //
 //  Created by Joe Rupertus on 7/21/23.
 //

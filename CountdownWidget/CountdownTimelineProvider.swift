@@ -1,6 +1,6 @@
 //
 //  CountdownTimelineProvider.swift
-//  CountdownWidgetExtension
+//  CountdownWidget
 //
 //  Created by Joe Rupertus on 8/7/23.
 //

@@ -1,6 +1,6 @@
 //
 //  Other.swift
-//  CountdownTime
+//  CountdownData
 //
 //  Created by Joe Rupertus on 5/6/23.
 //
@@ -37,7 +37,6 @@ public extension UIImage {
             data = minimum
             image = UIImage(data: minimum)
             while Double(data?.count ?? 0) > size {
-                print("looping \(data?.count ?? 0)")
                 image = image?.resized(withPercentage: 0.9)
                 data = image?.jpegData(compressionQuality: 0)
             }

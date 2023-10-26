@@ -1,6 +1,6 @@
 //
 //  BackgroundDisplay.swift
-//  CountdownTime
+//  CountdownUI
 //
 //  Created by Joe Rupertus on 8/8/23.
 //
@@ -15,6 +15,11 @@ public struct BackgroundDisplay: View {
     var countdown: Countdown
     var blurRadius: Double = 0
     
+    public init(countdown: Countdown, blurRadius: Double = 0) {
+        self.countdown = countdown
+        self.blurRadius = blurRadius
+    }
+    
     public var body: some View {
         Group {
             switch countdown.currentBackground {
@@ -24,7 +29,7 @@ public struct BackgroundDisplay: View {
                     .aspectRatio(contentMode: .fill)
                     .blur(radius: blurRadius)
             case .loading, nil:
-                Rectangle().fill(Constants.color)
+                Rectangle().fill(Color.init(red: 163/255, green: 55/255, blue: 68/255))
             }
         }
         .id(clock.tick)
