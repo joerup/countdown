@@ -82,6 +82,13 @@ struct CountdownRoot: View {
                 }
             }
         }
+        .onChange(of: clock.notifications) { _, active in
+            if active {
+                clock.scheduleNotifications(for: countdowns)
+            } else {
+                clock.unscheduleNotifications()
+            }
+        }
     }
     
     private var loadingScreen: some View {

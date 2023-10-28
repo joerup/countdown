@@ -12,6 +12,7 @@ struct SettingsMenu: View {
     
     @Environment(\.dismiss) var dismiss
     
+    @EnvironmentObject var clock: Clock
     @EnvironmentObject var premium: Premium
     
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
@@ -40,6 +41,9 @@ struct SettingsMenu: View {
                             PremiumView()
                         }
                     }
+                }
+                Section {
+                    Toggle("Notifications", isOn: $clock.notifications)
                 }
                 Section {
                     Link(destination: URL(string: "https://www.joerup.com/countdown")!) {

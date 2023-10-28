@@ -22,7 +22,7 @@ struct HolidayEditor: View {
         Holiday.all.sorted { $0.occasion.date < $1.occasion.date }
     }
     var filteredHolidays: [Holiday] {
-        sortedHolidays.filter { $0.name.lowercased().contains(search.lowercased()) }
+        sortedHolidays.filter { $0.name.lowercased().starts(with: search.lowercased()) } + sortedHolidays.filter { $0.name.lowercased().contains(search.lowercased()) && !$0.name.lowercased().starts(with: search.lowercased()) }
     }
     
     var body: some View {

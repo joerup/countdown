@@ -15,6 +15,8 @@ public final class Clock: ObservableObject {
     
     @Published public var active: Bool
     
+    @AppStorage("notifications") public var notifications: Bool = true
+    
     private var timer: Timer?
     
     private var times: [UUID : Double]
@@ -88,6 +90,7 @@ public final class Clock: ObservableObject {
     // MARK: Notifications
     
     public func scheduleNotifications(for countdowns: [Countdown]) {
+        guard notifications else { return }
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
             if success {
                 countdowns.forEach { self.scheduleNotification(for: $0) }
@@ -98,7 +101,7 @@ public final class Clock: ObservableObject {
     }
     
     public func scheduleNotification(for countdown: Countdown) {
-        guard countdown.isActive, let components = countdown.occasion.components else { return }
+        guard notifications, countdown.isActive, let components = countdown.occasion.components else { return }
         
         let content = UNMutableNotificationContent()
         content.title = countdown.displayName
@@ -116,5 +119,11 @@ public final class Clock: ObservableObject {
     
     public func unscheduleNotifications(for countdown: Countdown) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [countdown.id.uuidString])
+        print("Notification removed for \(countdown.name)")
+    }
+    
+    public func unscheduleNotifications() {
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        print("Notifications removed")
     }
 }

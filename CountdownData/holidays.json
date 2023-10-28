@@ -270,6 +270,17 @@
    }
 },
  {
+   "name": "Earth Day",
+   "displayName": "Earth Day",
+   "occasion": {
+      "annualDate": {
+         "calendar": "gregorian",
+         "month": 4,
+         "day": 22
+      }
+   }
+},
+ {
    "name": "Victoria Day (Canada)",
    "displayName": "Victoria Day",
    "occasion": {
