@@ -20,12 +20,12 @@ struct CountdownWidget: Widget {
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: CountdownWidgetIntent.self, provider: CountdownTimelineProvider()) { entry in
             if let countdown = entry.countdown {
-                CountdownDisplay(countdown: countdown)
+                Text("")
                     .containerBackground(for: .widget) {
-                        BackgroundDisplay(countdown: countdown)
+                        CountdownSquare(countdown: countdown)
+                            .environmentObject(clock)
                     }
-                    .environmentObject(clock)
-                    .widgetURL(URL(string: "countdown:///\(countdown.id.uuidString)"))
+                    .widgetURL(URL(string: "countdown:///\(countdown.name)"))
             } else {
                 Text("No countdowns")
                     .fontDesign(.rounded)
