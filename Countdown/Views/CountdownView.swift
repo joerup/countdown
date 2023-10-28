@@ -27,6 +27,8 @@ struct CountdownView: View {
         }
     }
     
+    @EnvironmentObject var premium: Premium
+    
     @Binding var selectedCountdown: Countdown?
     
     @State private var editing: Bool = false
@@ -34,6 +36,7 @@ struct CountdownView: View {
     @State private var showSettings: Bool = false
     @State private var showArchive: Bool = false
     @State private var showSearch: Bool = false
+    @State private var showPremium: Bool = false
     
     @State private var searchText: String = ""
     
@@ -41,7 +44,7 @@ struct CountdownView: View {
     
     var body: some View {
         NavigationStack {
-            CountdownGrid(countdowns: sortedCountdowns, selectedCountdown: $selectedCountdown)
+            CountdownGrid(countdowns: sortedCountdowns, selectedCountdown: $selectedCountdown, showArchive: showArchive)
                 .navigationBarTitleDisplayMode(.inline)
                 .overlay {
                     if sortedCountdowns.isEmpty {
@@ -72,6 +75,9 @@ struct CountdownView: View {
         }
         .sheet(isPresented: $showSettings) {
             SettingsMenu()
+        }
+        .sheet(isPresented: $showPremium) {
+            PremiumView()
         }
     }
     
@@ -106,15 +112,24 @@ struct CountdownView: View {
             }
         }
         ToolbarItem(placement: .topBarTrailing) {
-            Menu {
-                ForEach(EventType.allCases) { type in
-                    Button(type.displayName) {
-                        newCountdown = type
+            if premium.isActive || countdowns.filter({ $0.isActive }).count < 4 {
+                Menu {
+                    ForEach(EventType.allCases) { type in
+                        Button(type.displayName) {
+                            newCountdown = type
+                        }
                     }
+                } label: {
+                    Image(systemName: "plus")
+                        .fontWeight(.bold)
                 }
-            } label: {
-                Image(systemName: "plus")
-                    .fontWeight(.bold)
+            } else {
+                Button {
+                    showPremium.toggle()
+                } label: {
+                    Image(systemName: "plus")
+                        .fontWeight(.bold)
+                }
             }
         }
     }

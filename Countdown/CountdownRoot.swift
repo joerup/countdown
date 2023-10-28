@@ -19,6 +19,7 @@ struct CountdownRoot: View {
     @State private var selectedCountdown: Countdown?
     
     @StateObject private var clock: Clock = Clock()
+    @StateObject private var premium: Premium = Premium()
     
     @State private var isLoaded: Bool = false
     
@@ -31,6 +32,7 @@ struct CountdownRoot: View {
             }
         }
         .environmentObject(clock)
+        .environmentObject(premium)
         .onAppear {
             // Start the clock
             clock.start(countdowns: countdowns)
@@ -50,6 +52,8 @@ struct CountdownRoot: View {
             }
         }
         .task {
+            // Update premium
+            await premium.update()
             // Fetch countdown backgrounds
             for countdown in countdowns {
                 await countdown.fetchBackground()

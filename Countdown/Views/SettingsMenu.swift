@@ -6,18 +6,41 @@
 //
 
 import SwiftUI
+import CountdownData
 
 struct SettingsMenu: View {
     
     @Environment(\.dismiss) var dismiss
     
+    @EnvironmentObject var premium: Premium
+    
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     
     @State private var presentShare: Bool = false
+    @State private var presentStore: Bool = false
     
     var body: some View {
         NavigationStack {
             List {
+                Section {
+                    if premium.isActive {
+                        HStack {
+                            Text("Premium")
+                            Spacer()
+                            Text("Unlocked")
+                                .foregroundStyle(.secondary)
+                        }
+                    } else {
+                        Button {
+                            self.presentStore.toggle()
+                        } label: {
+                            row("Premium")
+                        }
+                        .sheet(isPresented: $presentStore) {
+                            PremiumView()
+                        }
+                    }
+                }
                 Section {
                     Link(destination: URL(string: "https://www.joerup.com/countdown")!) {
                         row("Website")
@@ -32,7 +55,7 @@ struct SettingsMenu: View {
                 
                 Section {
                     Button {
-                        UIApplication.shared.open(URL(string: "")!, options: [:], completionHandler: nil)
+                        UIApplication.shared.open(URL(string: "https://apps.apple.com/app/id6469441334?action=write-review")!, options: [:], completionHandler: nil)
                     } label: {
                         row("Rate the App")
                     }
@@ -41,9 +64,9 @@ struct SettingsMenu: View {
                     } label: {
                         row("Share the App")
                     }
-                    .sheet(isPresented: self.$presentShare, content: {
-                        ActivityViewController(activityItems: [URL(string: "")!])
-                    })
+                    .sheet(isPresented: $presentShare) {
+                        ActivityViewController(activityItems: [URL(string: "https://apps.apple.com/us/app/countdown-creator/id6469441334/")!])
+                    }
                 }
                 
                 Section {
