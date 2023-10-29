@@ -24,10 +24,6 @@ struct CountdownGrid: View {
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
-                if showArchive {
-                    Text("Past Countdowns")
-                        .font(.system(.body, design: .rounded, weight: .semibold))
-                }
                 let columns = horizontalSizeClass == .compact ? 2 : Int(geometry.size.width/180)
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: columns)) {
                     ForEach(countdowns) { countdown in

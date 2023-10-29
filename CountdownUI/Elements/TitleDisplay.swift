@@ -33,30 +33,28 @@ public struct TitleDisplay: View {
         .environment(\.colorScheme, .light)
     }
     
+    @ViewBuilder
     private func title() -> some View {
-        ZStack {
-            if let tintColor = countdown.card?.tintColor {
-                Text("\(countdown.displayName)")
-                    .font(.system(size: size))
-                    .fontWeight(.bold)
-                    .fontDesign(.rounded)
-                    .foregroundStyle(tintColor)
-                    .lineLimit(2)
-                    .multilineTextAlignment(alignment == .leading ? .leading : .center)
-            }
+        if let tintColor = countdown.card?.tintColor {
+            Text("\(countdown.displayName)")
+                .font(.system(size: size))
+                .fontWeight(.bold)
+                .fontDesign(.rounded)
+                .foregroundStyle(tintColor)
+                .lineLimit(2)
+                .multilineTextAlignment(alignment == .leading ? .leading : .center)
         }
     }
     
+    @ViewBuilder
     private func date() -> some View {
-        ZStack {
-            if let tintColor = countdown.card?.tintColor {
-                Text("\(countdown.date.dateString)\(countdown.occasion.includeTime ? " \(countdown.date.timeString)" : "")")
-                    .textCase(.uppercase)
-                    .font(.system(size: size*0.6))
-                    .fontWeight(.medium)
-                    .fontWidth(.condensed)
-                    .foregroundStyle(tintColor)
-            }
+        if let tintColor = countdown.card?.tintColor {
+            Text("\(countdown.date.dateString)\(countdown.occasion.includeTime ? " \(countdown.date.timeString)" : "")")
+                .textCase(.uppercase)
+                .font(.system(size: size*0.6))
+                .fontWeight(.medium)
+                .fontWidth(.condensed)
+                .foregroundStyle(tintColor)
         }
     }
 }

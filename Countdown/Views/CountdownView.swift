@@ -96,8 +96,11 @@ struct CountdownView: View {
             }
         }
         ToolbarItem(placement: .topBarLeading) {
-            Button {
-                showArchive.toggle()
+            Menu {
+                Picker("", selection: $showArchive) {
+                    Text("Upcoming").tag(false)
+                    Text("Archive").tag(true)
+                }
             } label: {
                 Image(systemName: "archivebox\(showArchive ? ".fill" : "")")
                     .fontWeight(.medium)
