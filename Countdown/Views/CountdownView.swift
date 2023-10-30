@@ -101,6 +101,9 @@ struct CountdownView: View {
                     Text("Upcoming").tag(false)
                     Text("Archive").tag(true)
                 }
+                .onChange(of: showArchive) { _, _ in
+                    UIImpactFeedbackGenerator().impactOccurred()
+                }
             } label: {
                 Image(systemName: "archivebox\(showArchive ? ".fill" : "")")
                     .fontWeight(.medium)

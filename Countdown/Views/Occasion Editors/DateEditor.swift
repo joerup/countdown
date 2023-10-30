@@ -59,6 +59,9 @@ struct DateEditor: View {
         .onChange(of: time) { _, time in
             setDate(date: date, time: time)
         }
+        .onChange(of: includeTime) { _, _ in
+            setDate(date: date, time: time)
+        }
         .onChange(of: repeatAnnually) { _, _ in
             setDate(date: date, time: time)
         }
