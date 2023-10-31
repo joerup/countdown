@@ -12,6 +12,7 @@
 		014FCD332AE48FB300C56FAF /* CardEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 014FCD322AE48FB300C56FAF /* CardEditor.swift */; };
 		014FCD352AE4AA2300C56FAF /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 014FCD342AE4AA2300C56FAF /* ConfettiSwiftUI */; };
 		015148372AED8E5300430189 /* PremiumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015148362AED8E5300430189 /* PremiumView.swift */; };
+		015148432AF0B58900430189 /* CountdownWidgetContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015148422AF0B54D00430189 /* CountdownWidgetContainer.swift */; };
 		0157B7D52A8758D2007CF704 /* CountdownRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0157B7D42A8758D2007CF704 /* CountdownRoot.swift */; };
 		015DD3C02A774807000EB3C0 /* CountdownApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015DD3BF2A774807000EB3C0 /* CountdownApp.swift */; };
 		015DD3C42A774809000EB3C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 015DD3C32A774809000EB3C0 /* Assets.xcassets */; };
@@ -70,6 +71,7 @@
 		013D84F52A820A0000A8DE1A /* CountdownWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CountdownWidgetExtension.entitlements; sourceTree = "<group>"; };
 		014FCD322AE48FB300C56FAF /* CardEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardEditor.swift; sourceTree = "<group>"; };
 		015148362AED8E5300430189 /* PremiumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumView.swift; sourceTree = "<group>"; };
+		015148422AF0B54D00430189 /* CountdownWidgetContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownWidgetContainer.swift; sourceTree = "<group>"; };
 		0157B7D42A8758D2007CF704 /* CountdownRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownRoot.swift; sourceTree = "<group>"; };
 		015DD3BC2A774807000EB3C0 /* Countdown.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Countdown.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		015DD3BF2A774807000EB3C0 /* CountdownApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownApp.swift; sourceTree = "<group>"; };
@@ -225,6 +227,7 @@
 				01B31ACD2A81E82C00002F15 /* CountdownWidgetIntent.swift */,
 				01B31ACF2A81E86600002F15 /* CountdownTimelineProvider.swift */,
 				01B31AB82A81D0D100002F15 /* CountdownWidget.swift */,
+				015148422AF0B54D00430189 /* CountdownWidgetContainer.swift */,
 				01B31ABA2A81D0D400002F15 /* Assets.xcassets */,
 				013D84F52A820A0000A8DE1A /* CountdownWidgetExtension.entitlements */,
 				01B31ABC2A81D0D400002F15 /* Info.plist */,
@@ -371,6 +374,7 @@
 			files = (
 				01B31AB72A81D0D100002F15 /* CountdownWidgetBundle.swift in Sources */,
 				013D84E72A8204A400A8DE1A /* CountdownTimelineProvider.swift in Sources */,
+				015148432AF0B58900430189 /* CountdownWidgetContainer.swift in Sources */,
 				01B31AB92A81D0D100002F15 /* CountdownWidget.swift in Sources */,
 				013D84EA2A82052A00A8DE1A /* CountdownWidgetIntent.swift in Sources */,
 			);
@@ -515,7 +519,7 @@
 				CODE_SIGN_ENTITLEMENTS = Countdown/Countdown.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_ASSET_PATHS = "\"Countdown/Preview Content\"";
 				DEVELOPMENT_TEAM = 52RCCS37U6;
 				ENABLE_PREVIEWS = YES;
@@ -552,7 +556,7 @@
 				CODE_SIGN_ENTITLEMENTS = Countdown/Countdown.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_ASSET_PATHS = "\"Countdown/Preview Content\"";
 				DEVELOPMENT_TEAM = 52RCCS37U6;
 				ENABLE_PREVIEWS = YES;
@@ -587,7 +591,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = CountdownWidget/CountdownWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = 52RCCS37U6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CountdownWidget/Info.plist;
@@ -614,7 +618,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = CountdownWidget/CountdownWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = 52RCCS37U6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CountdownWidget/Info.plist;

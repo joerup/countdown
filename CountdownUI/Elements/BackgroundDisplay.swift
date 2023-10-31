@@ -13,10 +13,12 @@ public struct BackgroundDisplay: View {
     @EnvironmentObject private var clock: Clock
     
     var countdown: Countdown
+    var card: Card?
     var blurRadius: Double = 0
     
-    public init(countdown: Countdown, blurRadius: Double = 0) {
+    public init(countdown: Countdown, card: Card? = nil, blurRadius: Double = 0) {
         self.countdown = countdown
+        self.card = card ?? countdown.card
         self.blurRadius = blurRadius
     }
     
@@ -33,7 +35,7 @@ public struct BackgroundDisplay: View {
             }
         }
         .id(clock.tick)
-        .onChange(of: countdown.card?.backgroundData) { _, _ in
+        .onChange(of: card?.backgroundData) { _, _ in
             Task {
                 await countdown.fetchBackground()
             }

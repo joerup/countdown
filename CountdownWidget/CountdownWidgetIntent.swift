@@ -48,9 +48,7 @@ struct CountdownEntityQuery: EntityQuery {
     // get countdown corresponding to id
     @MainActor
     func entities(for identifiers: [CountdownEntity.ID]) async throws -> [CountdownEntity] {
-        guard
-            let modelContainer = try? ModelContainer(for: Countdown.self),
-            let countdowns = try? modelContainer.mainContext.fetch(FetchDescriptor<Countdown>(predicate: #Predicate { identifiers.contains($0.id) }))
+        guard let countdowns = try? sharedModelContainer.mainContext.fetch(FetchDescriptor<Countdown>(predicate: #Predicate { identifiers.contains($0.id) }))
         else {
             print("Failed to get countdowns")
             return []
@@ -61,9 +59,7 @@ struct CountdownEntityQuery: EntityQuery {
     // get list of countdowns to select from
     @MainActor
     func suggestedEntities() async throws -> [CountdownEntity] {
-        guard
-            let modelContainer = try? ModelContainer(for: Countdown.self),
-            let countdowns = try? modelContainer.mainContext.fetch(FetchDescriptor<Countdown>())
+        guard let countdowns = try? sharedModelContainer.mainContext.fetch(FetchDescriptor<Countdown>())
         else {
             print("Failed to get countdowns")
             return []

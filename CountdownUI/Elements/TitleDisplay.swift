@@ -13,12 +13,14 @@ public struct TitleDisplay: View {
     @EnvironmentObject private var clock: Clock
     
     var countdown: Countdown
+    var card: Card?
     
     var size: CGFloat
     var alignment: HorizontalAlignment
     
-    public init(countdown: Countdown, size: CGFloat, alignment: HorizontalAlignment = .center) {
+    public init(countdown: Countdown, card: Card? = nil, size: CGFloat, alignment: HorizontalAlignment = .center) {
         self.countdown = countdown
+        self.card = card ?? countdown.card
         self.size = size
         self.alignment = alignment
     }
@@ -35,7 +37,7 @@ public struct TitleDisplay: View {
     
     @ViewBuilder
     private func title() -> some View {
-        if let tintColor = countdown.card?.tintColor {
+        if let tintColor = card?.tintColor {
             Text("\(countdown.displayName)")
                 .font(.system(size: size))
                 .fontWeight(.bold)
@@ -48,7 +50,7 @@ public struct TitleDisplay: View {
     
     @ViewBuilder
     private func date() -> some View {
-        if let tintColor = countdown.card?.tintColor {
+        if let tintColor = card?.tintColor {
             Text("\(countdown.date.dateString)\(countdown.occasion.includeTime ? " \(countdown.date.timeString)" : "")")
                 .textCase(.uppercase)
                 .font(.system(size: size*0.6))

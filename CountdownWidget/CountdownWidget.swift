@@ -10,19 +10,20 @@ import SwiftUI
 import AppIntents
 import CountdownData
 import CountdownUI
+import SwiftData
 
 struct CountdownWidget: Widget {
      
     let kind: String = "CountdownWidget"
     
     @State private var clock: Clock = Clock()
-
+    
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: CountdownWidgetIntent.self, provider: CountdownTimelineProvider()) { entry in
-            if let countdown = entry.countdown {
+            if let countdown = entry.countdown, let card = entry.card {
                 Text("")
                     .containerBackground(for: .widget) {
-                        CountdownSquare(countdown: countdown)
+                        CountdownSquare(countdown: countdown, card: card)
                             .environmentObject(clock)
                     }
                     .widgetURL(URL(string: "countdown:///\(countdown.name)"))
