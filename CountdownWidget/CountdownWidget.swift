@@ -20,10 +20,10 @@ struct CountdownWidget: Widget {
     
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: CountdownWidgetIntent.self, provider: CountdownTimelineProvider()) { entry in
-            if let countdown = entry.countdown, let card = entry.card {
+            if let countdown = entry.countdown {
                 Text("")
                     .containerBackground(for: .widget) {
-                        CountdownSquare(countdown: countdown, card: card)
+                        CountdownSquare(countdown: countdown)
                             .environmentObject(clock)
                     }
                     .widgetURL(URL(string: "countdown:///\(countdown.name)"))

@@ -13,14 +13,12 @@ public struct CounterDisplay: View {
     @EnvironmentObject private var clock: Clock
     
     var countdown: Countdown
-    var card: Card?
     
     var type: DisplayType
     var size: CGFloat
     
-    public init(countdown: Countdown, card: Card? = nil, type: DisplayType = .days, size: CGFloat) {
+    public init(countdown: Countdown, type: DisplayType = .days, size: CGFloat) {
         self.countdown = countdown
-        self.card = card ?? countdown.card
         self.type = type
         self.size = size
     }

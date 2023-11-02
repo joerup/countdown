@@ -36,25 +36,16 @@ struct CountdownTimelineProvider: AppIntentTimelineProvider {
         return countdown
     }
     
-    // get the countdown card
-    @MainActor
-    func card(for countdown: Countdown) async -> Card? {
-        guard let cards = (try? sharedModelContainer.mainContext.fetch(FetchDescriptor<Card>())) else { return nil }
-        return cards.first(where: { $0.countdown == countdown })
-    }
-    
     // placeholder while the widget loads
     func placeholder(in context: Context) -> Entry {
-        let countdown = Countdown(name: "Test", date: .now)
-        return CountdownWidgetEntry(date: .now, countdown: countdown)
+        return CountdownWidgetEntry(date: .now)
     }
     
     // snapshot displayed in the widget selection menu
     @MainActor
     func snapshot(for configuration: CountdownWidgetIntent, in context: Context) async -> Entry {
         guard let countdown = await firstCountdown() else { return .empty }
-        let card = await card(for: countdown)
-        return CountdownWidgetEntry(date: .now, countdown: countdown, card: card)
+        return CountdownWidgetEntry(date: .now, countdown: countdown)
     }
     
     // the timeline of updates to the countdown
@@ -64,15 +55,13 @@ struct CountdownTimelineProvider: AppIntentTimelineProvider {
         let countdowns = await countdowns(for: configuration)
         // return the correct countdown
         if let countdown = countdowns.first {
-            let card = await card(for: countdown)
-            let entry = CountdownWidgetEntry(date: .tomorrow.midnight, countdown: countdown, card: card)
+            let entry = CountdownWidgetEntry(date: .tomorrow.midnight, countdown: countdown)
             return Timeline(entries: [entry], policy: .atEnd)
         } 
         // return a default first countdown
         else if let countdown = await firstCountdown() {
-            let card = await card(for: countdown)
-            let entry = CountdownWidgetEntry(date: .tomorrow.midnight, countdown: countdown, card: card)
-            return Timeline(entries: [entry], policy: .never)
+            let entry = CountdownWidgetEntry(date: .tomorrow.midnight, countdown: countdown)
+            return Timeline(entries: [entry], policy: .atEnd)
         }
         return Timeline(entries: [.empty], policy: .never)
     }
@@ -81,7 +70,6 @@ struct CountdownTimelineProvider: AppIntentTimelineProvider {
 struct CountdownWidgetEntry: TimelineEntry {
     var date: Date
     var countdown: Countdown?
-    var card: Card?
     
     static var empty: Self {
         Self(date: .now)

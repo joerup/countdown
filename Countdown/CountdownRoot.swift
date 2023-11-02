@@ -8,11 +8,13 @@
 import SwiftUI
 import SwiftData
 import CountdownData
-import CoreData
+import WidgetKit
 
 struct CountdownRoot: View {
     
     @Environment(\.modelContext) private var modelContext
+    
+    @Environment(\.scenePhase) var scenePhase
     
     @Query private var countdowns: [Countdown]
     
@@ -67,6 +69,9 @@ struct CountdownRoot: View {
             if let countdown = countdowns.first(where: { $0.id.uuidString == url.lastPathComponent }) {
                 selectedCountdown = countdown
             }
+        }
+        .onChange(of: scenePhase) {
+            WidgetCenter.shared.reloadAllTimelines()
         }
         .onChange(of: selectedCountdown) { oldCountdown, newCountdown in
             // Set the background timer
