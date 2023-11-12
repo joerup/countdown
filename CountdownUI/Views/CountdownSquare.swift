@@ -24,6 +24,7 @@ public struct CountdownSquare: View {
                 HStack(alignment: .bottom) {
                     Spacer()
                     CounterDisplay(countdown: countdown, size: geometry.size.height*0.5)
+                        .padding(.trailing, 3)
                 }
                 .frame(height: geometry.size.height*0.5)
             }

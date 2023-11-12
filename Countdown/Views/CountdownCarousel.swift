@@ -120,6 +120,7 @@ struct CountdownCarousel: View {
                             .frame(width: 10)
                         }
                     }
+                    .padding(.bottom, 5)
                 }
             }
             .frame(maxHeight: .infinity)

@@ -37,6 +37,7 @@ public struct CounterDisplay: View {
                 switch type {
                 case .days:
                     number(daysRemaining, size: fit(daysRemaining))
+                        .frame(height: size)
                 case .full:
                     VStack(spacing: 0) {
                         number(daysRemaining, size: fit(daysRemaining))
@@ -85,12 +86,13 @@ public struct CounterDisplay: View {
                     .fontWeight(textStyle.weight)
                     .fontWidth(textStyle.width)
                     .foregroundStyle(tintColor)
+                    .minimumScaleFactor(0.5)
                     .monospacedDigit()
                 ZStack {
                     Text(unit).foregroundStyle(tintColor)
-                    Text(unit).foregroundStyle(.thinMaterial)
+                    Text(unit).foregroundStyle(.thinMaterial.opacity(0.5))
                 }
-                .font(.system(size: size*5/6))
+                .font(.system(size: (textStyle.width == .expanded ? size*0.8 : size)*5/6))
                 .fontDesign(textStyle.design)
                 .fontWeight(textStyle.weight)
                 .fontWidth(textStyle.width)

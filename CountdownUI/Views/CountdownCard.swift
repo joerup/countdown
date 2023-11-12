@@ -23,7 +23,7 @@ public struct CountdownCard: View {
             VStack {
                 TitleDisplay(countdown: countdown, size: 40)
                 Spacer()
-                CounterDisplay(countdown: countdown, type: .full, size: 160)
+                CounterDisplay(countdown: countdown, type: .full, size: 150)
             }
             .padding(.bottom, 50)
             .padding(.top, 80)
