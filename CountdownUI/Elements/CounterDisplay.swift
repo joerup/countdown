@@ -36,17 +36,15 @@ public struct CounterDisplay: View {
                 let componentsRemaining = clock.componentsRemaining(for: countdown)
                 switch type {
                 case .days:
-                    number(daysRemaining, size: size * (1-CGFloat(String(daysRemaining).count)/10))
+                    number(daysRemaining, size: fit(daysRemaining))
                 case .full:
-                    VStack {
-                        number(componentsRemaining.day, size: size * (1-CGFloat(String(componentsRemaining.day ?? 0).count)/10))
-                        ZStack {
-                            numberUnit(componentsRemaining.second, unit: "s", size: smaller(ignoreWidth: true)).opacity(0)
-                            HStack {
-                                numberUnit(componentsRemaining.hour, unit: "h", size: smaller())
-                                numberUnit(componentsRemaining.minute, unit: "m", size: smaller())
-                                numberUnit(componentsRemaining.second, unit: "s", size: smaller())
-                            }
+                    VStack(spacing: 0) {
+                        number(daysRemaining, size: fit(daysRemaining))
+                        HStack {
+                            numberUnit(componentsRemaining.day, unit: "d", size: smaller)
+                            numberUnit(componentsRemaining.hour, unit: "h", size: smaller)
+                            numberUnit(componentsRemaining.minute, unit: "m", size: smaller)
+                            numberUnit(componentsRemaining.second, unit: "s", size: smaller)
                         }
                         .blur(radius: clock.active ? 0 : 3)
                     }
@@ -58,18 +56,18 @@ public struct CounterDisplay: View {
         }
     }
     
-    private func smaller(ignoreWidth: Bool = false) -> CGFloat {
-        return (countdown.card?.textStyle.width == .expanded && !ignoreWidth ? size*0.85 : size) * 0.3
+    private var smaller: CGFloat {
+        return size * 0.25
     }
-    private func medium(ignoreWidth: Bool = false) -> CGFloat {
-        return (countdown.card?.textStyle.width == .expanded && !ignoreWidth ? size*0.85 : size) * 0.4
+    private func fit(_ number: Int) -> CGFloat {
+        return size * (1-CGFloat(String(number).count)/10)
     }
     
     @ViewBuilder
     private func number(_ value: Int?, size: CGFloat) -> some View {
         if let value, let tintColor = countdown.card?.tintColor, let textStyle = countdown.card?.textStyle {
             Text(String(value))
-                .font(.system(size: size))
+                .font(.system(size: textStyle.width == .expanded ? size*0.9 : size))
                 .fontDesign(textStyle.design)
                 .fontWeight(textStyle.weight)
                 .fontWidth(textStyle.width)
@@ -82,7 +80,7 @@ public struct CounterDisplay: View {
         HStack(alignment: .firstTextBaseline, spacing: 1) {
             if let value, let tintColor = countdown.card?.tintColor, let textStyle = countdown.card?.textStyle {
                 Text(String(format: "%02i", abs(value)))
-                    .font(.system(size: size))
+                    .font(.system(size: textStyle.width == .expanded ? size*0.8 : size))
                     .fontDesign(textStyle.design)
                     .fontWeight(textStyle.weight)
                     .fontWidth(textStyle.width)
@@ -92,12 +90,14 @@ public struct CounterDisplay: View {
                     Text(unit).foregroundStyle(tintColor)
                     Text(unit).foregroundStyle(.thinMaterial)
                 }
-                .font(.system(size: size*5/6, weight: .semibold))
+                .font(.system(size: size*5/6))
                 .fontDesign(textStyle.design)
                 .fontWeight(textStyle.weight)
                 .fontWidth(textStyle.width)
+                .fontWidth(.condensed)
             }
         }
+        .frame(height: size*1.2)
     }
 }
 

@@ -144,8 +144,8 @@
    }
 },
  {
-   "name": "Eid Al-Fitr",
-   "displayName": "Eid Al-Fitr",
+   "name": "Eid al-Fitr",
+   "displayName": "Eid al-Fitr",
    "occasion": {
       "annualDate": {
          "calendar": "islamic",
@@ -155,8 +155,8 @@
    }
 },
  {
-   "name": "Eid Al-Adha",
-   "displayName": "Eid Al-Adha",
+   "name": "Eid al-Adha",
+   "displayName": "Eid al-Adha",
    "occasion": {
       "annualDate": {
          "calendar": "islamic",

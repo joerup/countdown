@@ -56,6 +56,8 @@ struct CountdownRoot: View {
         .task {
             // Update premium
             await premium.update()
+        }
+        .task {
             // Fetch countdown backgrounds
             for countdown in countdowns {
                 await countdown.fetchBackground()
