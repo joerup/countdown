@@ -34,6 +34,9 @@ struct CountdownGrid: View {
                             }
                         } label: {
                             CountdownSquare(countdown: countdown)
+                                .cornerRadius(20)
+                                .aspectRatio(1.0, contentMode: .fill)
+                                .frame(maxWidth: 200)
                                 .background(Color.blue.opacity(0.2))
                                 .clipShape(RoundedRectangle(cornerRadius: 20))
                                 .scrollTransition { content, phase in

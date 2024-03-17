@@ -17,6 +17,13 @@ public struct CounterDisplay: View {
     var type: DisplayType
     var size: CGFloat
     
+    var tintColor: Color {
+        countdown.card?.tintColor ?? .white
+    }
+    var textStyle: Card.TextStyle {
+        countdown.card?.textStyle ?? .standard
+    }
+    
     public init(countdown: Countdown, type: DisplayType = .days, size: CGFloat) {
         self.countdown = countdown
         self.type = type
@@ -54,6 +61,7 @@ public struct CounterDisplay: View {
             .foregroundStyle(.thickMaterial)
             .id(clock.tick)
             .environment(\.colorScheme, .light)
+            .shadow(radius: 10)
         }
     }
     
@@ -66,7 +74,7 @@ public struct CounterDisplay: View {
     
     @ViewBuilder
     private func number(_ value: Int?, size: CGFloat) -> some View {
-        if let value, let tintColor = countdown.card?.tintColor, let textStyle = countdown.card?.textStyle {
+        if let value {
             Text(String(value))
                 .font(.system(size: textStyle.width == .expanded ? size*0.9 : size))
                 .fontDesign(textStyle.design)
@@ -79,7 +87,7 @@ public struct CounterDisplay: View {
     
     private func numberUnit(_ value: Int?, unit: String, size: CGFloat) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 1) {
-            if let value, let tintColor = countdown.card?.tintColor, let textStyle = countdown.card?.textStyle {
+            if let value {
                 Text(String(format: "%02i", abs(value)))
                     .font(.system(size: textStyle.width == .expanded ? size*0.8 : size))
                     .fontDesign(textStyle.design)

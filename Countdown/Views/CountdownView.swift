@@ -15,6 +15,9 @@ struct CountdownView: View {
     
     @Environment(\.modelContext) private var modelContext
     
+    @Environment(\.requestReview) private var requestReview
+    @AppStorage("reviewOpens") private var reviewOpens: Int = 0
+    
     var countdowns: [Countdown]
     var sortedCountdowns: [Countdown] {
         if !searchText.isEmpty {
@@ -78,6 +81,18 @@ struct CountdownView: View {
         }
         .sheet(isPresented: $showPremium) {
             PremiumView()
+        }
+        .onAppear {
+            if !premium.isActive, Int.random(in: 1...5) == 5 {
+                showPremium = true
+            }
+            else {
+                reviewOpens += 1
+                if reviewOpens >= 7 {
+                    requestReview()
+                    reviewOpens = 0
+                }
+            }
         }
     }
     

@@ -17,6 +17,10 @@ public struct TitleDisplay: View {
     var size: CGFloat
     var alignment: HorizontalAlignment
     
+    var tintColor: Color {
+        countdown.card?.tintColor ?? .white
+    }
+    
     public init(countdown: Countdown, size: CGFloat, alignment: HorizontalAlignment = .center) {
         self.countdown = countdown
         self.size = size
@@ -31,31 +35,28 @@ public struct TitleDisplay: View {
         }
         .id(clock.tick)
         .environment(\.colorScheme, .light)
+        .shadow(radius: 10)
     }
     
     @ViewBuilder
     private func title() -> some View {
-        if let tintColor = countdown.card?.tintColor {
-            Text("\(countdown.displayName)")
-                .font(.system(size: size))
-                .fontWeight(.bold)
-                .fontDesign(.rounded)
-                .foregroundStyle(tintColor)
-                .lineLimit(2)
-                .multilineTextAlignment(alignment == .leading ? .leading : .center)
-        }
+        Text("\(countdown.displayName)")
+            .font(.system(size: size))
+            .fontWeight(.bold)
+            .fontDesign(.rounded)
+            .foregroundStyle(tintColor)
+            .lineLimit(2)
+            .multilineTextAlignment(alignment == .leading ? .leading : .center)
     }
     
     @ViewBuilder
     private func date() -> some View {
-        if let tintColor = countdown.card?.tintColor {
-            Text("\(countdown.date.dateString)\(countdown.occasion.includeTime ? " \(countdown.date.timeString)" : "")")
-                .textCase(.uppercase)
-                .font(.system(size: size*0.6))
-                .fontWeight(.medium)
-                .fontWidth(.condensed)
-                .foregroundStyle(tintColor)
-        }
+        Text("\(countdown.date.dateString)\(countdown.occasion.includeTime ? " \(countdown.date.timeString)" : "")")
+            .textCase(.uppercase)
+            .font(.system(size: size*0.6))
+            .fontWeight(.medium)
+            .fontWidth(.condensed)
+            .foregroundStyle(tintColor)
     }
 }
 
