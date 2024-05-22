@@ -31,7 +31,7 @@ public struct CountdownCard: View {
             .frame(width: geometry.size.width)
 //            .confettiCannon(counter: 1, num: 100, rainHeight: 1000, openingAngle: .zero, closingAngle: .radians(2 * .pi))
             .background {
-                BackgroundDisplay(countdown: countdown)
+                BackgroundDisplay(countdown: countdown, icon: false)
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 1.0)) {
                             countdown.cycleCards()

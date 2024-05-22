@@ -100,7 +100,6 @@ struct CountdownView: View {
     private var headerButtons: some ToolbarContent {
         ToolbarItem(placement: .principal) {
             Text("Countdowns")
-                .fontDesign(.rounded)
                 .fontWeight(.bold)
         }
         ToolbarItem(placement: .topBarLeading) {

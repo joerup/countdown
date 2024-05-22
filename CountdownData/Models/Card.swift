@@ -14,20 +14,23 @@ public final class Card {
     
     public var countdown: Countdown?
     
-    @Attribute(.externalStorage) public var backgroundData: BackgroundData?
+    @Attribute(.externalStorage) public private(set) var backgroundData: BackgroundData?
     
     private var tint: [Double] = Color.white.rgb
     public var tintColor: Color {
-        return Color(rgb: tint)
+        get { Color(rgb: tint) }
+        set { self.tint = newValue.rgb }
     }
     
     public var textStyle: TextStyle = TextStyle.standard
+    
     public var textShadow: Double = 0
     
     public init() { }
     
     public func loadingBackground() {
         countdown?.currentBackground = .loading
+        countdown?.currentBackgroundIcon = .loading
     }
     public func setBackground(_ data: BackgroundData?) {
         self.backgroundData = data
@@ -35,8 +38,8 @@ public final class Card {
     public func getBackground() async -> Background? {
         return await backgroundData?.background()
     }
-    public func setTintColor(_ color: Color) {
-        self.tint = color.rgb
+    public func getBackgroundIcon() async -> Background? {
+        return await backgroundData?.icon()
     }
 }
 

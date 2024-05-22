@@ -13,16 +13,22 @@ public struct BackgroundDisplay: View {
     @EnvironmentObject private var clock: Clock
     
     var countdown: Countdown
+    var icon: Bool
     var blurRadius: Double = 0
     
-    public init(countdown: Countdown, blurRadius: Double = 0) {
+    var background: Card.Background? {
+        icon ? countdown.currentBackgroundIcon : countdown.currentBackground
+    }
+    
+    public init(countdown: Countdown, icon: Bool, blurRadius: Double = 0) {
         self.countdown = countdown
+        self.icon = icon
         self.blurRadius = blurRadius
     }
     
     public var body: some View {
         Group {
-            switch countdown.currentBackground {
+            switch background {
             case .photo(let photo):
                 Image(uiImage: photo)
                     .resizable()
@@ -32,7 +38,6 @@ public struct BackgroundDisplay: View {
                 Rectangle().fill(Color.init(red: 163/255, green: 55/255, blue: 68/255))
             }
         }
-        .id(clock.tick)
         .onChange(of: countdown.card?.backgroundData) { _, _ in
             Task {
                 await countdown.fetchBackground()

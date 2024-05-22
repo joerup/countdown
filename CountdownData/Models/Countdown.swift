@@ -47,6 +47,7 @@ public final class Countdown {
     
     @Relationship(deleteRule: .cascade, inverse: \Card.countdown) public var cards: [Card]?
     @Transient public var currentBackground: Card.Background? = nil
+    @Transient public var currentBackgroundIcon: Card.Background? = nil
     public var card: Card? {
         return cards?.first
     }
@@ -101,7 +102,9 @@ public final class Countdown {
     }
     
     public func fetchBackground() async {
+        currentBackgroundIcon = .loading
         currentBackground = .loading
+        currentBackgroundIcon = await card?.getBackgroundIcon()
         currentBackground = await card?.getBackground()
     }
 }

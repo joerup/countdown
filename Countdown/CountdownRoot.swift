@@ -103,7 +103,7 @@ struct CountdownRoot: View {
             ProgressView()
                 .padding()
             Text("Loading Countdowns")
-                .font(.system(.body, design: .rounded, weight: .semibold))
+                .fontWeight(.semibold)
                 .multilineTextAlignment(.center)
         }
     }

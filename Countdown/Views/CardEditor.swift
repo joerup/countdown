@@ -43,7 +43,7 @@ struct CardEditor: View {
             iconButton("textformat") {
                 editText.toggle()
             }
-            .sheet(isPresented: $editText) {
+            .popover(isPresented: $editText) {
                 textEditor
             }
         }
@@ -66,7 +66,7 @@ struct CardEditor: View {
             textStyle = card.textStyle
         }
         .onChange(of: tintColor) { _, color in
-            card.setTintColor(color)
+            card.tintColor = color
         }
         .onChange(of: textStyle) { _, style in
             card.textStyle = style

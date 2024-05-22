@@ -33,7 +33,6 @@ public struct TitleDisplay: View {
             date()
             Spacer(minLength: 0)
         }
-        .id(clock.tick)
         .environment(\.colorScheme, .light)
         .shadow(radius: 10)
     }

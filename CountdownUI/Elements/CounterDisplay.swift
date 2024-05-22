@@ -59,7 +59,6 @@ public struct CounterDisplay: View {
                 }
             }
             .foregroundStyle(.thickMaterial)
-            .id(clock.tick)
             .environment(\.colorScheme, .light)
             .shadow(radius: 10)
         }
