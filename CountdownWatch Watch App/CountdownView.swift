@@ -12,13 +12,16 @@ import CountdownData
 struct CountdownView: View {
     
     var countdowns: [Countdown]
+    var sortedCountdowns: [Countdown] {
+        countdowns.filter { !$0.isPastDay } .sorted()
+    }
     
     var body: some View {
-        if countdowns.isEmpty {
+        if sortedCountdowns.isEmpty {
             Text("No countdowns")
         } else {
             TabView {
-                ForEach(countdowns) { countdown in
+                ForEach(sortedCountdowns) { countdown in
                     CountdownSquare(countdown: countdown)
                 }
             }

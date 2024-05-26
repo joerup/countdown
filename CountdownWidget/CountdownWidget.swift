@@ -29,7 +29,6 @@ struct CountdownWidget: Widget {
                     .widgetURL(URL(string: "countdown:///\(countdown.name)"))
             } else {
                 Text("No countdowns")
-                    .fontDesign(.rounded)
                     .fontWeight(.bold)
                     .multilineTextAlignment(.center)
                     .containerBackground(.background, for: .widget)

@@ -30,16 +30,12 @@ public final class Card {
     
     public func loadingBackground() {
         countdown?.currentBackground = .loading
-        countdown?.currentBackgroundIcon = .loading
     }
     public func setBackground(_ data: BackgroundData?) {
         self.backgroundData = data
     }
     public func getBackground() async -> Background? {
         return await backgroundData?.background()
-    }
-    public func getBackgroundIcon() async -> Background? {
-        return await backgroundData?.icon()
     }
 }
 

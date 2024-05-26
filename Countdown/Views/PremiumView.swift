@@ -22,7 +22,7 @@ struct PremiumView: View {
             if let product = products.first {
                 VStack(spacing: 25) {
                     VStack {
-                        Image("Countdown Icon")
+                        Image("Countdown Icon New")
                             .resizable()
                             .frame(width: 100, height: 100)
                             .clipShape(RoundedRectangle(cornerRadius: 20))

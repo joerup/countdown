@@ -33,19 +33,6 @@ extension Card {
             }
             return nil
         }
-        
-        public func icon() async -> Background? {
-            let background = await background()
-            switch background {
-            case .photo(let photo):
-                if let data = photo.compressed(size: 15000), let icon = UIImage(data: data) {
-                    return .photo(icon)
-                }
-            case .loading, nil:
-                return background
-            }
-            return nil
-        }
     }
 }
 

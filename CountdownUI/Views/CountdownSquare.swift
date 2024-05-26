@@ -31,6 +31,6 @@ public struct CountdownSquare: View {
         }
         .padding([.horizontal, .top])
         .padding(.bottom, 5)
-        .background(BackgroundDisplay(countdown: countdown, icon: true, blurRadius: 1).ignoresSafeArea())
+        .background(BackgroundDisplay(countdown: countdown, blurRadius: 1).ignoresSafeArea())
     }
 }

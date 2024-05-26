@@ -52,7 +52,7 @@ struct CountdownView: View {
                 .overlay {
                     if sortedCountdowns.isEmpty {
                         Text(!searchText.isEmpty ? "No matching countdowns found." : showArchive ? "Completed countdowns will appear here." : "No countdowns are currently active!")
-                            .font(.system(.body, design: .rounded, weight: .semibold))
+                            .fontWeight(.semibold)
                             .multilineTextAlignment(.center)
                             .foregroundStyle(.gray)
                             .padding(50)
@@ -100,7 +100,7 @@ struct CountdownView: View {
     private var headerButtons: some ToolbarContent {
         ToolbarItem(placement: .principal) {
             Text("Countdowns")
-                .fontWeight(.bold)
+                .fontWeight(.semibold)
         }
         ToolbarItem(placement: .topBarLeading) {
             Button {
