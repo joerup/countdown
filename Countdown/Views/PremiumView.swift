@@ -29,7 +29,7 @@ struct PremiumView: View {
                             .shadow(radius: 10)
                             .padding()
                         Text("Countdown")
-                            .font(.system(.largeTitle, design: .rounded, weight: .bold))
+                            .font(.system(.largeTitle, design: .default, weight: .bold))
                         Text("Premium")
                             .textCase(.uppercase)
                             .font(.system(.largeTitle, weight: .bold))
@@ -37,7 +37,7 @@ struct PremiumView: View {
                     }
                     .foregroundStyle(.white)
                     Text("Upgrade to Premium to create an unlimited number of countdowns!")
-                        .font(.system(.title3, design: .rounded))
+                        .font(.title3)
                         .multilineTextAlignment(.center)
                         .foregroundStyle(.white)
                         .frame(maxWidth: 400)

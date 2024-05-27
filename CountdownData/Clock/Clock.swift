@@ -17,6 +17,8 @@ public final class Clock: ObservableObject {
     
     @AppStorage("notifications") public var notifications: Bool = true
     
+    public private(set) var delay: Double = 0.35
+    
     private var timer: Timer?
     
     private var times: [UUID : Double]
@@ -52,14 +54,14 @@ public final class Clock: ObservableObject {
         self.active = false
     }
     public func ready() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
             self.active = true
         }
     }
     
     public func pause(execute: () -> Void) {
         pause()
-        withAnimation(.easeInOut(duration: 0.35)) {
+        withAnimation(.easeInOut(duration: delay)) {
             execute()
         }
         ready()

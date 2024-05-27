@@ -42,8 +42,6 @@ struct CountdownCarousel: View {
         offsetScale * editingScale
     }
     
-    private let animationTime: Double = 0.35
-    
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -169,7 +167,7 @@ struct CountdownCarousel: View {
             }
             .onEnded { _ in
                 clock.pause {
-                    withAnimation(.easeInOut(duration: animationTime)) {
+                    withAnimation(.easeInOut(duration: clock.delay)) {
                         if abs(offset.height) > 100 {
                             self.selectedCountdown = nil
                         }
@@ -186,19 +184,19 @@ struct CountdownCarousel: View {
                     }
                     
                     if let last1, offset.width > 100 {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + animationTime) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + clock.delay) {
                             self.selectedCountdown = last1
                             self.offset = .zero
                         }
                     }
                     else if let next1, offset.width < -100 {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + animationTime) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + clock.delay) {
                             self.selectedCountdown = next1
                             self.offset = .zero
                         }
                     }
                     else {
-                        withAnimation(.easeInOut(duration: animationTime)) {
+                        withAnimation(.easeInOut(duration: clock.delay)) {
                             if abs(offset.width) > 100 {
                                 self.selectedCountdown = nil
                                 self.editing = false

@@ -292,5 +292,16 @@
          "day": 24
       }
    }
+},
+ {
+   "name": "Diwali",
+   "displayName": "Diwali",
+   "occasion": {
+      "annualDate": {
+         "calendar": "indian",
+         "month": 8,
+         "day": 15
+      }
+   }
 }
 ]

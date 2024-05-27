@@ -68,7 +68,7 @@ extension Calendar.Identifier {
         case "hebrew": self = .hebrew
         case "chinese": self = .chinese
         case "islamic": self = .islamicCivil
-        case "hindu": self = .indian
+        case "indian": self = .
         default: self = .iso8601
         }
     }
