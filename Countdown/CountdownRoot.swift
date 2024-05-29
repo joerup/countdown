@@ -23,11 +23,9 @@ struct CountdownRoot: View {
     @StateObject private var clock: Clock = Clock()
     @StateObject private var premium: Premium = Premium()
     
-    @State private var isLoaded: Bool = false
-    
     var body: some View {
         Group {
-            if isLoaded {
+            if clock.isLoaded {
                 CountdownView(countdowns: countdowns, selectedCountdown: $selectedCountdown)
             } else {
                 loadingScreen
@@ -35,36 +33,11 @@ struct CountdownRoot: View {
         }
         .environmentObject(clock)
         .environmentObject(premium)
-        .onAppear {
-            // Start the clock
-            clock.start(countdowns: countdowns)
-            
-            // Schedule all notifications
-            clock.scheduleNotifications(for: countdowns)
-            
-            // Add cards to empty countdowns
-            for countdown in countdowns {
-                if let cards = countdown.cards {
-                    if cards.isEmpty {
-                        countdown.addCard(Card())
-                    }
-                } else {
-                    countdown.cards = [Card()]
-                }
-            }
+        .task {
+            await clock.start(countdowns: countdowns)
         }
         .task {
-            // Update premium
             await premium.update()
-        }
-        .task {
-            // Fetch countdown backgrounds
-            for countdown in countdowns {
-                await countdown.fetchBackground()
-            }
-            withAnimation {
-                isLoaded = true
-            }
         }
         .onOpenURL { url in
             // Set the selected countdown from a widget

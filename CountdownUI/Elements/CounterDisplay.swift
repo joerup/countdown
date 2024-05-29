@@ -54,7 +54,7 @@ public struct CounterDisplay: View {
                             numberUnit(componentsRemaining.minute, unit: "m", size: smaller)
                             numberUnit(componentsRemaining.second, unit: "s", size: smaller)
                         }
-                        .blur(radius: clock.active ? 0 : 3)
+                        .blur(radius: clock.isActive ? 0 : 3)
                     }
                 }
             }

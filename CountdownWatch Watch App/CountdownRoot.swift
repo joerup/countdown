@@ -20,40 +20,17 @@ struct CountdownRoot: View {
     
     @StateObject private var clock: Clock = Clock()
     
-    @State private var isLoaded: Bool = false
-    
     var body: some View {
         Group {
-            if isLoaded {
+            if clock.isLoaded {
                 CountdownView(countdowns: countdowns)
             } else {
                 loadingScreen
             }
         }
         .environmentObject(clock)
-        .onAppear {
-            // Start the clock
-            clock.start(countdowns: countdowns)
-            
-            // Add cards to empty countdowns
-            for countdown in countdowns {
-                if let cards = countdown.cards {
-                    if cards.isEmpty {
-                        countdown.addCard(Card())
-                    }
-                } else {
-                    countdown.cards = [Card()]
-                }
-            }
-        }
         .task {
-            // Fetch countdown backgrounds
-            for countdown in countdowns {
-                await countdown.fetchBackground()
-            }
-            withAnimation {
-                isLoaded = true
-            }
+            await clock.start(countdowns: countdowns)
         }
         .onChange(of: scenePhase) {
             WidgetCenter.shared.reloadAllTimelines()
@@ -73,7 +50,7 @@ struct CountdownRoot: View {
             ProgressView()
                 .padding()
             Text("Loading Countdowns")
-                .font(.system(.body, design: .rounded, weight: .semibold))
+                .fontWeight(.semibold)
                 .multilineTextAlignment(.center)
         }
     }

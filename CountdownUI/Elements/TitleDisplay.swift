@@ -39,7 +39,7 @@ public struct TitleDisplay: View {
     
     @ViewBuilder
     private func title() -> some View {
-        Text("\(countdown.displayName)")
+        Text(countdown.displayName)
             .font(.system(size: size))
             .fontWeight(.bold)
             .fontDesign(.rounded)
@@ -50,7 +50,7 @@ public struct TitleDisplay: View {
     
     @ViewBuilder
     private func date() -> some View {
-        Text("\(countdown.date.dateString)\(countdown.occasion.includeTime ? " \(countdown.date.timeString)" : "")")
+        Text(countdown.dateString)
             .textCase(.uppercase)
             .font(.system(size: size*0.6))
             .fontWeight(.medium)

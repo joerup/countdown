@@ -12,8 +12,8 @@ import SwiftUI
 public final class Clock: ObservableObject {
     
     @Published public var tick: Bool
-    
-    @Published public var active: Bool
+    @Published public var isActive: Bool
+    @Published public var isLoaded: Bool
     
     @AppStorage("notifications") public var notifications: Bool = true
     
@@ -25,19 +25,31 @@ public final class Clock: ObservableObject {
     
     public init() {
         self.tick = false
-        self.active = true
+        self.isActive = false
+        self.isLoaded = false
         self.times = [:]
     }
     deinit {
         stop()
     }
     
-    public func start(countdowns: [Countdown]) {
+    
+    // MARK: Controls
+    
+    public func start(countdowns: [Countdown]) async {
+        
+        // Fetch countdown cards and backgrounds
+        await fetchCardsAndBackgrounds(for: countdowns)
+        
+        // Schedule all notifications
+        scheduleNotifications(for: countdowns)
+        
+        // Schedule the timer
         timer?.invalidate()
-        let delay: Double = 1 - Double(Date.now.component(.nanosecond))/1E9
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+        let initialDelay: Double = 1 - Double(Date.now.component(.nanosecond))/1E9
+        DispatchQueue.main.asyncAfter(deadline: .now() + initialDelay) {
             self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-                if self.active {
+                if self.isActive {
                     for countdown in countdowns {
                         self.setTimeRemaining(for: countdown)
                     }
@@ -45,18 +57,26 @@ public final class Clock: ObservableObject {
                 }
             }
         }
+        
+        await MainActor.run {
+            self.isActive = true
+            self.isLoaded = true
+        }
     }
+    
     public func stop() {
         timer?.invalidate()
+        self.isActive = false
+    }
+    
+    public func ready() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            self.isActive = true
+        }
     }
     
     public func pause() {
-        self.active = false
-    }
-    public func ready() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-            self.active = true
-        }
+        self.isActive = false
     }
     
     public func pause(execute: () -> Void) {
@@ -68,7 +88,7 @@ public final class Clock: ObservableObject {
     }
     
     
-    // MARK: Timers
+    // MARK: Calculations
     
     public func setTimeRemaining(for countdown: Countdown) {
         times[countdown.id] = countdown.date.timeIntervalSinceNow
@@ -86,6 +106,28 @@ public final class Clock: ObservableObject {
     
     public func componentsRemaining(for countdown: Countdown) -> DateComponents {
         Calendar.current.dateComponents([.day, .hour, .minute, .second], from: .now, to: countdown.date < .now ? .now : countdown.date.advanced(by: 1))
+    }
+    
+    
+    // MARK: Countdown Maintenance
+    
+    private func fetchCardsAndBackgrounds(for countdowns: [Countdown]) async {
+        
+        // Fetch countdown backgrounds
+        for countdown in countdowns {
+            await countdown.fetchBackground()
+        }
+        
+        // Add cards to empty countdowns
+        for countdown in countdowns {
+            if let cards = countdown.cards {
+                if cards.isEmpty {
+                    countdown.addCard(Card())
+                }
+            } else {
+                countdown.cards = [Card()]
+            }
+        }
     }
     
     
