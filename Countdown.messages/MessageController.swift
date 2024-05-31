@@ -22,6 +22,7 @@ class MessageController: MSMessagesAppViewController, Observable {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Fetch the countdowns
         do {
             countdowns = try sharedModelContainer.mainContext.fetch(FetchDescriptor<Countdown>())
         } catch {
@@ -30,25 +31,21 @@ class MessageController: MSMessagesAppViewController, Observable {
         
         // Start the clock
         Task {
-            await clock.start(countdowns: countdowns)
+            if !clock.isLoaded {
+                await clock.start(countdowns: countdowns)
+            }
         }
         
-//        // Get the countdown
-//        if presentationStyle == .transcript {
-//            insertView {
-//                Group {
-//                    if let countdown = selectedCountdown {
-//                        CountdownSquare(countdown: countdown)
-//                    } else {
-//                        Text("\(activeConversation == nil)")
-//                    }
-//                }
-//            }
-//        }
-//        
-//        else {
-            insertView(CountdownView(countdowns: countdowns))
-//        }
+        // Set the view
+        setView()
+    }
+    
+    private func setView() {
+        if presentationStyle == .transcript {
+            insertView(CountdownBubble(selectedCountdown: selectedCountdown))
+        } else {
+            insertView(CountdownGrid(countdowns: countdowns.filter(\.isSaved)))
+        }
     }
     
     override func contentSizeThatFits(_ size: CGSize) -> CGSize {
@@ -62,7 +59,7 @@ class MessageController: MSMessagesAppViewController, Observable {
     // MARK: - Message Handling
     
     func createMessage(for countdown: Countdown) {
-        let message = MSMessage()
+        let message = MSMessage(session: MSSession())
         
         // Create the alternative layout (only used for devices without the app installed)
         let alternateLayout = MSMessageTemplateLayout()
@@ -74,67 +71,43 @@ class MessageController: MSMessagesAppViewController, Observable {
         }
         
         // Create the live layout
-        let layout = alternateLayout
-//        let layout = MSMessageLiveLayout(alternateLayout: alternateLayout)
-        
+        let layout = MSMessageLiveLayout(alternateLayout: alternateLayout)
         message.layout = layout
+        
+        // Set the URL which encodes the countdown data
+        if let url = countdown.encodingURL() {
+            message.url = url
+        }
         
         // Insert the message to the conversation
         if let conversation = activeConversation {
-//            print("inserting into conversation \(conversation) message \(message) with summary \(message.summaryText) and with url \(message.url)")
             conversation.insert(message)
         }
-        
-//        // Create the URL
-//        if let url = countdown.createURL() {
-//            let summary = "Hello there"
-//            
-//            print("url has been set for \(message)")
-//            message.url = url
-//            print("url is \(url)")
-//            print("url is \(message.url)")
-//            message.summaryText = summary
-//            print("summary is \(summary)")
-//            print("summary is \(message.summaryText)")
-////            message.summaryText = countdown.displayName
-//        }
         
         // Make presentation compact
         requestPresentationStyle(.compact)
     }
     
-    
-    // MARK: - Lifecycle Methods
-    
-//    override func willBecomeActive(with conversation: MSConversation) {
-//        super.willBecomeActive(with: conversation)
-//        
-//        guard presentationStyle == .transcript else { return }
-//        
-//        print("did become active with \(conversation)")
-//        print("the message is \(conversation.selectedMessage)")
-//        print("the message summary is \(conversation.selectedMessage?.summaryText)")
-//        print("the message url is \(conversation.selectedMessage?.url)")
-//    }
-    
-//    override func didSelect(_ message: MSMessage, conversation: MSConversation) {
-//        super.didSelect(message, conversation: conversation)
-//            
-//        print("accessing message \(message.summaryText) via \(presentationStyle.rawValue)")
-//        
-//        guard let url = message.url,
-//              let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
-//              components.host == "countdown",
-//              let queryItem = components.queryItems?.first(where: { $0.name == "data" }),
-//              let dataString = queryItem.value,
-//              let data = Data(base64Encoded: dataString),
-//              let countdown = try? JSONDecoder().decode(Countdown.self, from: data)
-//        else {
-//            return
-//        }
-//    }
+    override func didBecomeActive(with conversation: MSConversation) {
+        super.didBecomeActive(with: conversation)
+        
+        guard presentationStyle == .transcript, let url = conversation.selectedMessage?.url else { return }
+        
+        // Use the alternateLayout image as a workaround to send image if represented as data, instead of sending it through URL
+        let image: UIImage? =
+        if let layout = conversation.selectedMessage?.layout as? MSMessageLiveLayout {
+            layout.alternateLayout.image
+        } else {
+            nil
+        }
+        
+        // Decode the countdown from the URL
+        selectedCountdown = Countdown.fromEncodingURL(url, modelContext: sharedModelContainer.mainContext, countdowns: countdowns, image: image)
+        
+        // Set the view
+        setView()
+    }
 
-    
     
     // MARK: Insert SwiftUI View
     
@@ -151,6 +124,5 @@ class MessageController: MSMessagesAppViewController, Observable {
         swiftUIViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         swiftUIViewController.didMove(toParent: self)
     }
-
 }
 

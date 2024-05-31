@@ -17,6 +17,7 @@ public final class Countdown: Codable {
     public var displayName: String = ""
     public var type: EventType = EventType.custom
     public var occasion: Occasion = Occasion.now
+    public var isSaved: Bool = true
     
     public var date: Date {
         occasion.date
@@ -63,6 +64,7 @@ public final class Countdown: Codable {
         self.displayName = displayName
         self.type = type
         self.occasion = occasion
+        self.isSaved = true
         self.cards = [Card()]
     }
     public init(name: String, date: Date) {
@@ -71,11 +73,12 @@ public final class Countdown: Codable {
         self.displayName = name
         self.type = .custom
         self.occasion = .now
+        self.isSaved = true
         self.cards = [Card()]
     }
     
     enum CodingKeys: CodingKey {
-        case id, name, displayName, type, occasion, cards
+        case id, name, displayName, type, occasion, isSaved, cards
     }
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -84,6 +87,7 @@ public final class Countdown: Codable {
         displayName = try container.decode(String.self, forKey: .displayName)
         type = try container.decode(EventType.self, forKey: .type)
         occasion = try container.decode(Occasion.self, forKey: .occasion)
+        isSaved = try container.decode(Bool.self, forKey: .isSaved)
         cards = try container.decode([Card].self, forKey: .cards)
     }
     public func encode(to encoder: Encoder) throws {
@@ -93,6 +97,7 @@ public final class Countdown: Codable {
         try container.encode(displayName, forKey: .displayName)
         try container.encode(type, forKey: .type)
         try container.encode(occasion, forKey: .occasion)
+        try container.encode(isSaved, forKey: .isSaved)
         try container.encode(cards, forKey: .cards)
     }
     
@@ -128,18 +133,6 @@ public final class Countdown: Codable {
         currentBackground = .loading
         currentBackground = await card?.getBackground()
     }
-    
-    public func createURL() -> URL? {
-        guard let countdownData = try? JSONEncoder().encode(self) else { return nil }
-        
-        let countdownString = countdownData.base64EncodedString()
-        var components = URLComponents()
-        components.scheme = "com.rupertusapps.Countdown"
-        components.host = "countdown"
-        components.queryItems = [URLQueryItem(name: "data", value: countdownString)]
-        
-        return components.url
-    }
 }
 
 extension Countdown: Identifiable, Equatable, Comparable, Hashable {
@@ -154,3 +147,5 @@ extension Countdown: Identifiable, Equatable, Comparable, Hashable {
         hasher.combine(id)
     }
 }
+
+

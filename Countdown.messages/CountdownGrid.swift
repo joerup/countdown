@@ -18,12 +18,16 @@ struct CountdownGrid: View {
     
     var countdowns: [Countdown]
     
+    private var sortedCountdowns: [Countdown] {
+        return countdowns.filter { !$0.isPastDay } .sorted()
+    }
+    
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
                 let columns = horizontalSizeClass == .compact ? 2 : Int(geometry.size.width/180)
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: columns)) {
-                    ForEach(countdowns) { countdown in
+                    ForEach(sortedCountdowns) { countdown in
                         Button {
                             controller.createMessage(for: countdown)
                         } label: {

@@ -5,8 +5,20 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>CFBundleURLName</key>
 			<string>com.rupertusapps.Countdown</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>countdown</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string></string>
 		</dict>
 	</array>
 	<key>UIBackgroundModes</key>

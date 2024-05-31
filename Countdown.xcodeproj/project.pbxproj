@@ -31,6 +31,7 @@
 		015DD3DF2A77483A000EB3C0 /* OccasionEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015DD3D82A77483A000EB3C0 /* OccasionEditor.swift */; };
 		015DD3E12A77483A000EB3C0 /* CountdownEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015DD3DA2A77483A000EB3C0 /* CountdownEditor.swift */; };
 		015DD4212A79BBBA000EB3C0 /* DateEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015DD4202A79BBBA000EB3C0 /* DateEditor.swift */; };
+		017AD9852C0973FD0096E27A /* CountdownBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 017AD9842C0973FD0096E27A /* CountdownBubble.swift */; };
 		01B31AB32A81D0D100002F15 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01B31A972A81CFE800002F15 /* WidgetKit.framework */; };
 		01B31AB42A81D0D100002F15 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01B31A992A81CFE800002F15 /* SwiftUI.framework */; };
 		01B31AB72A81D0D100002F15 /* CountdownWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B31AB62A81D0D100002F15 /* CountdownWidgetBundle.swift */; };
@@ -55,7 +56,6 @@
 		01E410B12C062DC900F7B936 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C2090E2AE0CA7700F798CD /* CloudKit.framework */; };
 		01E410B32C062DD700F7B936 /* CountdownData in Frameworks */ = {isa = PBXBuildFile; productRef = 01E410B22C062DD700F7B936 /* CountdownData */; };
 		01E410B52C062DDC00F7B936 /* CountdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 01E410B42C062DDC00F7B936 /* CountdownUI */; };
-		01E410B72C0630C500F7B936 /* CountdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01E410B62C0630C500F7B936 /* CountdownView.swift */; };
 		01E410B92C06310300F7B936 /* CountdownGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01E410B82C06310300F7B936 /* CountdownGrid.swift */; };
 		01E410BE2C06338C00F7B936 /* CountdownMessageContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01E410BC2C06338000F7B936 /* CountdownMessageContainer.swift */; };
 		01FA61942A831224003BDA2B /* UnsplashPhotoPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 01FA61932A831224003BDA2B /* UnsplashPhotoPicker */; };
@@ -138,6 +138,7 @@
 		015DD3D82A77483A000EB3C0 /* OccasionEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OccasionEditor.swift; sourceTree = "<group>"; };
 		015DD3DA2A77483A000EB3C0 /* CountdownEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountdownEditor.swift; sourceTree = "<group>"; };
 		015DD4202A79BBBA000EB3C0 /* DateEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateEditor.swift; sourceTree = "<group>"; };
+		017AD9842C0973FD0096E27A /* CountdownBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownBubble.swift; sourceTree = "<group>"; };
 		01B31A972A81CFE800002F15 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		01B31A992A81CFE800002F15 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		01B31AB22A81D0D100002F15 /* CountdownWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CountdownWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -159,7 +160,6 @@
 		01E410A32C062DA900F7B936 /* MessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageController.swift; sourceTree = "<group>"; };
 		01E410A82C062DAB00F7B936 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		01E410AA2C062DAB00F7B936 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		01E410B62C0630C500F7B936 /* CountdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownView.swift; sourceTree = "<group>"; };
 		01E410B82C06310300F7B936 /* CountdownGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownGrid.swift; sourceTree = "<group>"; };
 		01E410BC2C06338000F7B936 /* CountdownMessageContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownMessageContainer.swift; sourceTree = "<group>"; };
 		01E410BF2C06570F00F7B936 /* Countdown.messages.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Countdown.messages.entitlements; sourceTree = "<group>"; };
@@ -352,8 +352,8 @@
 			children = (
 				01E410BF2C06570F00F7B936 /* Countdown.messages.entitlements */,
 				01E410A32C062DA900F7B936 /* MessageController.swift */,
-				01E410B62C0630C500F7B936 /* CountdownView.swift */,
 				01E410B82C06310300F7B936 /* CountdownGrid.swift */,
+				017AD9842C0973FD0096E27A /* CountdownBubble.swift */,
 				01E410BC2C06338000F7B936 /* CountdownMessageContainer.swift */,
 				01E410A82C062DAB00F7B936 /* Assets.xcassets */,
 				01E410AA2C062DAB00F7B936 /* Info.plist */,
@@ -591,9 +591,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				01E410B92C06310300F7B936 /* CountdownGrid.swift in Sources */,
+				017AD9852C0973FD0096E27A /* CountdownBubble.swift in Sources */,
 				01E410A42C062DA900F7B936 /* MessageController.swift in Sources */,
 				01E410BE2C06338C00F7B936 /* CountdownMessageContainer.swift in Sources */,
-				01E410B72C0630C500F7B936 /* CountdownView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -632,7 +632,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = CountdownWatch;
+				INFOPLIST_KEY_CFBundleDisplayName = Countdown;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.rupertusapps.Countdown;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -665,7 +665,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = CountdownWatch;
+				INFOPLIST_KEY_CFBundleDisplayName = Countdown;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.rupertusapps.Countdown;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -812,7 +812,7 @@
 				CODE_SIGN_ENTITLEMENTS = Countdown/Countdown.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"Countdown/Preview Content\"";
 				DEVELOPMENT_TEAM = 52RCCS37U6;
 				ENABLE_PREVIEWS = YES;
@@ -849,7 +849,7 @@
 				CODE_SIGN_ENTITLEMENTS = Countdown/Countdown.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"Countdown/Preview Content\"";
 				DEVELOPMENT_TEAM = 52RCCS37U6;
 				ENABLE_PREVIEWS = YES;
@@ -942,7 +942,7 @@
 				DEVELOPMENT_TEAM = 52RCCS37U6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Countdown.messages/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Countdown.messages;
+				INFOPLIST_KEY_CFBundleDisplayName = Countdown;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -971,7 +971,7 @@
 				DEVELOPMENT_TEAM = 52RCCS37U6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Countdown.messages/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Countdown.messages;
+				INFOPLIST_KEY_CFBundleDisplayName = Countdown;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (

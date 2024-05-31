@@ -23,10 +23,13 @@ struct CountdownRoot: View {
     @StateObject private var clock: Clock = Clock()
     @StateObject private var premium: Premium = Premium()
     
+    @State private var newCountdown: Countdown?
+    @State private var requestNewCountdown: Bool = false
+    
     var body: some View {
         Group {
             if clock.isLoaded {
-                CountdownView(countdowns: countdowns, selectedCountdown: $selectedCountdown)
+                CountdownView(countdowns: countdowns.filter(\.isSaved), selectedCountdown: $selectedCountdown)
             } else {
                 loadingScreen
             }
@@ -40,10 +43,28 @@ struct CountdownRoot: View {
             await premium.update()
         }
         .onOpenURL { url in
-            // Set the selected countdown from a widget
-            if let countdown = countdowns.first(where: { $0.id.uuidString == url.lastPathComponent }) {
-                selectedCountdown = countdown
+            if let countdown = Countdown.fromLinkURL(url, countdowns: countdowns) {
+                if countdown.isSaved {
+                    selectedCountdown = countdown
+                } else {
+                    newCountdown = countdown
+                    requestNewCountdown = true
+                }
             }
+        }
+        .alert(isPresented: $requestNewCountdown) {
+            Alert(title: Text("Add \(newCountdown?.displayName ?? "")"), message: Text("Would you like to save this countdown?"),
+                primaryButton: .default(Text("Save")) {
+                    withAnimation {
+                        newCountdown?.isSaved = true
+                        selectedCountdown = newCountdown
+                        newCountdown = nil
+                    }
+                },
+                secondaryButton: .cancel(Text("Cancel")) {
+                    newCountdown = nil
+                }
+            )
         }
         .onChange(of: scenePhase) {
             WidgetCenter.shared.reloadAllTimelines()

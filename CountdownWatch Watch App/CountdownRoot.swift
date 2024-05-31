@@ -23,7 +23,7 @@ struct CountdownRoot: View {
     var body: some View {
         Group {
             if clock.isLoaded {
-                CountdownView(countdowns: countdowns)
+                CountdownView(countdowns: countdowns.filter(\.isSaved))
             } else {
                 loadingScreen
             }
