@@ -32,6 +32,7 @@
 		015DD3E12A77483A000EB3C0 /* CountdownEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015DD3DA2A77483A000EB3C0 /* CountdownEditor.swift */; };
 		015DD4212A79BBBA000EB3C0 /* DateEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015DD4202A79BBBA000EB3C0 /* DateEditor.swift */; };
 		017AD9852C0973FD0096E27A /* CountdownBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 017AD9842C0973FD0096E27A /* CountdownBubble.swift */; };
+		017AD9872C0A5E080096E27A /* ShareMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 017AD9862C0A5E080096E27A /* ShareMenu.swift */; };
 		01B31AB32A81D0D100002F15 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01B31A972A81CFE800002F15 /* WidgetKit.framework */; };
 		01B31AB42A81D0D100002F15 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01B31A992A81CFE800002F15 /* SwiftUI.framework */; };
 		01B31AB72A81D0D100002F15 /* CountdownWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B31AB62A81D0D100002F15 /* CountdownWidgetBundle.swift */; };
@@ -139,6 +140,7 @@
 		015DD3DA2A77483A000EB3C0 /* CountdownEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountdownEditor.swift; sourceTree = "<group>"; };
 		015DD4202A79BBBA000EB3C0 /* DateEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateEditor.swift; sourceTree = "<group>"; };
 		017AD9842C0973FD0096E27A /* CountdownBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownBubble.swift; sourceTree = "<group>"; };
+		017AD9862C0A5E080096E27A /* ShareMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareMenu.swift; sourceTree = "<group>"; };
 		01B31A972A81CFE800002F15 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		01B31A992A81CFE800002F15 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		01B31AB22A81D0D100002F15 /* CountdownWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CountdownWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -306,6 +308,7 @@
 				0114EAA22A8FE0240013EE87 /* Occasion Editors */,
 				015DD3D62A77483A000EB3C0 /* Background Editors */,
 				01CE90AC2ADC5959000537C5 /* SettingsMenu.swift */,
+				017AD9862C0A5E080096E27A /* ShareMenu.swift */,
 				015148362AED8E5300430189 /* PremiumView.swift */,
 			);
 			path = Views;
@@ -563,6 +566,7 @@
 				015DD3E12A77483A000EB3C0 /* CountdownEditor.swift in Sources */,
 				01FA61962A8312EA003BDA2B /* UnsplashMenu.swift in Sources */,
 				01C3C7D42A7CD14000475FC4 /* HolidayEditor.swift in Sources */,
+				017AD9872C0A5E080096E27A /* ShareMenu.swift in Sources */,
 				0157B7D52A8758D2007CF704 /* CountdownRoot.swift in Sources */,
 				01C2086C2AE04B8B00F798CD /* CountdownGrid.swift in Sources */,
 				015DD3C02A774807000EB3C0 /* CountdownApp.swift in Sources */,
@@ -812,7 +816,7 @@
 				CODE_SIGN_ENTITLEMENTS = Countdown/Countdown.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"Countdown/Preview Content\"";
 				DEVELOPMENT_TEAM = 52RCCS37U6;
 				ENABLE_PREVIEWS = YES;
@@ -849,7 +853,7 @@
 				CODE_SIGN_ENTITLEMENTS = Countdown/Countdown.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"Countdown/Preview Content\"";
 				DEVELOPMENT_TEAM = 52RCCS37U6;
 				ENABLE_PREVIEWS = YES;

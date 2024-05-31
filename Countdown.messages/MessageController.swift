@@ -14,7 +14,7 @@ import CountdownUI
 
 class MessageController: MSMessagesAppViewController, Observable {
     
-    private var clock = Clock()
+    private static let clock = Clock()
     
     private var countdowns: [Countdown] = []
     private var selectedCountdown: Countdown?
@@ -31,9 +31,7 @@ class MessageController: MSMessagesAppViewController, Observable {
         
         // Start the clock
         Task {
-            if !clock.isLoaded {
-                await clock.start(countdowns: countdowns)
-            }
+            await Self.clock.start(countdowns: countdowns)
         }
         
         // Set the view
@@ -64,7 +62,7 @@ class MessageController: MSMessagesAppViewController, Observable {
         // Create the alternative layout (only used for devices without the app installed)
         let alternateLayout = MSMessageTemplateLayout()
         alternateLayout.caption = countdown.displayName
-        alternateLayout.trailingCaption = "\(clock.daysRemaining(for: countdown))"
+        alternateLayout.trailingCaption = "\(Self.clock.daysRemaining(for: countdown))"
         alternateLayout.subcaption = countdown.dateString
         if case .photo(let photo) = countdown.currentBackground, let image = photo.square() {
             alternateLayout.image = image
@@ -102,10 +100,13 @@ class MessageController: MSMessagesAppViewController, Observable {
         }
         
         // Decode the countdown from the URL
-        selectedCountdown = Countdown.fromEncodingURL(url, modelContext: sharedModelContainer.mainContext, countdowns: countdowns, image: image)
+        guard let countdown = Countdown.fromEncodingURL(url, modelContext: sharedModelContainer.mainContext, countdowns: countdowns, image: image) else { return }
         
-        // Set the view
-        setView()
+        // Update the message bubble
+        if countdown != selectedCountdown {
+            selectedCountdown = countdown
+            setView()
+        }
     }
 
     
@@ -114,7 +115,7 @@ class MessageController: MSMessagesAppViewController, Observable {
     private func insertView(_ newView: some View) {
         let swiftUIView = newView
             .modelContainer(sharedModelContainer)
-            .environmentObject(clock)
+            .environmentObject(Self.clock)
             .environment(self)
         let swiftUIViewController = UIHostingController(rootView: swiftUIView)
         

@@ -22,6 +22,7 @@ struct CountdownEditor: View {
     var onDelete: () -> Void
     
     @State private var editDestination = false
+    @State private var shareCountdown = false
     @State private var deleteCountdown = false
     
     var body: some View {
@@ -32,6 +33,14 @@ struct CountdownEditor: View {
                 }
             } label: {
                 Image(systemName: "calendar")
+                    .padding(5)
+            }
+            Button {
+                clock.pause {
+                    shareCountdown.toggle()
+                }
+            } label: {
+                Image(systemName: "square.and.arrow.up")
                     .padding(5)
             }
             Button {
@@ -56,6 +65,9 @@ struct CountdownEditor: View {
         .padding(.horizontal)
         .sheet(isPresented: $editDestination) {
             OccasionEditor(countdown: countdown)
+        }
+        .sheet(isPresented: $shareCountdown) {
+            ShareMenu(countdown: countdown)
         }
         .alert("Delete Countdown", isPresented: $deleteCountdown) {
             Button("Cancel", role: .cancel) {

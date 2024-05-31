@@ -19,7 +19,8 @@ struct CountdownBubble: View {
                 CountdownSquare(countdown: countdown)
             }
             .clipShape(RoundedRectangle(cornerRadius: 20))
-            .padding(15)
+            .padding(.top, 15)
+            .padding(.horizontal, 5.5)
         } else {
             Text("No Countdown")
         }

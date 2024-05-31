@@ -37,6 +37,7 @@ public final class Clock: ObservableObject {
     // MARK: Controls
     
     public func start(countdowns: [Countdown]) async {
+        guard !isLoaded else { return }
         
         // Fetch countdown cards and backgrounds
         await fetchCardsAndBackgrounds(for: countdowns)
@@ -115,7 +116,9 @@ public final class Clock: ObservableObject {
         
         // Fetch countdown backgrounds
         for countdown in countdowns {
-            await countdown.fetchBackground()
+            if countdown.currentBackground == nil {
+                await countdown.fetchBackground()
+            }
         }
         
         // Add cards to empty countdowns
@@ -145,6 +148,7 @@ public final class Clock: ObservableObject {
     }
     
     public func scheduleNotification(for countdown: Countdown) {
+        
         guard notifications, countdown.isActive, let components = countdown.occasion.components else { return }
         
         let content = UNMutableNotificationContent()
