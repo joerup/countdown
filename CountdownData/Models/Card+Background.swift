@@ -10,6 +10,8 @@ import SwiftUI
 
 extension Card {
     
+    public static let maxPhotoSize: Double = 750000
+    
     public enum Background {
         case photo(_ photo: UIImage)
         case loading
@@ -32,6 +34,13 @@ extension Card {
                 }
             }
             return nil
+        }
+    }
+    
+    public func updateLink() async {
+        if case .photoLink(let url) = backgroundData, let data = try? Data(contentsOf: url), 
+            let image = UIImage(data: data), let photoData = image.compressed(size: Card.maxPhotoSize) {
+            setBackground(.photo(photoData))
         }
     }
 }

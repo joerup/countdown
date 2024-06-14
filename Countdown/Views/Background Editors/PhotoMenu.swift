@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PhotosUI
+import CountdownData
 
 struct PhotoMenu: ViewModifier {
     
@@ -25,7 +26,7 @@ struct PhotoMenu: ViewModifier {
                 Task {
                     if let data = try? await photoItem?.loadTransferable(type: Data.self) {
                         // limit to 750 kB for safe storage in CloudKit
-                        if let image = UIImage(data: data), let photoData = image.compressed(size: 750000) {
+                        if let image = UIImage(data: data), let photoData = image.compressed(size: Card.maxPhotoSize) {
                             onReturn(photoData)
                         }
                     }

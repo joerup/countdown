@@ -29,19 +29,25 @@ class MessageController: MSMessagesAppViewController, Observable {
             print(error)
         }
         
-        // Start the clock
-        Task {
-            await Self.clock.start(countdowns: countdowns)
-        }
-        
-        // Set the view
-        setView()
+        // Perform initial update
+        update()
     }
     
-    private func setView() {
+    private func update() {
         if presentationStyle == .transcript {
+            guard let selectedCountdown else { return }
+            // Start the clock
+            Task {
+                await Self.clock.start(countdowns: [selectedCountdown])
+            }
+            // Set the view
             insertView(CountdownBubble(selectedCountdown: selectedCountdown))
         } else {
+            // Start the clock
+            Task {
+                await Self.clock.start(countdowns: countdowns)
+            }
+            // Set the view
             insertView(CountdownGrid(countdowns: countdowns.filter(\.isSaved)))
         }
     }
@@ -105,7 +111,7 @@ class MessageController: MSMessagesAppViewController, Observable {
         // Update the message bubble
         if countdown != selectedCountdown {
             selectedCountdown = countdown
-            setView()
+            update()
         }
     }
 

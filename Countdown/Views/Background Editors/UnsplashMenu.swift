@@ -8,6 +8,7 @@
 import SwiftUI
 import UIKit
 import UnsplashPhotoPicker
+import CountdownData
 
 struct UnsplashMenu: ViewModifier {
     
@@ -16,7 +17,7 @@ struct UnsplashMenu: ViewModifier {
     @Binding var isPresented: Bool
     
     var onSelect: () -> Void
-    var onReturn: (URL) -> Void
+    var onReturn: (Data) -> Void
     
     func body(content: Content) -> some View {
         content
@@ -24,8 +25,11 @@ struct UnsplashMenu: ViewModifier {
                 UnsplashPhotoPickerView(configuration: configuration) { photos in
                     onSelect()
                     Task {
-                        if let photo = photos.first, let url = photo.urls[.regular] {
-                            onReturn(url)
+                        if let photo = photos.first, let url = photo.urls[.regular], let (data, _) = try? await URLSession.shared.data(from: url) {
+                            // limit to 750 kB for safe storage in CloudKit
+                            if let image = UIImage(data: data), let photoData = image.compressed(size: Card.maxPhotoSize) {
+                                onReturn(photoData)
+                            }
                         }
                     }
                 }
@@ -34,7 +38,7 @@ struct UnsplashMenu: ViewModifier {
 }
 
 extension View {
-    func unsplashMenu(isPresented: Binding<Bool>, onSelect: @escaping () -> Void, onReturn: @escaping (URL) -> Void) -> some View {
+    func unsplashMenu(isPresented: Binding<Bool>, onSelect: @escaping () -> Void, onReturn: @escaping (Data) -> Void) -> some View {
         modifier(UnsplashMenu(isPresented: isPresented, onSelect: onSelect, onReturn: onReturn))
     }
 }

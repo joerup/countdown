@@ -57,8 +57,8 @@ struct CardEditor: View {
         }
         .unsplashMenu(isPresented: $showUnsplashLibrary) {
             card.loadingBackground()
-        } onReturn: { link in
-            card.setBackground(.photoLink(link))
+        } onReturn: { photo in
+            card.setBackground(.photo(photo))
             UIImpactFeedbackGenerator().impactOccurred()
         }
         .onAppear {

@@ -39,6 +39,12 @@ public final class Clock: ObservableObject {
     public func start(countdowns: [Countdown]) async {
         guard !isLoaded else { return }
         
+        // Perform any updates
+        if UserDefaults.standard.integer(forKey: "updateVersion") < 1 {
+            await updateLinks(for: countdowns)
+        }
+        UserDefaults.standard.set(1, forKey: "updateVersion")
+        
         // Fetch countdown cards and backgrounds
         await fetchCardsAndBackgrounds(for: countdowns)
         
@@ -130,6 +136,18 @@ public final class Clock: ObservableObject {
             } else {
                 countdown.cards = [Card()]
             }
+        }
+    }
+    
+    
+    // MARK: Updates
+    
+    // Change photo URLs to image data
+    // Moving away from storing URLs
+    public func updateLinks(for countdowns: [Countdown]) async {
+        for countdown in countdowns {
+            await countdown.card?.updateLink()
+            await countdown.fetchBackground()
         }
     }
     

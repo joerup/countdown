@@ -147,5 +147,3 @@ extension Countdown: Identifiable, Equatable, Comparable, Hashable {
         hasher.combine(id)
     }
 }
-
-
