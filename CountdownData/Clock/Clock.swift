@@ -39,15 +39,9 @@ public final class Clock: ObservableObject {
     public func start(countdowns: [Countdown]) async {
         guard !isLoaded else { return }
         
-        // Perform any updates
-        if UserDefaults.standard.integer(forKey: "updateVersion") < 1 {
-            await updateLinks(for: countdowns)
-        }
-        UserDefaults.standard.set(1, forKey: "updateVersion")
-        
         // Fetch countdown cards and backgrounds
         await fetchCardsAndBackgrounds(for: countdowns)
-        
+    
         // Schedule all notifications
         scheduleNotifications(for: countdowns)
         
@@ -120,9 +114,21 @@ public final class Clock: ObservableObject {
     
     private func fetchCardsAndBackgrounds(for countdowns: [Countdown]) async {
         
+        // Change photo URLs to image data
+        for countdown in countdowns {
+            await countdown.card?.updateLink()
+        }
+        
+        // Match backgrounds and background icons
+        for card in countdowns.compactMap(\.cards).reduce([], +) {
+            if card.backgroundData != nil && card.backgroundIconData == nil {
+                card.setBackground(card.backgroundData)
+            }
+        }
+        
         // Fetch countdown backgrounds
         for countdown in countdowns {
-            if countdown.currentBackground == nil {
+            if countdown.currentBackground == nil || countdown.currentBackgroundIcon == nil {
                 await countdown.fetchBackground()
             }
         }
@@ -136,18 +142,6 @@ public final class Clock: ObservableObject {
             } else {
                 countdown.cards = [Card()]
             }
-        }
-    }
-    
-    
-    // MARK: Updates
-    
-    // Change photo URLs to image data
-    // Moving away from storing URLs
-    public func updateLinks(for countdowns: [Countdown]) async {
-        for countdown in countdowns {
-            await countdown.card?.updateLink()
-            await countdown.fetchBackground()
         }
     }
     

@@ -15,6 +15,7 @@ public final class Card: Codable {
     public var countdown: Countdown?
     
     @Attribute(.externalStorage) public private(set) var backgroundData: BackgroundData?
+    @Attribute(.externalStorage) public private(set) var backgroundIconData: BackgroundData?
     
     private var tint: [Double] = Color.white.rgb
     public var tintColor: Color {
@@ -29,7 +30,7 @@ public final class Card: Codable {
     public init() { }
     
     enum CodingKeys: CodingKey {
-        case tint, textStyle, textShadow, backgroundData
+        case tint, textStyle, textShadow, backgroundData, backgroundIconData
     }
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -37,6 +38,7 @@ public final class Card: Codable {
         textStyle = try container.decode(TextStyle.self, forKey: .textStyle)
         textShadow = try container.decode(Double.self, forKey: .textShadow)
         backgroundData = try? container.decode(BackgroundData.self, forKey: .backgroundData)
+        backgroundIconData = try? container.decode(BackgroundData.self, forKey: .backgroundIconData)
     }
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -45,6 +47,7 @@ public final class Card: Codable {
         try container.encode(textShadow, forKey: .textShadow)
         if case .photoLink(_) = backgroundData {
             try container.encode(backgroundData, forKey: .backgroundData)
+            try container.encode(backgroundIconData, forKey: .backgroundIconData)
         }
     }
     
@@ -53,9 +56,13 @@ public final class Card: Codable {
     }
     public func setBackground(_ data: BackgroundData?) {
         self.backgroundData = data
+        self.backgroundIconData = data?.icon
     }
     public func getBackground() async -> Background? {
         return await backgroundData?.background()
+    }
+    public func getBackgroundIcon() async -> Background? {
+        return await backgroundIconData?.background()
     }
 }
 

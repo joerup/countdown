@@ -37,11 +37,6 @@ struct CountdownGrid: View {
                                 .frame(maxWidth: 200)
                                 .background(Color.blue.opacity(0.2))
                                 .clipShape(RoundedRectangle(cornerRadius: 20))
-                                .scrollTransition { content, phase in
-                                    content
-                                        .scaleEffect(phase.isIdentity ? 1 : 0.8)
-                                        .blur(radius: phase.isIdentity ? 0 : 3)
-                                }
                         }
                         .shadow(radius: 10)
                         .padding(5)

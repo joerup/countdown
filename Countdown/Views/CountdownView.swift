@@ -52,7 +52,6 @@ struct CountdownView: View {
                 .overlay {
                     if sortedCountdowns.isEmpty {
                         Text(!searchText.isEmpty ? "No matching countdowns found." : showArchive ? "Completed countdowns will appear here." : "No countdowns are currently active!")
-                            .fontWeight(.semibold)
                             .multilineTextAlignment(.center)
                             .foregroundStyle(.gray)
                             .padding(50)

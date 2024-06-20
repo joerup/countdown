@@ -7,15 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		010A3F192B0D959300CE1609 /* CountdownWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010A3F182B0D959300CE1609 /* CountdownWatchApp.swift */; };
-		010A3F1B2B0D959300CE1609 /* CountdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010A3F1A2B0D959300CE1609 /* CountdownView.swift */; };
-		010A3F1D2B0D959400CE1609 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 010A3F1C2B0D959400CE1609 /* Assets.xcassets */; };
-		010A3F202B0D959400CE1609 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 010A3F1F2B0D959400CE1609 /* Preview Assets.xcassets */; };
-		010A3F232B0D959400CE1609 /* CountdownWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 010A3F162B0D959300CE1609 /* CountdownWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		010A3F292B0D965000CE1609 /* CountdownData in Frameworks */ = {isa = PBXBuildFile; productRef = 010A3F282B0D965000CE1609 /* CountdownData */; };
-		010A3F2B2B0D965000CE1609 /* CountdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 010A3F2A2B0D965000CE1609 /* CountdownUI */; };
-		010A3F2D2B0D973600CE1609 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 010A3F2C2B0D973600CE1609 /* CloudKit.framework */; };
-		010A3F2F2B0D97B500CE1609 /* CountdownRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010A3F2E2B0D97B500CE1609 /* CountdownRoot.swift */; };
 		013D84E72A8204A400A8DE1A /* CountdownTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B31ACF2A81E86600002F15 /* CountdownTimelineProvider.swift */; };
 		013D84EA2A82052A00A8DE1A /* CountdownWidgetIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B31ACD2A81E82C00002F15 /* CountdownWidgetIntent.swift */; };
 		014FCD332AE48FB300C56FAF /* CardEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 014FCD322AE48FB300C56FAF /* CardEditor.swift */; };
@@ -64,13 +55,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		010A3F212B0D959400CE1609 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 015DD3B42A774807000EB3C0 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 010A3F152B0D959300CE1609;
-			remoteInfo = "CountdownWatch Watch App";
-		};
 		01B31ABD2A81D0D400002F15 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 015DD3B42A774807000EB3C0 /* Project object */;
@@ -94,7 +78,6 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				010A3F232B0D959400CE1609 /* CountdownWatch Watch App.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -114,15 +97,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		010A3F162B0D959300CE1609 /* CountdownWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CountdownWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		010A3F182B0D959300CE1609 /* CountdownWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownWatchApp.swift; sourceTree = "<group>"; };
-		010A3F1A2B0D959300CE1609 /* CountdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownView.swift; sourceTree = "<group>"; };
-		010A3F1C2B0D959400CE1609 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		010A3F1F2B0D959400CE1609 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		010A3F2C2B0D973600CE1609 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS10.0.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
-		010A3F2E2B0D97B500CE1609 /* CountdownRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownRoot.swift; sourceTree = "<group>"; };
-		010A3F302B0DA58700CE1609 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
-		010A3F312B0DAC3E00CE1609 /* CountdownWatch Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "CountdownWatch Watch App.entitlements"; sourceTree = "<group>"; };
 		013D84F52A820A0000A8DE1A /* CountdownWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CountdownWidgetExtension.entitlements; sourceTree = "<group>"; };
 		014FCD322AE48FB300C56FAF /* CardEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardEditor.swift; sourceTree = "<group>"; };
 		015148362AED8E5300430189 /* PremiumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumView.swift; sourceTree = "<group>"; };
@@ -169,16 +144,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		010A3F132B0D959300CE1609 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				010A3F2D2B0D973600CE1609 /* CloudKit.framework in Frameworks */,
-				010A3F2B2B0D965000CE1609 /* CountdownUI in Frameworks */,
-				010A3F292B0D965000CE1609 /* CountdownData in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		015DD3B92A774807000EB3C0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -218,28 +183,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		010A3F172B0D959300CE1609 /* CountdownWatch Watch App */ = {
-			isa = PBXGroup;
-			children = (
-				010A3F312B0DAC3E00CE1609 /* CountdownWatch Watch App.entitlements */,
-				010A3F182B0D959300CE1609 /* CountdownWatchApp.swift */,
-				010A3F2E2B0D97B500CE1609 /* CountdownRoot.swift */,
-				010A3F1A2B0D959300CE1609 /* CountdownView.swift */,
-				010A3F1C2B0D959400CE1609 /* Assets.xcassets */,
-				010A3F302B0DA58700CE1609 /* Info.plist */,
-				010A3F1E2B0D959400CE1609 /* Preview Content */,
-			);
-			path = "CountdownWatch Watch App";
-			sourceTree = "<group>";
-		};
-		010A3F1E2B0D959400CE1609 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				010A3F1F2B0D959400CE1609 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
 		0114EAA22A8FE0240013EE87 /* Occasion Editors */ = {
 			isa = PBXGroup;
 			children = (
@@ -254,7 +197,6 @@
 			isa = PBXGroup;
 			children = (
 				015DD3BE2A774807000EB3C0 /* Countdown */,
-				010A3F172B0D959300CE1609 /* CountdownWatch Watch App */,
 				01E410A22C062DA900F7B936 /* Countdown.messages */,
 				01B31AB52A81D0D100002F15 /* CountdownWidget */,
 				01C2E2D72AC93A08009C1A10 /* CountdownUI */,
@@ -269,7 +211,6 @@
 			children = (
 				015DD3BC2A774807000EB3C0 /* Countdown.app */,
 				01B31AB22A81D0D100002F15 /* CountdownWidgetExtension.appex */,
-				010A3F162B0D959300CE1609 /* CountdownWatch Watch App.app */,
 				01E4109F2C062DA900F7B936 /* Countdown.messages.appex */,
 			);
 			name = Products;
@@ -367,27 +308,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		010A3F152B0D959300CE1609 /* CountdownWatch Watch App */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 010A3F272B0D959400CE1609 /* Build configuration list for PBXNativeTarget "CountdownWatch Watch App" */;
-			buildPhases = (
-				010A3F122B0D959300CE1609 /* Sources */,
-				010A3F132B0D959300CE1609 /* Frameworks */,
-				010A3F142B0D959300CE1609 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "CountdownWatch Watch App";
-			packageProductDependencies = (
-				010A3F282B0D965000CE1609 /* CountdownData */,
-				010A3F2A2B0D965000CE1609 /* CountdownUI */,
-			);
-			productName = "CountdownWatch Watch App";
-			productReference = 010A3F162B0D959300CE1609 /* CountdownWatch Watch App.app */;
-			productType = "com.apple.product-type.application";
-		};
 		015DD3BB2A774807000EB3C0 /* Countdown */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 015DD3CE2A774809000EB3C0 /* Build configuration list for PBXNativeTarget "Countdown" */;
@@ -402,7 +322,6 @@
 			);
 			dependencies = (
 				01B31ABE2A81D0D400002F15 /* PBXTargetDependency */,
-				010A3F222B0D959400CE1609 /* PBXTargetDependency */,
 				01E410AC2C062DAB00F7B936 /* PBXTargetDependency */,
 			);
 			name = Countdown;
@@ -469,9 +388,6 @@
 				LastSwiftUpdateCheck = 1540;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
-					010A3F152B0D959300CE1609 = {
-						CreatedOnToolsVersion = 15.0.1;
-					};
 					015DD3BB2A774807000EB3C0 = {
 						CreatedOnToolsVersion = 15.0;
 					};
@@ -502,22 +418,12 @@
 			targets = (
 				015DD3BB2A774807000EB3C0 /* Countdown */,
 				01B31AB12A81D0D100002F15 /* CountdownWidgetExtension */,
-				010A3F152B0D959300CE1609 /* CountdownWatch Watch App */,
 				01E4109E2C062DA900F7B936 /* Countdown.messages */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		010A3F142B0D959300CE1609 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				010A3F202B0D959400CE1609 /* Preview Assets.xcassets in Resources */,
-				010A3F1D2B0D959400CE1609 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		015DD3BA2A774807000EB3C0 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -546,16 +452,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		010A3F122B0D959300CE1609 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				010A3F1B2B0D959300CE1609 /* CountdownView.swift in Sources */,
-				010A3F2F2B0D97B500CE1609 /* CountdownRoot.swift in Sources */,
-				010A3F192B0D959300CE1609 /* CountdownWatchApp.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		015DD3B82A774807000EB3C0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -604,11 +500,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		010A3F222B0D959400CE1609 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 010A3F152B0D959300CE1609 /* CountdownWatch Watch App */;
-			targetProxy = 010A3F212B0D959400CE1609 /* PBXContainerItemProxy */;
-		};
 		01B31ABE2A81D0D400002F15 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 01B31AB12A81D0D100002F15 /* CountdownWidgetExtension */;
@@ -622,72 +513,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		010A3F252B0D959400CE1609 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "CountdownWatch Watch App/CountdownWatch Watch App.entitlements";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_ASSET_PATHS = "\"CountdownWatch Watch App/Preview Content\"";
-				DEVELOPMENT_TEAM = 52RCCS37U6;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Countdown;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.rupertusapps.Countdown;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.rupertusapps.Countdown.watchkitapp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 10.0;
-			};
-			name = Debug;
-		};
-		010A3F262B0D959400CE1609 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "CountdownWatch Watch App/CountdownWatch Watch App.entitlements";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_ASSET_PATHS = "\"CountdownWatch Watch App/Preview Content\"";
-				DEVELOPMENT_TEAM = 52RCCS37U6;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Countdown;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.rupertusapps.Countdown;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.rupertusapps.Countdown.watchkitapp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 10.0;
-			};
-			name = Release;
-		};
 		015DD3CC2A774809000EB3C0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -996,15 +821,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		010A3F272B0D959400CE1609 /* Build configuration list for PBXNativeTarget "CountdownWatch Watch App" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				010A3F252B0D959400CE1609 /* Debug */,
-				010A3F262B0D959400CE1609 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		015DD3B72A774807000EB3C0 /* Build configuration list for PBXProject "Countdown" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1063,14 +879,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		010A3F282B0D965000CE1609 /* CountdownData */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = CountdownData;
-		};
-		010A3F2A2B0D965000CE1609 /* CountdownUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = CountdownUI;
-		};
 		014FCD342AE4AA2300C56FAF /* ConfettiSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 01E092342A9DB723006BDABF /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */;

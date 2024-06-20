@@ -35,14 +35,14 @@ struct CountdownEditor: View {
                 Image(systemName: "calendar")
                     .padding(5)
             }
-            Button {
-                clock.pause {
-                    shareCountdown.toggle()
-                }
-            } label: {
-                Image(systemName: "square.and.arrow.up")
-                    .padding(5)
-            }
+//            Button {
+//                clock.pause {
+//                    shareCountdown.toggle()
+//                }
+//            } label: {
+//                Image(systemName: "square.and.arrow.up")
+//                    .padding(5)
+//            }
             Button {
                 clock.pause {
                     deleteCountdown.toggle()

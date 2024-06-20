@@ -49,7 +49,8 @@ public final class Countdown: Codable {
     }
     
     @Relationship(deleteRule: .cascade, inverse: \Card.countdown) public var cards: [Card]?
-    @Transient public var currentBackground: Card.Background? = nil
+    @Transient public var currentBackground: Card.Background?
+    @Transient public var currentBackgroundIcon: Card.Background?
     public var card: Card? {
         return cards?.first
     }
@@ -131,7 +132,9 @@ public final class Countdown: Codable {
     
     public func fetchBackground() async {
         currentBackground = .loading
+        currentBackgroundIcon = .loading
         currentBackground = await card?.getBackground()
+        currentBackgroundIcon = await card?.getBackgroundIcon()
     }
 }
 

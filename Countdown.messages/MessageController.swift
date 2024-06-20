@@ -14,7 +14,7 @@ import CountdownUI
 
 class MessageController: MSMessagesAppViewController, Observable {
     
-    private static let clock = Clock()
+    private let clock = Clock()
     
     private var countdowns: [Countdown] = []
     private var selectedCountdown: Countdown?
@@ -38,14 +38,14 @@ class MessageController: MSMessagesAppViewController, Observable {
             guard let selectedCountdown else { return }
             // Start the clock
             Task {
-                await Self.clock.start(countdowns: [selectedCountdown])
+                await clock.start(countdowns: [selectedCountdown])
             }
             // Set the view
             insertView(CountdownBubble(selectedCountdown: selectedCountdown))
         } else {
             // Start the clock
             Task {
-                await Self.clock.start(countdowns: countdowns)
+                await clock.start(countdowns: countdowns)
             }
             // Set the view
             insertView(CountdownGrid(countdowns: countdowns.filter(\.isSaved)))
@@ -68,7 +68,7 @@ class MessageController: MSMessagesAppViewController, Observable {
         // Create the alternative layout (only used for devices without the app installed)
         let alternateLayout = MSMessageTemplateLayout()
         alternateLayout.caption = countdown.displayName
-        alternateLayout.trailingCaption = "\(Self.clock.daysRemaining(for: countdown))"
+        alternateLayout.trailingCaption = "\(clock.daysRemaining(for: countdown)) days"
         alternateLayout.subcaption = countdown.dateString
         if case .photo(let photo) = countdown.currentBackground, let image = photo.square() {
             alternateLayout.image = image
@@ -121,7 +121,7 @@ class MessageController: MSMessagesAppViewController, Observable {
     private func insertView(_ newView: some View) {
         let swiftUIView = newView
             .modelContainer(sharedModelContainer)
-            .environmentObject(Self.clock)
+            .environmentObject(clock)
             .environment(self)
         let swiftUIViewController = UIHostingController(rootView: swiftUIView)
         
