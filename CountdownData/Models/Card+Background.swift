@@ -40,7 +40,7 @@ extension Card {
         public var icon: BackgroundData? {
             switch self {
             case .photo(let data):
-                if let photo = UIImage(data: data), let compressed = photo.compressed(size: Card.maxIconSize) {
+                if let photo = UIImage(data: data), let compressed = photo.square()?.compressed(size: Card.maxIconSize) {
                     return .photo(compressed)
                 }
             case .photoLink(_):
@@ -50,6 +50,7 @@ extension Card {
         }
     }
     
+    // Update any photo links to raw photo data
     public func updateLink() async {
         if case .photoLink(let url) = backgroundData, let data = try? Data(contentsOf: url), 
             let image = UIImage(data: data), let photoData = image.compressed(size: Card.maxPhotoSize) {

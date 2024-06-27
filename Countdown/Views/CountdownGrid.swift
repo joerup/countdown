@@ -13,6 +13,7 @@ struct CountdownGrid: View {
     
     @EnvironmentObject var clock: Clock
     
+    @Environment(\.modelContext) private var modelContext
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
     var countdowns: [Countdown]
@@ -45,11 +46,14 @@ struct CountdownGrid: View {
                                         .blur(radius: phase.isIdentity ? 0 : 3)
                                 }
                         }
-                        .shadow(radius: 10)
+                        .shadow(radius: 5)
                         .padding(5)
                     }
                 }
                 .padding(.horizontal)
+            }
+            .refreshable {
+                await clock.refresh(countdowns: countdowns)
             }
         }
     }

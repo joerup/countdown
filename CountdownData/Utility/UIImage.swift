@@ -20,7 +20,7 @@ public extension UIImage {
     }
 
     func resized(withPercentage percentage: CGFloat) -> UIImage? {
-        let canvasSize = CGSize(width: size.width * percentage, height: size.height * percentage)
+        let canvasSize = CGSize(width: size.width * percentage + 20, height: size.height * percentage + 20)
         UIGraphicsBeginImageContextWithOptions(canvasSize, false, scale)
         defer { UIGraphicsEndImageContext() }
         draw(in: CGRect(origin: .zero, size: canvasSize))

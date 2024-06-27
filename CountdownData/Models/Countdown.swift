@@ -130,7 +130,7 @@ public final class Countdown: Codable {
         }
     }
     
-    public func fetchBackground() async {
+    func fetchBackground() async {
         currentBackground = .loading
         currentBackgroundIcon = .loading
         currentBackground = await card?.getBackground()

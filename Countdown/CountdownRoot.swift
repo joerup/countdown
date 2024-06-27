@@ -75,11 +75,11 @@ struct CountdownRoot: View {
             newCountdown?.startCardTimer()
         }
         .onChange(of: countdowns) { oldCountdowns, newCountdowns in
-            // Set notification and background for any new countdowns
-            if let countdown = newCountdowns.first(where: { !oldCountdowns.contains($0) }) {
+            // Referesh new countdown
+            for countdown in newCountdowns.filter({ !oldCountdowns.contains($0) }) {
                 clock.scheduleNotification(for: countdown)
                 Task {
-                    await countdown.fetchBackground()
+                    await clock.refresh(countdowns: [countdown])
                 }
             }
         }

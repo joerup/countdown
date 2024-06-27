@@ -88,6 +88,10 @@ public final class Clock: ObservableObject {
         ready()
     }
     
+    public func refresh(countdowns: [Countdown]) async {
+        await fetchCardsAndBackgrounds(for: countdowns)
+    }
+    
     
     // MARK: Calculations
     

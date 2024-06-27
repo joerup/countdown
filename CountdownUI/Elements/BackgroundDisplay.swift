@@ -40,7 +40,7 @@ public struct BackgroundDisplay: View {
         }
         .onChange(of: countdown.card?.backgroundData) { _, _ in
             Task {
-                await countdown.fetchBackground()
+                await clock.refresh(countdowns: [countdown])
             }
         }
     }
