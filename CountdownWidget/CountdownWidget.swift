@@ -16,15 +16,12 @@ struct CountdownWidget: Widget {
      
     let kind: String = "CountdownWidget"
     
-    @State private var clock: Clock = Clock()
-    
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: CountdownWidgetIntent.self, provider: CountdownTimelineProvider()) { entry in
             if let countdown = entry.countdown {
                 Text("")
                     .containerBackground(for: .widget) {
                         CountdownSquare(countdown: countdown)
-                            .environmentObject(clock)
                     }
                     .widgetURL(countdown.linkURL())
             } else {

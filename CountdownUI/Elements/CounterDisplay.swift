@@ -10,42 +10,28 @@ import CountdownData
 
 public struct CounterDisplay: View {
     
-    @EnvironmentObject private var clock: Clock
-    
-    var countdown: Countdown
-    
-    var type: DisplayType
+    var value: Countdown.Counter
     var size: CGFloat
     
-    var tintColor: Color {
-        countdown.card?.tintColor ?? .white
-    }
-    var textStyle: Card.TextStyle {
-        countdown.card?.textStyle ?? .standard
-    }
+    var tintColor: Color
+    var textStyle: Card.TextStyle
     
-    public init(countdown: Countdown, type: DisplayType = .days, size: CGFloat) {
-        self.countdown = countdown
-        self.type = type
+    public init(value: Countdown.Counter = .days(0), tintColor: Color, textStyle: Card.TextStyle, size: CGFloat) {
+        self.value = value
+        self.tintColor = tintColor
+        self.textStyle = textStyle
         self.size = size
-    }
-    
-    public enum DisplayType {
-        case days
-        case full
     }
     
     public var body: some View {
         VStack(spacing: 0) {
             Spacer(minLength: 0)
             Group {
-                let daysRemaining = clock.daysRemaining(for: countdown)
-                let componentsRemaining = clock.componentsRemaining(for: countdown)
-                switch type {
-                case .days:
+                switch value {
+                case .days(let daysRemaining):
                     number(daysRemaining, size: fit(daysRemaining))
                         .frame(height: size)
-                case .full:
+                case .full(let daysRemaining, let componentsRemaining):
                     VStack(spacing: 0) {
                         number(daysRemaining, size: fit(daysRemaining))
                         HStack {
@@ -54,7 +40,6 @@ public struct CounterDisplay: View {
                             numberUnit(componentsRemaining.minute, unit: "m", size: smaller)
                             numberUnit(componentsRemaining.second, unit: "s", size: smaller)
                         }
-                        .blur(radius: clock.isActive ? 0 : 3)
                     }
                 }
             }

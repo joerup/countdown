@@ -10,19 +10,17 @@ import CountdownData
 
 public struct TitleDisplay: View {
     
-    @EnvironmentObject private var clock: Clock
+    private var titleString: String
+    private var dateString: String
+    private var tintColor: Color
     
-    var countdown: Countdown
-    
-    var size: CGFloat
-    var alignment: HorizontalAlignment
-    
-    var tintColor: Color {
-        countdown.card?.tintColor ?? .white
-    }
-    
-    public init(countdown: Countdown, size: CGFloat, alignment: HorizontalAlignment = .center) {
-        self.countdown = countdown
+    private var size: CGFloat
+    private var alignment: HorizontalAlignment
+
+    public init(title: String, date: String, tintColor: Color, size: CGFloat, alignment: HorizontalAlignment = .center) {
+        self.titleString = title
+        self.dateString = date
+        self.tintColor = tintColor
         self.size = size
         self.alignment = alignment
     }
@@ -39,7 +37,7 @@ public struct TitleDisplay: View {
     
     @ViewBuilder
     private func title() -> some View {
-        Text(countdown.displayName)
+        Text(titleString)
             .font(.system(size: size))
             .fontWeight(.bold)
             .fontDesign(.rounded)
@@ -50,7 +48,7 @@ public struct TitleDisplay: View {
     
     @ViewBuilder
     private func date() -> some View {
-        Text(countdown.dateString)
+        Text(dateString)
             .textCase(.uppercase)
             .font(.system(size: size*0.6))
             .fontWeight(.medium)

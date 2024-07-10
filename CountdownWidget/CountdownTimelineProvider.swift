@@ -23,7 +23,7 @@ struct CountdownTimelineProvider: AppIntentTimelineProvider {
             countdowns = (try? sharedModelContainer.mainContext.fetch(FetchDescriptor<Countdown>(predicate: #Predicate { $0.id == id })).sorted()) ?? []
         }
         for countdown in countdowns {
-            await countdown.fetchBackground()
+            await countdown.loadCards()
         }
         return countdowns
     }
@@ -32,7 +32,7 @@ struct CountdownTimelineProvider: AppIntentTimelineProvider {
     @MainActor
     func firstCountdown() async -> Countdown? {
         guard let countdown = (try? sharedModelContainer.mainContext.fetch(FetchDescriptor<Countdown>()).filter({ !$0.isPastDay }).sorted())?.first else { return nil }
-        await countdown.fetchBackground()
+        await countdown.loadCards()
         return countdown
     }
     

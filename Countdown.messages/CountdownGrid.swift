@@ -11,9 +11,6 @@ import CountdownUI
 
 struct CountdownGrid: View {
     
-    @EnvironmentObject var clock: Clock
-    
-    @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(MessageController.self) var controller
     
     var countdowns: [Countdown]
@@ -25,8 +22,7 @@ struct CountdownGrid: View {
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
-                let columns = horizontalSizeClass == .compact ? 2 : Int(geometry.size.width/180)
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: columns)) {
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2)) {
                     ForEach(sortedCountdowns) { countdown in
                         Button {
                             controller.createMessage(for: countdown)

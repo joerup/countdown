@@ -13,7 +13,6 @@ public final class Clock: ObservableObject {
     
     @Published public var tick: Bool
     @Published public var isActive: Bool
-    @Published public var isLoaded: Bool
     
     @AppStorage("notifications") public var notifications: Bool = true
     
@@ -21,13 +20,9 @@ public final class Clock: ObservableObject {
     
     private var timer: Timer?
     
-    private var times: [UUID : Double]
-    
     public init() {
         self.tick = false
         self.isActive = false
-        self.isLoaded = false
-        self.times = [:]
     }
     deinit {
         stop()
@@ -37,11 +32,7 @@ public final class Clock: ObservableObject {
     // MARK: Controls
     
     public func start(countdowns: [Countdown]) async {
-        guard !isLoaded else { return }
         
-        // Fetch countdown cards and backgrounds
-        await fetchCardsAndBackgrounds(for: countdowns)
-    
         // Schedule all notifications
         scheduleNotifications(for: countdowns)
         
@@ -51,9 +42,6 @@ public final class Clock: ObservableObject {
         DispatchQueue.main.asyncAfter(deadline: .now() + initialDelay) {
             self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
                 if self.isActive {
-                    for countdown in countdowns {
-                        self.setTimeRemaining(for: countdown)
-                    }
                     self.tick.toggle()
                 }
             }
@@ -61,7 +49,6 @@ public final class Clock: ObservableObject {
         
         await MainActor.run {
             self.isActive = true
-            self.isLoaded = true
         }
     }
     
@@ -88,66 +75,22 @@ public final class Clock: ObservableObject {
         ready()
     }
     
-    public func refresh(countdowns: [Countdown]) async {
-        await fetchCardsAndBackgrounds(for: countdowns)
-    }
+//    public func refresh(countdowns: [Countdown]) async {
+//        await fetchCardsAndBackgrounds(for: countdowns)
+//    }
     
     
     // MARK: Calculations
     
-    public func setTimeRemaining(for countdown: Countdown) {
-        times[countdown.id] = countdown.date.timeIntervalSinceNow
-    }
-    
-    public func timeRemaining(for countdown: Countdown) -> Double? {
-        return times[countdown.id]
-    }
-    
-    public func daysRemaining(for countdown: Countdown) -> Int {
-        let components = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: .now, to: countdown.date < .now ? .now : countdown.date.midnight.advanced(by: 1))
-        guard let day = components.day, let hour = components.hour, let minute = components.minute, let second = components.second else { return 0 }
-        return day + (hour <= 0 && minute <= 0 && second <= 0 ? 0 : 1)
-    }
-    
-    public func componentsRemaining(for countdown: Countdown) -> DateComponents {
-        Calendar.current.dateComponents([.day, .hour, .minute, .second], from: .now, to: countdown.date < .now ? .now : countdown.date.advanced(by: 1))
-    }
-    
-    
-    // MARK: Countdown Maintenance
-    
-    private func fetchCardsAndBackgrounds(for countdowns: [Countdown]) async {
-        
-        // Change photo URLs to image data
-        for countdown in countdowns {
-            await countdown.card?.updateLink()
-        }
-        
-        // Match backgrounds and background icons
-        for card in countdowns.compactMap(\.cards).reduce([], +) {
-            if card.backgroundData != nil && card.backgroundIconData == nil {
-                card.setBackground(card.backgroundData)
-            }
-        }
-        
-        // Fetch countdown backgrounds
-        for countdown in countdowns {
-            if countdown.currentBackground == nil || countdown.currentBackgroundIcon == nil {
-                await countdown.fetchBackground()
-            }
-        }
-        
-        // Add cards to empty countdowns
-        for countdown in countdowns {
-            if let cards = countdown.cards {
-                if cards.isEmpty {
-                    countdown.addCard(Card())
-                }
-            } else {
-                countdown.cards = [Card()]
-            }
-        }
-    }
+//    public func daysRemaining(for countdown: Countdown) -> Int {
+//        let components = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: .now, to: countdown.date < .now ? .now : countdown.date.midnight.advanced(by: 1))
+//        guard let day = components.day, let hour = components.hour, let minute = components.minute, let second = components.second else { return 0 }
+//        return day + (hour <= 0 && minute <= 0 && second <= 0 ? 0 : 1)
+//    }
+//    
+//    public func componentsRemaining(for countdown: Countdown) -> DateComponents {
+//        Calendar.current.dateComponents([.day, .hour, .minute, .second], from: .now, to: countdown.date < .now ? .now : countdown.date.advanced(by: 1))
+//    }
     
     
     // MARK: Notifications

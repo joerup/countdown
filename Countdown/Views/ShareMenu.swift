@@ -25,7 +25,7 @@ struct ShareMenu: UIViewControllerRepresentable {
         
         // Create the message
         let message = MSMessage()
-        message.url = countdown.encodingURL()
+//        message.url = countdown.encodingURL()
         
         if let url = message.url {
             composeVC.addAttachmentURL(url, withAlternateFilename: "MyAttachment")

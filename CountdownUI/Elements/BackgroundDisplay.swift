@@ -10,19 +10,11 @@ import CountdownData
 
 public struct BackgroundDisplay: View {
     
-    @EnvironmentObject private var clock: Clock
+    private var background: Card.Background?
+    private var blurRadius: Double = 0
     
-    var countdown: Countdown
-    var icon: Bool
-    var blurRadius: Double = 0
-    
-    private var background: Card.Background? {
-        return icon ? countdown.currentBackgroundIcon : countdown.currentBackground
-    }
-    
-    public init(countdown: Countdown, icon: Bool = false, blurRadius: Double = 0) {
-        self.countdown = countdown
-        self.icon = icon
+    public init(background: Card.Background?, blurRadius: Double = 0) {
+        self.background = background
         self.blurRadius = blurRadius
     }
     
@@ -36,11 +28,6 @@ public struct BackgroundDisplay: View {
                     .blur(radius: blurRadius)
             case .loading, nil:
                 Rectangle().fill(Color.init(red: 163/255, green: 55/255, blue: 68/255))
-            }
-        }
-        .onChange(of: countdown.card?.backgroundData) { _, _ in
-            Task {
-                await clock.refresh(countdowns: [countdown])
             }
         }
     }

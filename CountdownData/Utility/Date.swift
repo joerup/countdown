@@ -9,6 +9,16 @@ import Foundation
 
 public extension Date {
     
+    func daysRemaining(relativeTo reference: Date = .now) -> Int {
+        let components = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: reference, to: self < reference ? reference : self.midnight.advanced(by: 1))
+        guard let day = components.day, let hour = components.hour, let minute = components.minute, let second = components.second else { return 0 }
+        return day + (hour <= 0 && minute <= 0 && second <= 0 ? 0 : 1)
+    }
+    
+    func componentsRemaining(relativeTo reference: Date = .now) -> DateComponents {
+        Calendar.current.dateComponents([.day, .hour, .minute, .second], from: .now, to: self < reference ? reference : self.advanced(by: 1))
+    }
+    
     var dateString: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = timeIntervalSinceNow < 86400*365 ? "EEE MMM d" : "EEE MMM d YYYY"

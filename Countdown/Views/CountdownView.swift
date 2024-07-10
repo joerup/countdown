@@ -21,8 +21,9 @@ struct CountdownView: View {
     var countdowns: [Countdown]
     var sortedCountdowns: [Countdown] {
         if !searchText.isEmpty {
-            return countdowns.filter {  $0.name.lowercased().starts(with: searchText.lowercased()) } .sorted()
-            + countdowns.filter { $0.name.lowercased().contains(searchText.lowercased()) && !$0.name.lowercased().starts(with: searchText.lowercased()) } .sorted()
+            return (countdowns.filter {  $0.name.lowercased().starts(with: searchText.lowercased()) } .sorted()
+            + countdowns.filter { $0.name.lowercased().contains(searchText.lowercased()) && !$0.name.lowercased().starts(with: searchText.lowercased()) } .sorted())
+            .filter { showArchive ? $0.isComplete : !$0.isPastDay }
         } else if showArchive {
             return countdowns.filter { $0.isComplete } .sorted().reversed()
         } else {

@@ -14,17 +14,18 @@ import CountdownUI
 
 class MessageController: MSMessagesAppViewController, Observable {
     
-    private let clock = Clock()
-    
     private var countdowns: [Countdown] = []
-    private var selectedCountdown: Countdown?
+    
+    private var context: ModelContext {
+        sharedModelContainer.mainContext
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Fetch the countdowns
         do {
-            countdowns = try sharedModelContainer.mainContext.fetch(FetchDescriptor<Countdown>())
+            countdowns = try context.fetch(FetchDescriptor<Countdown>())
         } catch {
             print(error)
         }
@@ -33,22 +34,31 @@ class MessageController: MSMessagesAppViewController, Observable {
         update()
     }
     
-    private func update() {
+    private func update(instance: CountdownInstance? = nil, sent: Bool? = nil) {
         if presentationStyle == .transcript {
-            guard let selectedCountdown else { return }
-            // Start the clock
+            guard let instance, let sent else { return }
+            let existingCountdown = countdowns.first(where: { $0.id == instance.countdownID })
+            
             Task {
-                await clock.start(countdowns: [selectedCountdown])
+                insertView(CountdownBubble(instance: instance, existingCountdown: existingCountdown, sent: sent, update: update(instance:sent:), append: { self.countdowns.append($0) }))
+                
+                if let existingCountdown, instance.compareTo(countdown: existingCountdown) {
+                    await existingCountdown.loadCards()
+                } else {
+                    await instance.loadCard()
+                }
+                
+                insertView(CountdownBubble(instance: instance, existingCountdown: existingCountdown, sent: sent, update: update(instance:sent:), append: { self.countdowns.append($0) }))
             }
-            // Set the view
-            insertView(CountdownBubble(selectedCountdown: selectedCountdown))
-        } else {
-            // Start the clock
+        }
+        else {
             Task {
-                await clock.start(countdowns: countdowns)
+                for countdown in countdowns {
+                    await countdown.loadCards()
+                }
+                
+                insertView(CountdownGrid(countdowns: countdowns))
             }
-            // Set the view
-            insertView(CountdownGrid(countdowns: countdowns.filter(\.isSaved)))
         }
     }
     
@@ -68,7 +78,7 @@ class MessageController: MSMessagesAppViewController, Observable {
         // Create the alternative layout (only used for devices without the app installed)
         let alternateLayout = MSMessageTemplateLayout()
         alternateLayout.caption = countdown.displayName
-        alternateLayout.trailingCaption = "\(clock.daysRemaining(for: countdown)) days"
+        alternateLayout.trailingCaption = "\(countdown.date.daysRemaining()) days"
         alternateLayout.subcaption = countdown.dateString
         if case .photo(let photo) = countdown.currentBackground, let image = photo.square() {
             alternateLayout.image = image
@@ -78,8 +88,9 @@ class MessageController: MSMessagesAppViewController, Observable {
         let layout = MSMessageLiveLayout(alternateLayout: alternateLayout)
         message.layout = layout
         
-        // Set the URL which encodes the countdown data
-        if let url = countdown.encodingURL() {
+        // Create a specific instance and URL to decode it
+        let instance = CountdownInstance(from: countdown)
+        if let url = instance.toEncodingURL() {
             message.url = url
         }
         
@@ -95,24 +106,25 @@ class MessageController: MSMessagesAppViewController, Observable {
     override func didBecomeActive(with conversation: MSConversation) {
         super.didBecomeActive(with: conversation)
         
-        guard presentationStyle == .transcript, let url = conversation.selectedMessage?.url else { return }
+        // Decode the message and create an instance of a countdown
+        guard let message = conversation.selectedMessage,
+            let url = message.url,
+            let instance = CountdownInstance.fromEncodingURL(url)
+        else { return }
         
         // Use the alternateLayout image as a workaround to send image if represented as data, instead of sending it through URL
         let image: UIImage? =
-        if let layout = conversation.selectedMessage?.layout as? MSMessageLiveLayout {
+        if let layout = message.layout as? MSMessageLiveLayout {
             layout.alternateLayout.image
         } else {
             nil
         }
-        
-        // Decode the countdown from the URL
-        guard let countdown = Countdown.fromEncodingURL(url, modelContext: sharedModelContainer.mainContext, countdowns: countdowns, image: image) else { return }
+        if let image, let photoData = image.compressed(size: Card.maxPhotoSize) {
+            instance.setBackground(.photo(photoData))
+        }
         
         // Update the message bubble
-        if countdown != selectedCountdown {
-            selectedCountdown = countdown
-            update()
-        }
+        update(instance: instance, sent: true)//conversation.localParticipantIdentifier == message.senderParticipantIdentifier)
     }
 
     
@@ -121,7 +133,7 @@ class MessageController: MSMessagesAppViewController, Observable {
     private func insertView(_ newView: some View) {
         let swiftUIView = newView
             .modelContainer(sharedModelContainer)
-            .environmentObject(clock)
+//            .environmentObject(clock)
             .environment(self)
         let swiftUIViewController = UIHostingController(rootView: swiftUIView)
         

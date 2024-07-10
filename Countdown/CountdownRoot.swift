@@ -13,23 +13,22 @@ import WidgetKit
 struct CountdownRoot: View {
     
     @Environment(\.modelContext) private var modelContext
-    
     @Environment(\.scenePhase) var scenePhase
     
     @Query private var countdowns: [Countdown]
-    
     @State private var selectedCountdown: Countdown?
     
     @StateObject private var clock: Clock = Clock()
     @StateObject private var premium: Premium = Premium()
     
-    @State private var newCountdown: Countdown?
+    @State private var isLoaded: Bool = false
+    @State private var newCountdown: CountdownInstance?
     @State private var requestNewCountdown: Bool = false
     
     var body: some View {
         Group {
-            if clock.isLoaded {
-                CountdownView(countdowns: countdowns.filter(\.isSaved), selectedCountdown: $selectedCountdown)
+            if isLoaded {
+                CountdownView(countdowns: countdowns, selectedCountdown: $selectedCountdown)
             } else {
                 loadingScreen
             }
@@ -37,34 +36,18 @@ struct CountdownRoot: View {
         .environmentObject(clock)
         .environmentObject(premium)
         .task {
-            await clock.start(countdowns: countdowns)
+            for countdown in countdowns {
+                await countdown.loadCards()
+            }
+            isLoaded = true
         }
         .task {
             await premium.update()
         }
         .onOpenURL { url in
             if let countdown = Countdown.fromLinkURL(url, countdowns: countdowns) {
-                if countdown.isSaved {
-                    selectedCountdown = countdown
-                } else {
-                    newCountdown = countdown
-                    requestNewCountdown = true
-                }
+                selectedCountdown = countdown
             }
-        }
-        .alert(isPresented: $requestNewCountdown) {
-            Alert(title: Text("Add \(newCountdown?.displayName ?? "")"), message: Text("Would you like to save this countdown?"),
-                primaryButton: .default(Text("Save")) {
-                    withAnimation {
-                        newCountdown?.isSaved = true
-                        selectedCountdown = newCountdown
-                        newCountdown = nil
-                    }
-                },
-                secondaryButton: .cancel(Text("Cancel")) {
-                    newCountdown = nil
-                }
-            )
         }
         .onChange(of: scenePhase) {
             WidgetCenter.shared.reloadAllTimelines()
@@ -79,7 +62,7 @@ struct CountdownRoot: View {
             for countdown in newCountdowns.filter({ !oldCountdowns.contains($0) }) {
                 clock.scheduleNotification(for: countdown)
                 Task {
-                    await clock.refresh(countdowns: [countdown])
+                    await countdown.loadCards()
                 }
             }
         }

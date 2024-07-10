@@ -64,6 +64,6 @@ struct CountdownEntityQuery: EntityQuery {
             print("Failed to get countdowns")
             return []
         }
-        return countdowns.filter({ !$0.isPastDay && $0.isSaved }).sorted().map { CountdownEntity(from: $0) }
+        return countdowns.filter({ !$0.isPastDay }).sorted().map { CountdownEntity(from: $0) }
     }
 }

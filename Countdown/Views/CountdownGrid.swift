@@ -22,6 +22,13 @@ struct CountdownGrid: View {
     
     var showArchive: Bool
     
+    @State private var editDestination: Bool = false
+    @State private var editDestinationValue: Countdown?
+    @State private var shareCountdown: Bool = false
+    @State private var shareCountdownValue: Countdown?
+    @State private var deleteCountdown: Bool = false
+    @State private var deleteCountdownValue: Countdown?
+    
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
@@ -35,25 +42,67 @@ struct CountdownGrid: View {
                             }
                         } label: {
                             CountdownSquare(countdown: countdown)
-                                .cornerRadius(20)
                                 .aspectRatio(1.0, contentMode: .fill)
                                 .frame(maxWidth: 200)
                                 .background(Color.blue.opacity(0.2))
-                                .clipShape(RoundedRectangle(cornerRadius: 20))
-                                .scrollTransition { content, phase in
-                                    content
-                                        .scaleEffect(phase.isIdentity ? 1 : 0.8)
-                                        .blur(radius: phase.isIdentity ? 0 : 3)
-                                }
                         }
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
                         .shadow(radius: 5)
+                        .contextMenu {
+                            if countdown.canEditDestination {
+                                Button {
+                                    self.editDestinationValue = countdown
+                                    self.editDestination.toggle()
+                                } label: {
+                                    Label("Edit Date", systemImage: "calendar")
+                                }
+                            }
+//                            Button {
+//                                self.shareCountdownValue = countdown
+//                                self.shareCountdown.toggle()
+//                            } label: {
+//                                Label("Share", systemImage: "square.and.arrow.up")
+//                            }
+                            Button(role: .destructive) {
+                                self.deleteCountdownValue = countdown
+                                self.deleteCountdown.toggle()
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
                         .padding(5)
                     }
                 }
                 .padding(.horizontal)
             }
+            .sheet(isPresented: $editDestination) {
+                if let countdown = editDestinationValue {
+                    OccasionEditor(countdown: countdown)
+                }
+            }
+            .sheet(isPresented: $shareCountdown) {
+                if let countdown = shareCountdownValue {
+                    ShareMenu(countdown: countdown)
+                }
+            }
+            .alert("Delete Countdown", isPresented: $deleteCountdown) {
+                Button("Cancel", role: .cancel) {
+                    deleteCountdown = false
+                    deleteCountdownValue = nil
+                }
+                if let countdown = deleteCountdownValue {
+                    Button("Delete", role: .destructive) {
+                        clock.unscheduleNotifications(for: countdown)
+                        modelContext.delete(countdown)
+                    }
+                }
+            } message: {
+                Text("Are you sure you want to delete this countdown? This action cannot be undone.")
+            }
             .refreshable {
-                await clock.refresh(countdowns: countdowns)
+                for countdown in countdowns {
+                    await countdown.loadCards()
+                }
             }
         }
     }

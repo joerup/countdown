@@ -16,6 +16,6 @@ struct CountdownApp: App {
         WindowGroup {
             CountdownRoot()
         }
-        .modelContainer(for: Countdown.self)
+        .modelContainer(for: [Countdown.self])
     }
 }

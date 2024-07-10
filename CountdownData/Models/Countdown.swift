@@ -10,14 +10,13 @@ import SwiftData
 import SwiftUI
 
 @Model
-public final class Countdown: Codable {
+public final class Countdown {
     
     public var id: UUID = UUID()
     public var name: String = ""
     public var displayName: String = ""
     public var type: EventType = EventType.custom
     public var occasion: Occasion = Occasion.now
-    public var isSaved: Bool = true
     
     public var date: Date {
         occasion.date
@@ -48,6 +47,15 @@ public final class Countdown: Codable {
         return Calendar.current.date(byAdding: .day, value: 1, to: .now) ?? .now >= date
     }
     
+    public enum Counter {
+        case days(Int)
+        case full(Int, DateComponents)
+    }
+    
+    public var canEditDestination: Bool {
+        return type == .custom
+    }
+    
     @Relationship(deleteRule: .cascade, inverse: \Card.countdown) public var cards: [Card]?
     @Transient public var currentBackground: Card.Background?
     @Transient public var currentBackgroundIcon: Card.Background?
@@ -65,7 +73,6 @@ public final class Countdown: Codable {
         self.displayName = displayName
         self.type = type
         self.occasion = occasion
-        self.isSaved = true
         self.cards = [Card()]
     }
     public init(name: String, date: Date) {
@@ -74,32 +81,24 @@ public final class Countdown: Codable {
         self.displayName = name
         self.type = .custom
         self.occasion = .now
-        self.isSaved = true
         self.cards = [Card()]
     }
     
-    enum CodingKeys: CodingKey {
-        case id, name, displayName, type, occasion, isSaved, cards
+    public init(from instance: CountdownInstance) {
+        self.id = instance.countdownID
+        self.name = instance.name
+        self.displayName = instance.displayName
+        self.type = instance.type
+        self.occasion = instance.occasion
+        self.cards = [Card(from: instance)]
     }
-    public required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(UUID.self, forKey: .id)
-        name = try container.decode(String.self, forKey: .name)
-        displayName = try container.decode(String.self, forKey: .displayName)
-        type = try container.decode(EventType.self, forKey: .type)
-        occasion = try container.decode(Occasion.self, forKey: .occasion)
-        isSaved = try container.decode(Bool.self, forKey: .isSaved)
-        cards = try container.decode([Card].self, forKey: .cards)
-    }
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(id, forKey: .id)
-        try container.encode(name, forKey: .name)
-        try container.encode(displayName, forKey: .displayName)
-        try container.encode(type, forKey: .type)
-        try container.encode(occasion, forKey: .occasion)
-        try container.encode(isSaved, forKey: .isSaved)
-        try container.encode(cards, forKey: .cards)
+    public func match(_ instance: CountdownInstance) {
+        self.id = instance.countdownID
+        self.name = instance.name
+        self.displayName = instance.displayName
+        self.type = instance.type
+        self.occasion = instance.occasion
+        self.card?.match(instance)
     }
     
     public func addCard(_ card: Card) {
@@ -130,11 +129,34 @@ public final class Countdown: Codable {
         }
     }
     
-    func fetchBackground() async {
-        currentBackground = .loading
-        currentBackgroundIcon = .loading
-        currentBackground = await card?.getBackground()
-        currentBackgroundIcon = await card?.getBackgroundIcon()
+    public func loadCards() async {
+        
+        // Change photo URL to image data
+        await card?.updateLink()
+        
+        // Match backgrounds and background icons
+        for card in (cards ?? []) {
+            if card.backgroundData != nil && card.backgroundIconData == nil {
+                card.setBackground(card.backgroundData)
+            }
+        }
+        
+        // Fetch countdown backgrounds
+        if currentBackground == nil || currentBackgroundIcon == nil {
+            currentBackground = .loading
+            currentBackgroundIcon = .loading
+            currentBackground = await card?.getBackground()
+            currentBackgroundIcon = await card?.getBackgroundIcon()
+        }
+        
+        // Add cards to empty countdowns
+        if let cards {
+            if cards.isEmpty {
+                addCard(Card())
+            }
+        } else {
+            cards = [Card()]
+        }
     }
 }
 

@@ -27,13 +27,15 @@ struct CountdownEditor: View {
     
     var body: some View {
         HStack {
-            Button {
-                clock.pause {
-                    editDestination.toggle()
+            if countdown.canEditDestination {
+                Button {
+                    clock.pause {
+                        editDestination.toggle()
+                    }
+                } label: {
+                    Image(systemName: "calendar")
+                        .padding(5)
                 }
-            } label: {
-                Image(systemName: "calendar")
-                    .padding(5)
             }
 //            Button {
 //                clock.pause {
