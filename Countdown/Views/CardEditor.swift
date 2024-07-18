@@ -13,8 +13,6 @@ struct CardEditor: View {
     
     @Environment(\.modelContext) var modelContext
     
-    @EnvironmentObject var clock: Clock
-    
     var card: Card
     
     @State private var tintColor: Color = .white
@@ -35,7 +33,11 @@ struct CardEditor: View {
             .confirmationDialog("Change background", isPresented: $editBackground) {
                 Button("Photo Library") { showPhotoLibrary.toggle() }
                 Button("Unsplash") { showUnsplashLibrary.toggle() }
-                Button("None") { card.setBackground(nil) }
+                Button("None") {
+                    card.setBackground(nil)
+                    UIImpactFeedbackGenerator().impactOccurred()
+                    updateCard()
+                }
             } message: {
                 Text("Choose a new background")
             }
@@ -54,12 +56,14 @@ struct CardEditor: View {
         } onReturn: { photo in
             card.setBackground(.photo(photo))
             UIImpactFeedbackGenerator().impactOccurred()
+            updateCard()
         }
         .unsplashMenu(isPresented: $showUnsplashLibrary) {
             card.loadingBackground()
         } onReturn: { photo in
             card.setBackground(.photo(photo))
             UIImpactFeedbackGenerator().impactOccurred()
+            updateCard()
         }
         .onAppear {
             tintColor = card.tintColor
@@ -70,6 +74,14 @@ struct CardEditor: View {
         }
         .onChange(of: textStyle) { _, style in
             card.textStyle = style
+        }
+    }
+    
+    private func updateCard() {
+        if card == card.countdown?.card {
+            Task {
+                await card.countdown?.loadCards()
+            }
         }
     }
     

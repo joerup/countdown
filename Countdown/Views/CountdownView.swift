@@ -7,7 +7,6 @@
 
 import SwiftUI
 import Foundation
-import SwiftData
 import CountdownData
 import CountdownUI
 

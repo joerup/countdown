@@ -40,13 +40,7 @@ class MessageController: MSMessagesAppViewController, Observable {
             let existingCountdown = countdowns.first(where: { $0.id == instance.countdownID })
             
             Task {
-                insertView(CountdownBubble(instance: instance, existingCountdown: existingCountdown, sent: sent, update: update(instance:sent:), append: { self.countdowns.append($0) }))
-                
-                if let existingCountdown, instance.compareTo(countdown: existingCountdown) {
-                    await existingCountdown.loadCards()
-                } else {
-                    await instance.loadCard()
-                }
+                await instance.loadCard()
                 
                 insertView(CountdownBubble(instance: instance, existingCountdown: existingCountdown, sent: sent, update: update(instance:sent:), append: { self.countdowns.append($0) }))
             }
@@ -124,7 +118,7 @@ class MessageController: MSMessagesAppViewController, Observable {
         }
         
         // Update the message bubble
-        update(instance: instance, sent: true)//conversation.localParticipantIdentifier == message.senderParticipantIdentifier)
+        update(instance: instance, sent: conversation.localParticipantIdentifier == message.senderParticipantIdentifier)
     }
 
     

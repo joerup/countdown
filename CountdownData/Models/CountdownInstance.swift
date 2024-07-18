@@ -43,9 +43,9 @@ public final class CountdownInstance: Codable {
         self.displayName = countdown.displayName
         self.type = countdown.type
         self.occasion = countdown.occasion
-        self.tint = countdown.card?.tintColor.rgb ?? Color.white.rgb
-        self.textStyle = countdown.card?.textStyle ?? .standard
-        self.textShadow = countdown.card?.textShadow ?? 0
+        self.tint = countdown.currentTintColor?.rgb ?? Color.white.rgb
+        self.textStyle = countdown.currentTextStyle ?? .standard
+        self.textShadow = countdown.currentTextShadow ?? 0
         self.backgroundData = countdown.card?.backgroundData
         self.backgroundIconData = countdown.card?.backgroundIconData
         self.backgroundID = countdown.card?.backgroundID ?? UUID()
@@ -104,9 +104,9 @@ public final class CountdownInstance: Codable {
         self.displayName == countdown.displayName &&
         self.type == countdown.type &&
         self.occasion == countdown.occasion &&
-        self.tint == countdown.card?.tintColor.rgb &&
-        self.textStyle == countdown.card?.textStyle &&
-        self.textShadow == countdown.card?.textShadow &&
+        self.tint == countdown.currentTintColor?.rgb &&
+        self.textStyle == countdown.currentTextStyle &&
+        self.textShadow == countdown.currentTextShadow &&
         self.backgroundID == countdown.card?.backgroundID
     }
     

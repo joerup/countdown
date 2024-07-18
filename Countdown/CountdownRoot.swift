@@ -12,66 +12,41 @@ import WidgetKit
 
 struct CountdownRoot: View {
     
-    @Environment(\.modelContext) private var modelContext
     @Environment(\.scenePhase) var scenePhase
     
-    @Query private var countdowns: [Countdown]
     @State private var selectedCountdown: Countdown?
     
-    @StateObject private var clock: Clock = Clock()
+    @State private var clock: Clock
     @StateObject private var premium: Premium = Premium()
     
-    @State private var isLoaded: Bool = false
     @State private var newCountdown: CountdownInstance?
     @State private var requestNewCountdown: Bool = false
     
+    init(modelContext: ModelContext) {
+        let clock = Clock(modelContext: modelContext)
+        _clock = State(initialValue: clock)
+    }
+    
     var body: some View {
         Group {
-            if isLoaded {
-                CountdownView(countdowns: countdowns, selectedCountdown: $selectedCountdown)
+            if clock.isLoaded {
+                CountdownView(countdowns: clock.countdowns, selectedCountdown: $selectedCountdown)
             } else {
                 loadingScreen
             }
         }
-        .environmentObject(clock)
+        .environment(clock)
         .environmentObject(premium)
-        .task {
-            for countdown in countdowns {
-                await countdown.loadCards()
-            }
-            isLoaded = true
-        }
-        .task {
+        .task { 
             await premium.update()
         }
         .onOpenURL { url in
-            if let countdown = Countdown.fromLinkURL(url, countdowns: countdowns) {
+            if let countdown = clock.getCountdown(from: url) {
                 selectedCountdown = countdown
             }
         }
         .onChange(of: scenePhase) {
             WidgetCenter.shared.reloadAllTimelines()
-        }
-        .onChange(of: selectedCountdown) { oldCountdown, newCountdown in
-            // Set the background timer
-            oldCountdown?.stopCardTimer()
-            newCountdown?.startCardTimer()
-        }
-        .onChange(of: countdowns) { oldCountdowns, newCountdowns in
-            // Referesh new countdown
-            for countdown in newCountdowns.filter({ !oldCountdowns.contains($0) }) {
-                clock.scheduleNotification(for: countdown)
-                Task {
-                    await countdown.loadCards()
-                }
-            }
-        }
-        .onChange(of: clock.notifications) { _, active in
-            if active {
-                clock.scheduleNotifications(for: countdowns)
-            } else {
-                clock.unscheduleNotifications()
-            }
         }
     }
     

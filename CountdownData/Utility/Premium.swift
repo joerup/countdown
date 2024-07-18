@@ -16,7 +16,7 @@ public class Premium: ObservableObject {
 
     // Premium is currently active
     public var isActive: Bool {
-        !purchasedProductIDs.isEmpty
+        true// !purchasedProductIDs.isEmpty
     }
     
     public init() { }

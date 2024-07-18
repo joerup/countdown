@@ -11,8 +11,7 @@ import CountdownUI
 
 struct CountdownGrid: View {
     
-    @EnvironmentObject var clock: Clock
-    
+    @Environment(Clock.self) private var clock
     @Environment(\.modelContext) private var modelContext
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
@@ -37,9 +36,7 @@ struct CountdownGrid: View {
                     ForEach(countdowns) { countdown in
                         Button {
                             UIImpactFeedbackGenerator().impactOccurred()
-                            clock.pause {
-                                self.selectedCountdown = countdown
-                            }
+                            self.selectedCountdown = countdown
                         } label: {
                             CountdownSquare(countdown: countdown)
                                 .aspectRatio(1.0, contentMode: .fill)
@@ -92,17 +89,14 @@ struct CountdownGrid: View {
                 }
                 if let countdown = deleteCountdownValue {
                     Button("Delete", role: .destructive) {
-                        clock.unscheduleNotifications(for: countdown)
-                        modelContext.delete(countdown)
+                        clock.delete(countdown)
                     }
                 }
             } message: {
                 Text("Are you sure you want to delete this countdown? This action cannot be undone.")
             }
             .refreshable {
-                for countdown in countdowns {
-                    await countdown.loadCards()
-                }
+                await clock.refresh()
             }
         }
     }

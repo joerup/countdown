@@ -19,11 +19,12 @@ struct CountdownWidget: Widget {
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: CountdownWidgetIntent.self, provider: CountdownTimelineProvider()) { entry in
             if let countdown = entry.countdown {
-                Text("")
+                CountdownSquareText(countdown: countdown)
+                    .padding(.bottom, -10)
                     .containerBackground(for: .widget) {
-                        CountdownSquare(countdown: countdown)
+                        BackgroundDisplay(background: countdown.currentBackgroundIcon, blurRadius: 1)
                     }
-                    .widgetURL(countdown.linkURL())
+                    .widgetURL(countdown.getURL())
             } else {
                 Text("No countdowns")
                     .fontWeight(.bold)

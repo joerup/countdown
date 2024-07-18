@@ -12,10 +12,20 @@ import CountdownData
 @main
 struct CountdownApp: App {
     
+    let container: ModelContainer
+    
     var body: some Scene {
         WindowGroup {
-            CountdownRoot()
+            CountdownRoot(modelContext: container.mainContext)
         }
-        .modelContainer(for: [Countdown.self])
+        .modelContainer(container)
+    }
+    
+    init() {
+        do {
+            container = try ModelContainer(for: Countdown.self)
+        } catch {
+            fatalError("Failed to create ModelContainer for Movie.")
+        }
     }
 }

@@ -11,7 +11,7 @@ import CountdownUI
 
 struct CountdownCarousel: View {
     
-    @EnvironmentObject var clock: Clock
+    @Environment(Clock.self) private var clock
     
     var countdowns: [Countdown]
     
@@ -83,10 +83,8 @@ struct CountdownCarousel: View {
             VStack(spacing: 0) {
                 if editing, let selectedCountdown {
                     CountdownEditor(countdown: selectedCountdown, editing: $editing, onDelete: {
-                        clock.pause {
-                            self.selectedCountdown = nil
-                            self.editing = false
-                        }
+                        self.selectedCountdown = nil
+                        self.editing = false
                     })
                     Spacer(minLength: 0)
                 } else {
@@ -137,23 +135,18 @@ struct CountdownCarousel: View {
             .gesture(cardGesture(size: size))
             .simultaneousGesture(TapGesture().onEnded { _ in
                 if editing {
-                    clock.pause {
-                        editing.toggle()
-                    }
+                    editing.toggle()
                 }
             })
             .simultaneousGesture(LongPressGesture().onEnded { _ in
                 UIImpactFeedbackGenerator().impactOccurred()
-                clock.pause {
-                    self.editing.toggle()
-                }
+                self.editing.toggle()
             })
     }
     
     private func cardGesture(size: CGSize) -> some Gesture {
         DragGesture()
             .onChanged { value in
-                clock.pause()
                 self.offset = value.translation
                 if editing {
                     offset.height = 0
@@ -166,43 +159,41 @@ struct CountdownCarousel: View {
                 }
             }
             .onEnded { _ in
-                clock.pause {
-                    withAnimation(.easeInOut(duration: clock.delay)) {
-                        if abs(offset.height) > 100 {
-                            self.selectedCountdown = nil
-                        }
-                        else if offset.width > 100 {
-                            self.offset.width = size.width+15
-                        }
-                        else if offset.width < -100 {
-                            self.offset.width = -size.width-15
-                        }
-                        else {
-                            self.offset.width = 0
-                        }
-                        self.offset.height = 0
+                withAnimation(.easeInOut(duration: clock.delay)) {
+                    if abs(offset.height) > 100 {
+                        self.selectedCountdown = nil
                     }
-                    
-                    if let last1, offset.width > 100 {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + clock.delay) {
-                            self.selectedCountdown = last1
-                            self.offset = .zero
-                        }
+                    else if offset.width > 100 {
+                        self.offset.width = size.width+15
                     }
-                    else if let next1, offset.width < -100 {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + clock.delay) {
-                            self.selectedCountdown = next1
-                            self.offset = .zero
-                        }
+                    else if offset.width < -100 {
+                        self.offset.width = -size.width-15
                     }
                     else {
-                        withAnimation(.easeInOut(duration: clock.delay)) {
-                            if abs(offset.width) > 100 {
-                                self.selectedCountdown = nil
-                                self.editing = false
-                            }
-                            self.offset = .zero
+                        self.offset.width = 0
+                    }
+                    self.offset.height = 0
+                }
+                
+                if let last1, offset.width > 100 {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + clock.delay) {
+                        self.selectedCountdown = last1
+                        self.offset = .zero
+                    }
+                }
+                else if let next1, offset.width < -100 {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + clock.delay) {
+                        self.selectedCountdown = next1
+                        self.offset = .zero
+                    }
+                }
+                else {
+                    withAnimation(.easeInOut(duration: clock.delay)) {
+                        if abs(offset.width) > 100 {
+                            self.selectedCountdown = nil
+                            self.editing = false
                         }
+                        self.offset = .zero
                     }
                 }
             }
@@ -212,9 +203,7 @@ struct CountdownCarousel: View {
         HStack(spacing: 15) {
             Button {
                 UIImpactFeedbackGenerator().impactOccurred()
-                clock.pause {
-                    editing.toggle()
-                }
+                editing.toggle()
             } label: {
                 Image(systemName: "pencil.circle.fill")
                     .imageScale(.large)
@@ -224,9 +213,7 @@ struct CountdownCarousel: View {
             }
             Spacer()
             Button {
-                clock.pause {
-                    selectedCountdown = nil
-                }
+                selectedCountdown = nil
             } label: {
                 Image(systemName: "xmark.circle.fill")
                     .imageScale(.large)

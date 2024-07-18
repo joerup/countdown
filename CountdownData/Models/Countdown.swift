@@ -57,8 +57,21 @@ public final class Countdown {
     }
     
     @Relationship(deleteRule: .cascade, inverse: \Card.countdown) public var cards: [Card]?
+    
     @Transient public var currentBackground: Card.Background?
     @Transient public var currentBackgroundIcon: Card.Background?
+    @Transient public var currentBackgroundID: UUID = UUID()
+    
+    public var currentTintColor: Color? {
+        return card?.tintColor
+    }
+    public var currentTextStyle: Card.TextStyle? {
+        return card?.textStyle
+    }
+    public var currentTextShadow: Card.TextShadow? {
+        return card?.textShadow
+    }
+    
     public var card: Card? {
         return cards?.first
     }
@@ -90,6 +103,7 @@ public final class Countdown {
         self.displayName = instance.displayName
         self.type = instance.type
         self.occasion = instance.occasion
+        self.currentBackgroundID = instance.backgroundID
         self.cards = [Card(from: instance)]
     }
     public func match(_ instance: CountdownInstance) {
@@ -98,6 +112,7 @@ public final class Countdown {
         self.displayName = instance.displayName
         self.type = instance.type
         self.occasion = instance.occasion
+        self.currentBackgroundID = instance.backgroundID
         self.card?.match(instance)
     }
     
@@ -142,11 +157,12 @@ public final class Countdown {
         }
         
         // Fetch countdown backgrounds
-        if currentBackground == nil || currentBackgroundIcon == nil {
+        if let card, currentBackgroundID != card.backgroundID {
             currentBackground = .loading
             currentBackgroundIcon = .loading
-            currentBackground = await card?.getBackground()
-            currentBackgroundIcon = await card?.getBackgroundIcon()
+            currentBackground = await card.getBackground()
+            currentBackgroundIcon = await card.getBackgroundIcon()
+            currentBackgroundID = card.backgroundID
         }
         
         // Add cards to empty countdowns
@@ -157,6 +173,16 @@ public final class Countdown {
         } else {
             cards = [Card()]
         }
+    }
+    
+    // Create a link to open this countdown via id
+    public func getURL() -> URL? {
+        var components = URLComponents()
+        components.scheme = "countdown"
+        components.host = "open"
+        components.queryItems = [URLQueryItem(name: "id", value: id.uuidString)]
+        
+        return components.url
     }
 }
 

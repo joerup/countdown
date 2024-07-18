@@ -11,9 +11,8 @@ import CountdownUI
 
 struct CountdownEditor: View {
     
-    @Environment(\.modelContext) var modelContext
-    
-    @EnvironmentObject var clock: Clock
+    @Environment(Clock.self) private var clock: Clock
+    @Environment(\.modelContext) private var modelContext
     
     var countdown: Countdown
     
@@ -29,9 +28,7 @@ struct CountdownEditor: View {
         HStack {
             if countdown.canEditDestination {
                 Button {
-                    clock.pause {
-                        editDestination.toggle()
-                    }
+                    editDestination.toggle()
                 } label: {
                     Image(systemName: "calendar")
                         .padding(5)
@@ -46,18 +43,14 @@ struct CountdownEditor: View {
 //                    .padding(5)
 //            }
             Button {
-                clock.pause {
-                    deleteCountdown.toggle()
-                }
+                deleteCountdown.toggle()
             } label: {
                 Image(systemName: "trash")
                     .padding(5)
             }
             Spacer()
             Button {
-                clock.pause {
-                    editing = false
-                }
+                editing = false
             } label: {
                 Text("Done")
                     .fontDesign(.rounded)
@@ -76,8 +69,7 @@ struct CountdownEditor: View {
                 deleteCountdown = false
             }
             Button("Delete", role: .destructive) {
-                clock.unscheduleNotifications(for: countdown)
-                modelContext.delete(countdown)
+                clock.delete(countdown)
                 onDelete()
             }
         } message: {

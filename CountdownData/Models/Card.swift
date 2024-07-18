@@ -13,10 +13,10 @@ import SwiftUI
 public final class Card {
     
     public var countdown: Countdown?
+    public private(set) var backgroundID: UUID = UUID()
     
     @Attribute(.externalStorage) public private(set) var backgroundData: BackgroundData?
     @Attribute(.externalStorage) public private(set) var backgroundIconData: BackgroundData?
-    private(set) var backgroundID: UUID = UUID()
     
     private var tint: Tint = Color.white.rgb
     public var tintColor: Color {

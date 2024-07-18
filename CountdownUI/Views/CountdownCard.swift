@@ -10,7 +10,7 @@ import CountdownData
 
 public struct CountdownCard: View {
     
-    @EnvironmentObject var clock: Clock
+    @Environment(Clock.self) var clock
     
     private var title: String
     private var dateString: String
@@ -23,8 +23,8 @@ public struct CountdownCard: View {
         self.title = countdown.displayName
         self.dateString = countdown.dateString
         self.counter = .full(countdown.date.daysRemaining(), countdown.date.componentsRemaining())
-        self.tintColor = countdown.card?.tintColor ?? .white
-        self.textStyle = countdown.card?.textStyle ?? .standard
+        self.tintColor = countdown.currentTintColor ?? .white
+        self.textStyle = countdown.currentTextStyle ?? .standard
         self.background = countdown.currentBackground
     }
     

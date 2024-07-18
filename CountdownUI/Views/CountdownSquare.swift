@@ -10,8 +10,6 @@ import CountdownData
 
 public struct CountdownSquare: View {
     
-    @EnvironmentObject var clock: Clock
-    
     private var title: String
     private var dateString: String
     private var counter: Countdown.Counter
@@ -23,8 +21,8 @@ public struct CountdownSquare: View {
         self.title = countdown.displayName
         self.dateString = countdown.dateString
         self.counter = .days(countdown.date.daysRemaining())
-        self.tintColor = countdown.card?.tintColor ?? .white
-        self.textStyle = countdown.card?.textStyle ?? .standard
+        self.tintColor = countdown.currentTintColor ?? .white
+        self.textStyle = countdown.currentTextStyle ?? .standard
         self.background = countdown.currentBackgroundIcon
     }
     public init(instance: CountdownInstance) {
@@ -33,7 +31,48 @@ public struct CountdownSquare: View {
         self.counter = .days(instance.date.daysRemaining(relativeTo: instance.timestamp))
         self.tintColor = instance.tintColor
         self.textStyle = instance.textStyle
-        self.background = instance.currentBackgroundIcon
+    }
+    
+    public var body: some View {
+        CountdownSquareText(title: title, dateString: dateString, counter: counter, tintColor: tintColor, textStyle: textStyle)
+            .padding([.horizontal, .top])
+            .padding(.bottom, 5)
+            .background {
+                BackgroundDisplay(background: background, blurRadius: 1)
+                    .ignoresSafeArea()
+                    .padding(.bottom, -5)
+            }
+    }
+}
+
+public struct CountdownSquareText: View {
+    
+    private var title: String
+    private var dateString: String
+    private var counter: Countdown.Counter
+    private var tintColor: Color
+    private var textStyle: Card.TextStyle
+    
+    public init(countdown: Countdown) {
+        self.title = countdown.displayName
+        self.dateString = countdown.dateString
+        self.counter = .days(countdown.date.daysRemaining())
+        self.tintColor = countdown.card?.tintColor ?? .white
+        self.textStyle = countdown.card?.textStyle ?? .standard
+    }
+    public init(instance: CountdownInstance) {
+        self.title = instance.displayName
+        self.dateString = instance.dateString
+        self.counter = .days(instance.date.daysRemaining(relativeTo: instance.timestamp))
+        self.tintColor = instance.tintColor
+        self.textStyle = instance.textStyle
+    }
+    public init(title: String, dateString: String, counter: Countdown.Counter, tintColor: Color, textStyle: Card.TextStyle) {
+        self.title = title
+        self.dateString = dateString
+        self.counter = counter
+        self.tintColor = tintColor
+        self.textStyle = textStyle
     }
     
     public var body: some View {
@@ -48,13 +87,6 @@ public struct CountdownSquare: View {
                 }
                 .frame(height: geometry.size.height*0.5)
             }
-        }
-        .padding([.horizontal, .top])
-        .padding(.bottom, 5)
-        .background {
-            BackgroundDisplay(background: background, blurRadius: 1)
-                .ignoresSafeArea()
-                .padding(.bottom, -5)
         }
     }
 }
