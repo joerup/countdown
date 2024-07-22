@@ -12,21 +12,21 @@ import CountdownUI
 
 struct CountdownView: View {
     
+    @Environment(Clock.self) private var clock
     @Environment(\.modelContext) private var modelContext
     
     @Environment(\.requestReview) private var requestReview
     @AppStorage("reviewOpens") private var reviewOpens: Int = 0
     
-    var countdowns: [Countdown]
     var sortedCountdowns: [Countdown] {
         if !searchText.isEmpty {
-            return (countdowns.filter {  $0.name.lowercased().starts(with: searchText.lowercased()) } .sorted()
-            + countdowns.filter { $0.name.lowercased().contains(searchText.lowercased()) && !$0.name.lowercased().starts(with: searchText.lowercased()) } .sorted())
+            return (clock.countdowns.filter {  $0.name.lowercased().starts(with: searchText.lowercased()) } .sorted()
+                    + clock.countdowns.filter { $0.name.lowercased().contains(searchText.lowercased()) && !$0.name.lowercased().starts(with: searchText.lowercased()) } .sorted())
             .filter { showArchive ? $0.isComplete : !$0.isPastDay }
         } else if showArchive {
-            return countdowns.filter { $0.isComplete } .sorted().reversed()
+            return clock.countdowns.filter { $0.isComplete } .sorted().reversed()
         } else {
-            return countdowns.filter { !$0.isPastDay } .sorted()
+            return clock.countdowns.filter { !$0.isPastDay } .sorted()
         }
     }
     
@@ -131,7 +131,7 @@ struct CountdownView: View {
             }
         }
         ToolbarItem(placement: .topBarTrailing) {
-            if premium.isActive || countdowns.filter({ $0.isActive }).count < 4 {
+            if premium.isActive || clock.countdowns.filter(\.isActive).count < 4 {
                 Menu {
                     ForEach(EventType.allCases) { type in
                         Button(type.displayName) {

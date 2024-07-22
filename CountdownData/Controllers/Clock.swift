@@ -28,28 +28,52 @@ public final class Clock {
     // standard delay constant
     public let delay: Double = 0.35
     
-    // timer to trigger ticks
+    // scheduled timer
     private var timer: Timer?
     
     // model context from environment
     private var modelContext: ModelContext
     
-    // Initialize clock from environment context and load data
+    
+    // MARK: - Setup
+    
+    // Dynamic usage - Initialize from context and start clock
     public init(modelContext: ModelContext) {
         self.modelContext = modelContext
         fetchData()
         Task {
-            await loadCards()
-            isLoaded = true
+            await loadCountdownData()
+            await start()
         }
     }
     
-    // MARK: Setup
+    // Static usage - Load specified countdown(s) without starting
+    public init(modelContext: ModelContext, active: Bool, predicate: Predicate<Countdown>? = nil) {
+        self.modelContext = modelContext
+        fetchData(predicate: predicate)
+    }
+    // Static usage - Load specified countdown(s) data after fetching
+    public func loadCountdownData() async {
+        await loadCards()
+        setCounters()
+    }
+    
+    // Refresh all countdowns
+    public func refresh() async {
+        stop()
+        fetchData()
+        await loadCards()
+        setCounters()
+        await start()
+    }
+    
+    
+    // MARK: - Configuration
 
     // Fetch data from environment context
-    private func fetchData() {
+    private func fetchData(predicate: Predicate<Countdown>? = nil) {
         do {
-            let descriptor = FetchDescriptor<Countdown>()
+            let descriptor = FetchDescriptor<Countdown>(predicate: predicate)
             countdowns = try modelContext.fetch(descriptor)
         } catch {
             print("Fetch failed")
@@ -63,7 +87,37 @@ public final class Clock {
         }
     }
     
-    // MARK: Intents
+    // Set the counters
+    private func setCounters() {
+        for countdown in countdowns {
+            countdown.timeRemaining = countdown.date.timeRemaining()
+            countdown.daysRemaining = countdown.date.daysRemaining()
+        }
+    }
+    
+    // Start the clock
+    private func start() async {
+        timer?.invalidate()
+        let initialDelay: Double = 1 - Double(Date.now.component(.nanosecond))/1E9
+        DispatchQueue.main.asyncAfter(deadline: .now() + initialDelay) {
+            self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+                self.tick.toggle()
+                for countdown in self.countdowns {
+                    countdown.tick()
+                }
+                print("tick")
+            }
+        }
+        isLoaded = true
+    }
+    
+    // Stop the clock
+    private func stop() {
+        timer?.invalidate()
+    }
+    
+    
+    // MARK: - Intents
     
     // Add countdown
     public func add(_ countdown: Countdown) {
@@ -76,38 +130,6 @@ public final class Clock {
         countdowns.removeAll(where: { $0 == countdown })
         modelContext.delete(countdown)
     }
-    
-    // Refresh all countdowns
-    public func refresh() async {
-        fetchData()
-        await loadCards()
-    }
-    
-    
-    
-    
-    
-    // MARK: - OLD
-    
-    
-    // MARK: Controls
-    
-    public func start() async {
-        
-        // Schedule the timer
-        timer?.invalidate()
-        let initialDelay: Double = 1 - Double(Date.now.component(.nanosecond))/1E9
-        DispatchQueue.main.asyncAfter(deadline: .now() + initialDelay) {
-            self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-                self.tick.toggle()
-            }
-        }
-    }
-    
-    public func stop() {
-        timer?.invalidate()
-    }
-    
     
     
     // MARK: Conversions
@@ -130,18 +152,6 @@ public final class Clock {
     }
     
     
-    
-    // MARK: Calculations
-    
-//    public func daysRemaining(for countdown: Countdown) -> Int {
-//        let components = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: .now, to: countdown.date < .now ? .now : countdown.date.midnight.advanced(by: 1))
-//        guard let day = components.day, let hour = components.hour, let minute = components.minute, let second = components.second else { return 0 }
-//        return day + (hour <= 0 && minute <= 0 && second <= 0 ? 0 : 1)
-//    }
-//    
-//    public func componentsRemaining(for countdown: Countdown) -> DateComponents {
-//        Calendar.current.dateComponents([.day, .hour, .minute, .second], from: .now, to: countdown.date < .now ? .now : countdown.date.advanced(by: 1))
-//    }
     
     
     // MARK: Notifications

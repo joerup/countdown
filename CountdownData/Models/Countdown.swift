@@ -18,6 +18,9 @@ public final class Countdown {
     public var type: EventType = EventType.custom
     public var occasion: Occasion = Occasion.now
     
+    
+    // MARK: - Counter
+    
     public var date: Date {
         occasion.date
     }
@@ -47,38 +50,33 @@ public final class Countdown {
         return Calendar.current.date(byAdding: .day, value: 1, to: .now) ?? .now >= date
     }
     
-    public enum Counter {
-        case days(Int)
-        case full(Int, DateComponents)
-    }
+    @Transient public var daysRemaining: Int = 0
+    @Transient public var timeRemaining: Date.TimeRemaining = .none
     
-    public var canEditDestination: Bool {
-        return type == .custom
-    }
+    
+    // MARK: - Cards
     
     @Relationship(deleteRule: .cascade, inverse: \Card.countdown) public var cards: [Card]?
+    public var card: Card? {
+        return cards?.first
+    }
     
     @Transient public var currentBackground: Card.Background?
     @Transient public var currentBackgroundIcon: Card.Background?
     @Transient public var currentBackgroundID: UUID = UUID()
     
-    public var currentTintColor: Color? {
-        return card?.tintColor
+    public var currentTintColor: Color {
+        return card?.tintColor ?? .white
     }
-    public var currentTextStyle: Card.TextStyle? {
-        return card?.textStyle
+    public var currentTextStyle: Card.TextStyle {
+        return card?.textStyle ?? .standard
     }
-    public var currentTextShadow: Card.TextShadow? {
-        return card?.textShadow
+    public var currentTextShadow: Card.TextShadow {
+        return card?.textShadow ?? 0
     }
     
-    public var card: Card? {
-        return cards?.first
-    }
-    @Transient public var cardIndex: Int?
-    @Transient public var cardTimer: Timer?
-    public var cardCycleEnabled: Bool = false
-    public var cardCycleDuration: Double = 7.0
+    
+    // MARK: - Configuration
     
     public init(name: String, displayName: String, type: EventType, occasion: Occasion) {
         self.id = UUID()
@@ -116,34 +114,6 @@ public final class Countdown {
         self.card?.match(instance)
     }
     
-    public func addCard(_ card: Card) {
-        cards?.append(card)
-    }
-    public func removeCard(at index: Int) {
-        cards?.remove(at: index)
-    }
-    
-    public func startCardTimer() {
-        cardTimer?.invalidate()
-        guard let cards, cardCycleEnabled, cards.count > 1 else { return }
-        cardTimer = Timer.scheduledTimer(withTimeInterval: cardCycleDuration, repeats: true) { _ in
-            withAnimation(.easeInOut(duration: 2.0)) {
-                self.cycleCards()
-            }
-        }
-    }
-    public func stopCardTimer() {
-        cardTimer?.invalidate()
-    }
-    public func cycleCards() {
-        guard let cards, let cardIndex else { return }
-        if cardIndex+1 < cards.count {
-            self.cardIndex = cardIndex + 1
-        } else {
-            self.cardIndex = 0
-        }
-    }
-    
     public func loadCards() async {
         
         // Change photo URL to image data
@@ -168,11 +138,41 @@ public final class Countdown {
         // Add cards to empty countdowns
         if let cards {
             if cards.isEmpty {
-                addCard(Card())
+                self.cards?.append(Card())
             }
         } else {
             cards = [Card()]
         }
+    }
+    
+    // Tick one second
+    internal func tick() {
+        if timeRemaining.second > 0 {
+            self.timeRemaining.second -= 1
+        }
+        else if timeRemaining.minute > 0 {
+            self.timeRemaining.minute -= 1
+            self.timeRemaining.second = 59
+        }
+        else if timeRemaining.hour > 0 {
+            self.timeRemaining.hour -= 1
+            self.timeRemaining.minute = 59
+            self.timeRemaining.second = 59
+        }
+        else if timeRemaining.day > 0 {
+            self.daysRemaining -= 1
+            self.timeRemaining.day -= 1
+            self.timeRemaining.hour = 23
+            self.timeRemaining.minute = 59
+            self.timeRemaining.second = 59
+        }
+    }
+    
+    
+    // MARK: - Other
+    
+    public var canEditDestination: Bool {
+        return type == .custom
     }
     
     // Create a link to open this countdown via id

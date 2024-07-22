@@ -30,7 +30,7 @@ struct CountdownRoot: View {
     var body: some View {
         Group {
             if clock.isLoaded {
-                CountdownView(countdowns: clock.countdowns, selectedCountdown: $selectedCountdown)
+                CountdownView(selectedCountdown: $selectedCountdown)
             } else {
                 loadingScreen
             }

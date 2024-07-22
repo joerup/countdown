@@ -9,14 +9,21 @@ import Foundation
 
 public extension Date {
     
+    struct TimeRemaining {
+        public var day, hour, minute, second: Int
+        static let none = Self(day: 0, hour: 0, minute: 0, second: 0)
+    }
+    
     func daysRemaining(relativeTo reference: Date = .now) -> Int {
         let components = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: reference, to: self < reference ? reference : self.midnight.advanced(by: 1))
         guard let day = components.day, let hour = components.hour, let minute = components.minute, let second = components.second else { return 0 }
         return day + (hour <= 0 && minute <= 0 && second <= 0 ? 0 : 1)
     }
     
-    func componentsRemaining(relativeTo reference: Date = .now) -> DateComponents {
-        Calendar.current.dateComponents([.day, .hour, .minute, .second], from: .now, to: self < reference ? reference : self.advanced(by: 1))
+    func timeRemaining(relativeTo reference: Date = .now) -> TimeRemaining {
+        let components = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: .now, to: self < reference ? reference : self)
+        guard let day = components.day, let hour = components.hour, let minute = components.minute, let second = components.second else { return .none }
+        return TimeRemaining(day: day, hour: hour, minute: minute, second: second)
     }
     
     var dateString: String {

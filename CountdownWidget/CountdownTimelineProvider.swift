@@ -18,22 +18,18 @@ struct CountdownTimelineProvider: AppIntentTimelineProvider {
     // get countdown matching configuration id
     @MainActor
     func countdowns(for configuration: CountdownWidgetIntent) async -> [Countdown] {
-        var countdowns: [Countdown] = []
-        if let id = configuration.countdown?.id {
-            countdowns = (try? sharedModelContainer.mainContext.fetch(FetchDescriptor<Countdown>(predicate: #Predicate { $0.id == id })).sorted()) ?? []
-        }
-        for countdown in countdowns {
-            await countdown.loadCards()
-        }
-        return countdowns
+        guard let id = configuration.countdown?.id else { return [] }
+        let clock = Clock(modelContext: sharedModelContainer.mainContext, active: false, predicate: #Predicate { $0.id == id })
+        await clock.loadCountdownData()
+        return clock.countdowns
     }
     
     // get first countdown for default option
     @MainActor
     func firstCountdown() async -> Countdown? {
-        guard let countdown = (try? sharedModelContainer.mainContext.fetch(FetchDescriptor<Countdown>()).filter({ !$0.isPastDay }).sorted())?.first else { return nil }
-        await countdown.loadCards()
-        return countdown
+        let clock = Clock(modelContext: sharedModelContainer.mainContext, active: false)
+        await clock.loadCountdownData()
+        return clock.countdowns.filter({ !$0.isPastDay }).sorted().first
     }
     
     // placeholder while the widget loads

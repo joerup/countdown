@@ -14,7 +14,7 @@ import CountdownUI
 
 class MessageController: MSMessagesAppViewController, Observable {
     
-    private var countdowns: [Countdown] = []
+    private var clock: Clock?
     
     private var context: ModelContext {
         sharedModelContainer.mainContext
@@ -23,12 +23,8 @@ class MessageController: MSMessagesAppViewController, Observable {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Fetch the countdowns
-        do {
-            countdowns = try context.fetch(FetchDescriptor<Countdown>())
-        } catch {
-            print(error)
-        }
+        // Initialize the clock
+        self.clock = Clock(modelContext: context, active: false)
         
         // Perform initial update
         update()
@@ -36,21 +32,17 @@ class MessageController: MSMessagesAppViewController, Observable {
     
     private func update(instance: CountdownInstance? = nil, sent: Bool? = nil) {
         if presentationStyle == .transcript {
-            guard let instance, let sent else { return }
-            let existingCountdown = countdowns.first(where: { $0.id == instance.countdownID })
+            guard let instance, let sent, let clock else { return }
+            let existingCountdown = clock.countdowns.first(where: { $0.id == instance.countdownID })
             
             Task {
                 await instance.loadCard()
-                
-                insertView(CountdownBubble(instance: instance, existingCountdown: existingCountdown, sent: sent, update: update(instance:sent:), append: { self.countdowns.append($0) }))
+                insertView(CountdownBubble(instance: instance, existingCountdown: existingCountdown, sent: sent, update: update(instance:sent:), append: clock.add(_:)))
             }
         }
-        else {
+        else if let countdowns = clock?.countdowns {
             Task {
-                for countdown in countdowns {
-                    await countdown.loadCards()
-                }
-                
+                await clock?.loadCountdownData()
                 insertView(CountdownGrid(countdowns: countdowns))
             }
         }
