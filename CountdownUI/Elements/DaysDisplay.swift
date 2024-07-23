@@ -24,14 +24,11 @@ public struct DaysDisplay: View {
     }
     
     public var body: some View {
-        VStack(spacing: 0) {
-            Spacer(minLength: 0)
-            number(daysRemaining, size: fit(daysRemaining))
-                .frame(height: size)
-                .foregroundStyle(.thickMaterial)
-                .environment(\.colorScheme, .light)
-                .shadow(radius: 10)
-        }
+        number(daysRemaining, size: fit(daysRemaining))
+            .frame(height: 1.2 * fit(daysRemaining))
+            .foregroundStyle(.thickMaterial)
+            .environment(\.colorScheme, .light)
+            .shadow(radius: 10)
     }
     
     private func fit(_ number: Int) -> CGFloat {

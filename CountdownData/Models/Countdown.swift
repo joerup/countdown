@@ -113,6 +113,17 @@ public final class Countdown {
         self.currentBackgroundID = instance.backgroundID
         self.card?.match(instance)
     }
+    public func compareTo(countdown: Countdown) -> Bool {
+        self.id == countdown.id &&
+        self.name == countdown.name &&
+        self.displayName == countdown.displayName &&
+        self.type == countdown.type &&
+        self.occasion == countdown.occasion &&
+        self.currentTintColor.rgb == countdown.currentTintColor.rgb &&
+        self.currentTextStyle == countdown.currentTextStyle &&
+        self.currentTextShadow == countdown.currentTextShadow &&
+        self.card?.backgroundID == countdown.card?.backgroundID
+    }
     
     public func loadCards() async {
         

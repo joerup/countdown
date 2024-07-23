@@ -23,6 +23,7 @@ struct CountdownWidget: Widget {
                     .padding(.bottom, -10)
                     .containerBackground(for: .widget) {
                         BackgroundDisplay(background: countdown.currentBackgroundIcon, blurRadius: 1)
+                            .padding(.bottom, -3)
                     }
                     .widgetURL(countdown.getURL())
             } else {
@@ -33,7 +34,7 @@ struct CountdownWidget: Widget {
             }
         }
         .configurationDisplayName("Countdown")
-        .description("Select a countdown to display.")
+        .description("Display a live countdown.")
         .supportedFamilies([.systemSmall])
     }
 }

@@ -12,38 +12,30 @@ import SwiftData
 import CountdownData
 import CountdownUI
 
-class MessageController: MSMessagesAppViewController, Observable {
+class MessageController: MSMessagesAppViewController {
     
-    private var clock: Clock?
-    
-    private var context: ModelContext {
-        sharedModelContainer.mainContext
-    }
+    private var clock = Clock(modelContext: sharedModelContainer.mainContext)
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Initialize the clock
-        self.clock = Clock(modelContext: context, active: false)
-        
-        // Perform initial update
         update()
     }
     
     private func update(instance: CountdownInstance? = nil, sent: Bool? = nil) {
         if presentationStyle == .transcript {
-            guard let instance, let sent, let clock else { return }
-            let existingCountdown = clock.countdowns.first(where: { $0.id == instance.countdownID })
-            
+            guard let instance, let sent else { return }
             Task {
+                let id = instance.countdownID
+                await clock.loadStaticCountdownData(predicate: #Predicate { $0.id == id }, includeCards: false)
+                let existingCountdown = clock.countdowns.first
                 await instance.loadCard()
                 insertView(CountdownBubble(instance: instance, existingCountdown: existingCountdown, sent: sent, update: update(instance:sent:), append: clock.add(_:)))
             }
         }
-        else if let countdowns = clock?.countdowns {
+        else {
             Task {
-                await clock?.loadCountdownData()
-                insertView(CountdownGrid(countdowns: countdowns))
+                await clock.loadStaticCountdownData()
+                insertView(CountdownGrid(countdowns: clock.countdowns, createMessage: createMessage(for:)))
             }
         }
     }
@@ -117,12 +109,8 @@ class MessageController: MSMessagesAppViewController, Observable {
     // MARK: Insert SwiftUI View
     
     private func insertView(_ newView: some View) {
-        let swiftUIView = newView
-            .modelContainer(sharedModelContainer)
-//            .environmentObject(clock)
-            .environment(self)
+        let swiftUIView = newView.modelContainer(sharedModelContainer)
         let swiftUIViewController = UIHostingController(rootView: swiftUIView)
-        
         addChild(swiftUIViewController)
         view.addSubview(swiftUIViewController.view)
         swiftUIViewController.view.frame = view.bounds
@@ -131,3 +119,15 @@ class MessageController: MSMessagesAppViewController, Observable {
     }
 }
 
+var sharedModelContainer: ModelContainer = {
+    let schema = Schema([
+        Countdown.self, Card.self
+    ])
+    let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
+    do {
+        return try ModelContainer(for: schema, configurations: [modelConfiguration])
+    } catch {
+        fatalError("Could not create ModelContainer: \(error)")
+    }
+}()

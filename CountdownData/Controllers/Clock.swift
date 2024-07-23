@@ -9,6 +9,7 @@ import Foundation
 import UserNotifications
 import SwiftData
 import SwiftUI
+import WidgetKit
 
 @Observable
 public final class Clock {
@@ -34,31 +35,37 @@ public final class Clock {
     // model context from environment
     private var modelContext: ModelContext
     
-    
-    // MARK: - Setup
-    
-    // Dynamic usage - Initialize from context and start clock
+    // init from model context
     public init(modelContext: ModelContext) {
         self.modelContext = modelContext
+    }
+    
+    
+    // MARK: - Active Mode Setup
+    // Used for the main app interface
+    // Content is loaded and updated throughout the app lifecycle
+    // - loaded on startup and any subsequent view state transitions
+    // - can also be force refreshed
+    
+    // Load all data when the view appears
+    // Set counters and start clock
+    public func didBecomeActive() {
         fetchData()
+        WidgetCenter.shared.reloadAllTimelines()
         Task {
-            await loadCountdownData()
+            await loadCards()
+            setCounters()
             await start()
         }
     }
     
-    // Static usage - Load specified countdown(s) without starting
-    public init(modelContext: ModelContext, active: Bool, predicate: Predicate<Countdown>? = nil) {
-        self.modelContext = modelContext
-        fetchData(predicate: predicate)
-    }
-    // Static usage - Load specified countdown(s) data after fetching
-    public func loadCountdownData() async {
-        await loadCards()
-        setCounters()
+    // Stop the clock when the view disappears
+    public func didEnterBackground() {
+        WidgetCenter.shared.reloadAllTimelines()
+        stop()
     }
     
-    // Refresh all countdowns
+    // Reset data and clock after force refresh
     public func refresh() async {
         stop()
         fetchData()
@@ -68,13 +75,32 @@ public final class Clock {
     }
     
     
+    // MARK: - Static Mode Setup
+    // Used for widgets and messages
+    // Content is loaded a single time (potentially with predicate)
+    // Counters are set but no clock is started
+    
+    // Load specified countdown(s) data after fetching
+    public func loadStaticCountdownData(predicate: Predicate<Countdown>? = nil, includeCards: Bool = true) async {
+        fetchData(predicate: predicate)
+        if includeCards {
+            await loadCards()
+        }
+        setCounters()
+    }
+    
+    
     // MARK: - Configuration
 
     // Fetch data from environment context
     private func fetchData(predicate: Predicate<Countdown>? = nil) {
         do {
             let descriptor = FetchDescriptor<Countdown>(predicate: predicate)
-            countdowns = try modelContext.fetch(descriptor)
+            let countdowns = try modelContext.fetch(descriptor)
+            if countdowns.contains(where: { countdown in self.countdowns.first(where: { $0 == countdown })?.compareTo(countdown: countdown) != true }) { // reload if countdowns has changed
+                self.countdowns = countdowns
+                self.isLoaded = false
+            }
         } catch {
             print("Fetch failed")
         }
@@ -97,9 +123,10 @@ public final class Clock {
     
     // Start the clock
     private func start() async {
-        timer?.invalidate()
         let initialDelay: Double = 1 - Double(Date.now.component(.nanosecond))/1E9
+        self.tick.toggle()
         DispatchQueue.main.asyncAfter(deadline: .now() + initialDelay) {
+            self.timer?.invalidate()
             self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
                 self.tick.toggle()
                 for countdown in self.countdowns {

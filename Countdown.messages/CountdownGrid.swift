@@ -11,9 +11,8 @@ import CountdownUI
 
 struct CountdownGrid: View {
     
-    @Environment(MessageController.self) var controller
-    
     var countdowns: [Countdown]
+    var createMessage: (Countdown) -> ()
     
     private var sortedCountdowns: [Countdown] {
         return countdowns.filter { !$0.isPastDay } .sorted()
@@ -25,7 +24,7 @@ struct CountdownGrid: View {
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2)) {
                     ForEach(sortedCountdowns) { countdown in
                         Button {
-                            controller.createMessage(for: countdown)
+                            createMessage(countdown)
                         } label: {
                             CountdownSquare(countdown: countdown)
                                 .cornerRadius(20)

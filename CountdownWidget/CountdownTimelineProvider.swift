@@ -19,16 +19,16 @@ struct CountdownTimelineProvider: AppIntentTimelineProvider {
     @MainActor
     func countdowns(for configuration: CountdownWidgetIntent) async -> [Countdown] {
         guard let id = configuration.countdown?.id else { return [] }
-        let clock = Clock(modelContext: sharedModelContainer.mainContext, active: false, predicate: #Predicate { $0.id == id })
-        await clock.loadCountdownData()
+        let clock = Clock(modelContext: sharedModelContainer.mainContext)
+        await clock.loadStaticCountdownData(predicate: #Predicate { $0.id == id })
         return clock.countdowns
     }
     
     // get first countdown for default option
     @MainActor
     func firstCountdown() async -> Countdown? {
-        let clock = Clock(modelContext: sharedModelContainer.mainContext, active: false)
-        await clock.loadCountdownData()
+        let clock = Clock(modelContext: sharedModelContainer.mainContext)
+        await clock.loadStaticCountdownData()
         return clock.countdowns.filter({ !$0.isPastDay }).sorted().first
     }
     
