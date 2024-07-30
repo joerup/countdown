@@ -33,13 +33,13 @@ struct CountdownGrid: View {
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: columns)) {
                     ForEach(countdowns) { countdown in
                         Button {
-                            UIImpactFeedbackGenerator().impactOccurred()
                             clock.select(countdown)
                         } label: {
                             CountdownSquare(countdown: countdown)
                                 .aspectRatio(1.0, contentMode: .fill)
                                 .frame(maxWidth: 200)
                                 .background(Color.blue.opacity(0.2))
+                                .id(clock.tick)
                         }
                         .clipShape(RoundedRectangle(cornerRadius: 20))
                         .shadow(radius: 5)

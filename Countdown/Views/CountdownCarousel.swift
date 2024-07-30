@@ -50,6 +50,9 @@ struct CountdownCarousel: View {
             .animation(.easeOut, value: clock.selectedCountdown)
             .id(clock.selectedCountdown)
         }
+        .onAppear {
+            UIImpactFeedbackGenerator().impactOccurred()
+        }
     }
     
     private func carousel(size: CGSize) -> some View {

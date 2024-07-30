@@ -37,7 +37,7 @@ extension Card {
         
         public var weight: Font.Weight {
             switch self {
-            case .serif, .round:
+            case .serif:
                 return .heavy
             default:
                 return .bold

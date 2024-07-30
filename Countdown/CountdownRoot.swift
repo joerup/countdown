@@ -36,7 +36,6 @@ struct CountdownRoot: View {
         }
         .onOpenURL { url in
             if let id = clock.link(from: url) {
-                UIImpactFeedbackGenerator().impactOccurred()
                 clock.select(id)
             }
         }

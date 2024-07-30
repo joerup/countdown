@@ -24,7 +24,7 @@ public final class Card {
         set { self.tint = newValue.rgb }
     }
     
-    public var textStyle: TextStyle = TextStyle.standard
+    public var textStyle: TextStyle = TextStyle.round
     
     public var textShadow: TextShadow = 0
     
