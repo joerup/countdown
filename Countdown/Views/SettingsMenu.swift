@@ -7,12 +7,13 @@
 
 import SwiftUI
 import CountdownData
+import SwiftData
 
 struct SettingsMenu: View {
     
-    @Environment(\.dismiss) var dismiss
-    
-    @EnvironmentObject var premium: Premium
+    @Environment(Premium.self) private var premium
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
     
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     
@@ -44,6 +45,14 @@ struct SettingsMenu: View {
 //                Section {
 //                    Toggle("Notifications", isOn: $clock.notifications)
 //                }
+                Section {
+                    Button {
+                        try? modelContext.delete(model: Countdown.self)
+                        try? modelContext.delete(model: Card.self)
+                    } label: {
+                        row("DELETE")
+                    }
+                }
                 Section {
                     Link(destination: URL(string: "https://www.joerup.com/countdown")!) {
                         row("Website")

@@ -13,6 +13,7 @@ import CountdownUI
 struct CountdownView: View {
     
     @Environment(Clock.self) private var clock
+    @Environment(Premium.self) private var premium
     @Environment(\.modelContext) private var modelContext
     
     @Environment(\.requestReview) private var requestReview
@@ -30,10 +31,6 @@ struct CountdownView: View {
         }
     }
     
-    @EnvironmentObject var premium: Premium
-    
-    @Binding var selectedCountdown: Countdown?
-    
     @State private var editing: Bool = false
     
     @State private var showSettings: Bool = false
@@ -47,7 +44,7 @@ struct CountdownView: View {
     
     var body: some View {
         NavigationStack {
-            CountdownGrid(countdowns: sortedCountdowns, selectedCountdown: $selectedCountdown, showArchive: showArchive)
+            CountdownGrid(countdowns: sortedCountdowns, showArchive: showArchive)
                 .navigationBarTitleDisplayMode(.inline)
                 .overlay {
                     if sortedCountdowns.isEmpty {
@@ -62,16 +59,16 @@ struct CountdownView: View {
                 }
         }
         .searchable(text: $searchText, isPresented: $showSearch, placement: .navigationBarDrawer)
-        .opacity(selectedCountdown == nil ? 1 : 0)
+        .opacity(clock.selectedCountdown == nil ? 1 : 0)
         .overlay {
-            if selectedCountdown != nil {
-                CountdownCarousel(countdowns: sortedCountdowns, selectedCountdown: $selectedCountdown, editing: $editing)
+            if clock.selectedCountdown != nil {
+                CountdownCarousel(countdowns: sortedCountdowns, editing: $editing)
             }
         }
         .tint(.pink)
         .sheet(item: $newCountdown) { type in
             OccasionEditor(type: type) { countdown in
-                self.selectedCountdown = countdown
+                clock.select(countdown)
                 self.editing = true
             }
         }

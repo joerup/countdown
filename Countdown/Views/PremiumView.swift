@@ -11,9 +11,8 @@ import CountdownData
 
 struct PremiumView: View {
     
-    @Environment(\.dismiss) var dismiss
-    
-    @EnvironmentObject var premium: Premium
+    @Environment(\.dismiss) private var dismiss
+    @Environment(Premium.self) private var premium
     
     @State private var products: [Product] = []
     

@@ -35,6 +35,9 @@ public final class CountdownInstance: Codable {
     public var dateString: String {
         "\(date.dateString)\(occasion.includeTime ? " \(date.timeString)" : "")"
     }
+    public var daysRemaining: Int {
+        date.daysRemaining(relativeTo: timestamp)
+    }
     
     public init(from countdown: Countdown) {
         self.timestamp = .now

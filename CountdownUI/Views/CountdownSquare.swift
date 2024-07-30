@@ -56,7 +56,7 @@ public struct CountdownSquareText: View {
     public init(instance: CountdownInstance) {
         self.title = instance.displayName
         self.dateString = instance.dateString
-        self.daysRemaining = instance.date.daysRemaining()
+        self.daysRemaining = instance.daysRemaining
         self.tintColor = instance.tintColor
         self.textStyle = instance.textStyle
     }

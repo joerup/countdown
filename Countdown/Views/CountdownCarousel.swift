@@ -15,15 +15,13 @@ struct CountdownCarousel: View {
     
     var countdowns: [Countdown]
     
-    @Binding var selectedCountdown: Countdown?
-    
     private var last2: Countdown? { countdown(at: -2) }
     private var last1: Countdown? { countdown(at: -1) }
     private var next1: Countdown? { countdown(at: +1) }
     private var next2: Countdown? { countdown(at: +2) }
     
     private func countdown(at relativeIndex: Int) -> Countdown? {
-        if let selectedCountdown, let index = countdowns.firstIndex(of: selectedCountdown), countdowns.indices ~= index+relativeIndex {
+        if let selectedCountdown = clock.selectedCountdown, let index = countdowns.firstIndex(of: selectedCountdown), countdowns.indices ~= index+relativeIndex {
             return countdowns[index+relativeIndex]
         }
         return nil
@@ -49,8 +47,8 @@ struct CountdownCarousel: View {
                 controls(size: geometry.totalSize)
             }
             .transition(.move(edge: .bottom))
-            .animation(.easeOut, value: selectedCountdown)
-            .id(selectedCountdown)
+            .animation(.easeOut, value: clock.selectedCountdown)
+            .id(clock.selectedCountdown)
         }
     }
     
@@ -72,7 +70,7 @@ struct CountdownCarousel: View {
                 cardDisplay(countdown: next2, size: size)
                     .offset(x: 2*editingScale*(size.width*offsetScale+15))
             }
-            if let countdown = selectedCountdown {
+            if let countdown = clock.selectedCountdown {
                 cardDisplay(countdown: countdown, size: size)
             }
         }
@@ -81,9 +79,9 @@ struct CountdownCarousel: View {
     private func controls(size: CGSize) -> some View {
         VStack(spacing: 0) {
             VStack(spacing: 0) {
-                if editing, let selectedCountdown {
-                    CountdownEditor(countdown: selectedCountdown, editing: $editing, onDelete: {
-                        self.selectedCountdown = nil
+                if editing, let countdown = clock.selectedCountdown {
+                    CountdownEditor(countdown: countdown, editing: $editing, onDelete: {
+                        clock.select(nil)
                         self.editing = false
                     })
                     Spacer(minLength: 0)
@@ -100,7 +98,7 @@ struct CountdownCarousel: View {
             
             VStack(spacing: 0) {
                 Spacer(minLength: 0)
-                if editing, let card = selectedCountdown?.card {
+                if editing, let card = clock.selectedCountdown?.card {
                     CardEditor(card: card)
                         .padding(.bottom)
                     Spacer(minLength: 0)
@@ -114,7 +112,7 @@ struct CountdownCarousel: View {
                                     Circle().fill(.white)
                                 }
                             }
-                            .opacity(countdown == selectedCountdown ? 0.7 : 0.4)
+                            .opacity(countdown == clock.selectedCountdown ? 0.7 : 0.4)
                             .frame(width: 10)
                         }
                     }
@@ -154,14 +152,14 @@ struct CountdownCarousel: View {
                 if offsetScale <= 0.3 {
                     withAnimation {
                         self.offset = .zero
-                        self.selectedCountdown = nil
+                        clock.select(nil)
                     }
                 }
             }
             .onEnded { _ in
                 withAnimation(.easeInOut(duration: clock.delay)) {
                     if abs(offset.height) > 100 {
-                        self.selectedCountdown = nil
+                        clock.select(nil)
                     }
                     else if offset.width > 100 {
                         self.offset.width = size.width+15
@@ -177,20 +175,20 @@ struct CountdownCarousel: View {
                 
                 if let last1, offset.width > 100 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + clock.delay) {
-                        self.selectedCountdown = last1
+                        clock.select(last1)
                         self.offset = .zero
                     }
                 }
                 else if let next1, offset.width < -100 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + clock.delay) {
-                        self.selectedCountdown = next1
+                        clock.select(next1)
                         self.offset = .zero
                     }
                 }
                 else {
                     withAnimation(.easeInOut(duration: clock.delay)) {
                         if abs(offset.width) > 100 {
-                            self.selectedCountdown = nil
+                            clock.select(nil)
                             self.editing = false
                         }
                         self.offset = .zero
@@ -213,7 +211,7 @@ struct CountdownCarousel: View {
             }
             Spacer()
             Button {
-                selectedCountdown = nil
+                clock.select(nil)
             } label: {
                 Image(systemName: "xmark.circle.fill")
                     .imageScale(.large)

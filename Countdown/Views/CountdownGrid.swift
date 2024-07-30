@@ -17,8 +17,6 @@ struct CountdownGrid: View {
     
     var countdowns: [Countdown]
     
-    @Binding var selectedCountdown: Countdown?
-    
     var showArchive: Bool
     
     @State private var editDestination: Bool = false
@@ -36,7 +34,7 @@ struct CountdownGrid: View {
                     ForEach(countdowns) { countdown in
                         Button {
                             UIImpactFeedbackGenerator().impactOccurred()
-                            self.selectedCountdown = countdown
+                            clock.select(countdown)
                         } label: {
                             CountdownSquare(countdown: countdown)
                                 .aspectRatio(1.0, contentMode: .fill)

@@ -8,11 +8,12 @@
 import Foundation
 import StoreKit
 
-public class Premium: ObservableObject {
+@Observable
+public class Premium {
     
     public let ids = ["com.rupertusapps.Countdown.Premium"]
 
-    @Published private(set) var purchasedProductIDs = Set<String>()
+    private(set) var purchasedProductIDs = Set<String>()
 
     // Premium is currently active
     public var isActive: Bool {
