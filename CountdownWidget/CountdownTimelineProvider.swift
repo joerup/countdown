@@ -51,12 +51,12 @@ struct CountdownTimelineProvider: AppIntentTimelineProvider {
         let countdowns = await countdowns(for: configuration)
         // return the correct countdown
         if let countdown = countdowns.first {
-            let entry = CountdownWidgetEntry(date: .tomorrow.midnight, countdown: countdown)
+            let entry = CountdownWidgetEntry(date: .nextHour, countdown: countdown)
             return Timeline(entries: [entry], policy: .atEnd)
         } 
         // return a default first countdown
         else if let countdown = await firstCountdown() {
-            let entry = CountdownWidgetEntry(date: .tomorrow.midnight, countdown: countdown)
+            let entry = CountdownWidgetEntry(date: .nextHour, countdown: countdown)
             return Timeline(entries: [entry], policy: .atEnd)
         }
         return Timeline(entries: [.empty], policy: .never)

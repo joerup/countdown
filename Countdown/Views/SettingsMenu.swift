@@ -17,6 +17,8 @@ struct SettingsMenu: View {
     
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     
+    @AppStorage("notifications") private var notifications: Bool = true
+    
     @State private var presentShare: Bool = false
     @State private var presentStore: Bool = false
     
@@ -42,16 +44,8 @@ struct SettingsMenu: View {
                         }
                     }
                 }
-//                Section {
-//                    Toggle("Notifications", isOn: $clock.notifications)
-//                }
                 Section {
-                    Button {
-                        try? modelContext.delete(model: Countdown.self)
-                        try? modelContext.delete(model: Card.self)
-                    } label: {
-                        row("DELETE")
-                    }
+                    Toggle("Notifications", isOn: $notifications)
                 }
                 Section {
                     Link(destination: URL(string: "https://www.joerup.com/countdown")!) {

@@ -15,7 +15,7 @@ import WidgetKit
 public final class Clock {
     
     // notifications enabled setting
-    @AppStorage("notifications") public static var notifications: Bool = true
+    @AppStorage("notifications") private static var notifications: Bool = true
     
     // whether all data has loaded
     public private(set) var isLoaded: Bool = false
@@ -60,14 +60,18 @@ public final class Clock {
         WidgetCenter.shared.reloadAllTimelines()
         Task {
             await loadCards()
+            await scheduleNotifications()
             synchronize()
             await start()
         }
     }
     
     // Stop the clock when the view disappears
-    public func didEnterBackground() {
+    public func didBecomeInactive() {
         WidgetCenter.shared.reloadAllTimelines()
+        Task {
+            await scheduleNotifications()
+        }
         stop()
     }
     
@@ -166,6 +170,42 @@ public final class Clock {
         }
     }
     
+    // Schedule notifications for all countdowns
+    // Removes all pending notifications and replaces with new ones
+    private func scheduleNotifications() async {
+        guard Self.notifications else { return }
+        
+        do {
+            // request notification access if not granted
+            guard try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) else {
+                print("No access to schedule notifications")
+                return
+            }
+            // remove all notifications currently pending
+            UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+            
+            // schedule new notifications
+            for countdown in countdowns.filter(\.isActive) {
+                guard let components = countdown.occasion.components else { continue }
+                
+                let content = UNMutableNotificationContent()
+                content.title = countdown.displayName
+                content.body = "It's time for \(countdown.displayName)!"
+                content.sound = UNNotificationSound.default
+                
+                let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+                let request = UNNotificationRequest(identifier: countdown.id.uuidString, content: content, trigger: trigger)
+
+                try await UNUserNotificationCenter.current().add(request)
+                
+                print("Notification set for \(countdown.name)")
+            }
+            
+        } catch {
+            print(error)
+        }
+    }
+    
     // Synchronize the countdown counters
     // Sets clock to current time before ticking timer takes over
     private func synchronize() {
@@ -216,47 +256,4 @@ public final class Clock {
         return id
     }
     
-    
-    
-    
-    // MARK: Notifications
-    
-//    public func scheduleNotifications(for countdowns: [Countdown]) {
-//        guard notifications else { return }
-//        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
-//            if success {
-//                countdowns.forEach { self.scheduleNotification(for: $0) }
-//            } else if let error = error {
-//                print(error.localizedDescription)
-//            }
-//        }
-//    }
-//    
-//    public func scheduleNotification(for countdown: Countdown) {
-//        
-//        guard notifications, countdown.isActive, let components = countdown.occasion.components else { return }
-//        
-//        let content = UNMutableNotificationContent()
-//        content.title = countdown.displayName
-//        content.body = "It's time for \(countdown.displayName)!"
-//        content.sound = UNNotificationSound.default
-//        
-//        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
-//        
-//        let request = UNNotificationRequest(identifier: countdown.id.uuidString, content: content, trigger: trigger)
-//
-//        UNUserNotificationCenter.current().add(request)
-//        
-//        print("Notification set for \(countdown.name)")
-//    }
-//    
-//    public func unscheduleNotifications(for countdown: Countdown) {
-//        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [countdown.id.uuidString])
-//        print("Notification removed for \(countdown.name)")
-//    }
-//    
-//    public func unscheduleNotifications() {
-//        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-//        print("Notifications removed")
-//    }
 }

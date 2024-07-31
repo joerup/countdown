@@ -50,10 +50,7 @@ public extension Date {
     
     var midnight: Date {
         let calendar = Calendar.current
-        var components = DateComponents()
-        components.year = calendar.component(.year, from: self)
-        components.month = calendar.component(.month, from: self)
-        components.day = calendar.component(.day, from: self)
+        var components = calendar.dateComponents([.year, .month, .day], from: self)
         components.hour = 0
         components.minute = 0
         components.second = 0
@@ -63,6 +60,20 @@ public extension Date {
         } else {
             return self
         }
+    }
+    
+    static var nextHour: Date {
+        let calendar = Calendar.current
+        var components = calendar.dateComponents([.year, .month, .day, .hour], from: .now)
+        components.minute = 0
+        components.second = 0
+        
+        if let currentHourDate = calendar.date(from: components) {
+            if let nextHourDate = calendar.date(byAdding: .hour, value: 1, to: currentHourDate) {
+                return nextHourDate
+            }
+        }
+        return .now
     }
     
     init(year: Int? = nil, month: Int, day: Int) {
