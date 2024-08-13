@@ -33,7 +33,9 @@ struct CountdownGrid: View {
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: columns)) {
                     ForEach(countdowns) { countdown in
                         Button {
-                            clock.select(countdown)
+                            withAnimation {
+                                clock.select(countdown)
+                            }
                         } label: {
                             CountdownSquare(countdown: countdown)
                                 .aspectRatio(1.0, contentMode: .fill)

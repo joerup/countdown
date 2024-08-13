@@ -79,6 +79,7 @@ struct OccasionEditor: View {
             countdown.displayName = displayName
             countdown.type = type
             countdown.occasion = occasion
+            clock.edit(countdown)
         } else {
             let countdown = Countdown(name: name, displayName: displayName, type: type, occasion: occasion)
             clock.add(countdown)

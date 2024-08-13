@@ -51,6 +51,41 @@ public extension Color {
         }
     }
     
+    func discretizedGradient(numberOfShades: Int) -> [Color] {
+        guard numberOfShades > 0 else { return [] }
+        let intensityRange: CGFloat = 0.3
+
+        // Extract RGB components from the base color
+        let baseUIColor = UIColor(self)
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        baseUIColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        
+        var hue: CGFloat = 0
+        var saturation: CGFloat = 0
+        var brightness: CGFloat = 0
+        baseUIColor.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+        guard saturation > 0.1 && brightness > 0.1 else { return [.blue, .red, .green, .yellow, .pink, .purple, .orange] }
+
+        // Create an array to store the shades
+        var gradientColors: [Color] = []
+
+        // Calculate the step increment within the intensity range
+        let step = intensityRange / CGFloat(numberOfShades - 1)
+
+        // Generate shades closer to the base color (darker to lighter)
+        for i in stride(from: -intensityRange, through: intensityRange, by: step) {
+            let adjustedRed = min(max(red + i, 0), 1)
+            let adjustedGreen = min(max(green + i, 0), 1)
+            let adjustedBlue = min(max(blue + i, 0), 1)
+            gradientColors.append(Color(red: adjustedRed, green: adjustedGreen, blue: adjustedBlue, opacity: alpha))
+        }
+
+        return gradientColors
+    }
+    
     func inverted() -> Color {
         return Color(rgb: [1-red, 1-green, 1-blue])
     }

@@ -11,6 +11,7 @@ import CountdownUI
 
 struct CountdownCarousel: View {
     
+    @Environment(\.scenePhase) private var scenePhase
     @Environment(Clock.self) private var clock
     
     var countdowns: [Countdown]
@@ -46,12 +47,15 @@ struct CountdownCarousel: View {
                 carousel(size: geometry.size)
                 controls(size: geometry.totalSize)
             }
-            .transition(.move(edge: .bottom))
-            .animation(.easeOut, value: clock.selectedCountdown)
             .id(clock.selectedCountdown)
         }
         .onAppear {
             UIImpactFeedbackGenerator().impactOccurred()
+        }
+        .onChange(of: scenePhase) { _, _ in
+            withAnimation {
+                offset = .zero
+            }
         }
     }
     
@@ -136,12 +140,16 @@ struct CountdownCarousel: View {
             .gesture(cardGesture(size: size))
             .simultaneousGesture(TapGesture().onEnded { _ in
                 if editing {
-                    editing.toggle()
+                    withAnimation {
+                        editing.toggle()
+                    }
                 }
             })
             .simultaneousGesture(LongPressGesture().onEnded { _ in
                 UIImpactFeedbackGenerator().impactOccurred()
-                self.editing.toggle()
+                withAnimation {
+                    self.editing.toggle()
+                }
             })
     }
     
@@ -149,9 +157,18 @@ struct CountdownCarousel: View {
         DragGesture()
             .onChanged { value in
                 self.offset = value.translation
+                // reject vertical scrolling if editing
                 if editing {
                     offset.height = 0
                 }
+                // prioritize single direction
+                if abs(offset.height) > abs(offset.width) {
+                    offset.width = 0
+                }
+                if abs(offset.width) > abs(offset.height) {
+                    offset.height = 0
+                }
+                // dismiss if scrolled far enough vertically
                 if offsetScale <= 0.3 {
                     withAnimation {
                         self.offset = .zero
@@ -204,7 +221,9 @@ struct CountdownCarousel: View {
         HStack(spacing: 15) {
             Button {
                 UIImpactFeedbackGenerator().impactOccurred()
-                editing.toggle()
+                withAnimation {
+                    editing.toggle()
+                }
             } label: {
                 Image(systemName: "pencil.circle.fill")
                     .imageScale(.large)
@@ -214,7 +233,9 @@ struct CountdownCarousel: View {
             }
             Spacer()
             Button {
-                clock.select(nil)
+                withAnimation {
+                    clock.select(nil)
+                }
             } label: {
                 Image(systemName: "xmark.circle.fill")
                     .imageScale(.large)

@@ -37,9 +37,6 @@ public final class Countdown {
     public var isToday: Bool {
         return date.midnight == .now.midnight
     }
-    public var wasToday: Bool {
-        return isToday && isComplete
-    }
     public var isPastDay: Bool {
         return date.midnight < .now.midnight
     }

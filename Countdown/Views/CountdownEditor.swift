@@ -50,7 +50,9 @@ struct CountdownEditor: View {
             }
             Spacer()
             Button {
-                editing = false
+                withAnimation {
+                    editing = false
+                }
             } label: {
                 Text("Done")
                     .fontDesign(.rounded)

@@ -28,7 +28,7 @@ public extension Date {
     
     var dateString: String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = timeIntervalSinceNow < 86400*365 ? "EEE MMM d" : "EEE MMM d YYYY"
+        dateFormatter.dateFormat = timeIntervalSinceNow < 86400*335 && timeIntervalSinceNow > -86400*30 ? "EEE MMM d" : "EEE MMM d YYYY"
         return dateFormatter.string(from: self)
     }
     var timeString: String {

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CountdownData
+import ConfettiSwiftUI
 
 public struct CountdownCard: View {
     
@@ -17,6 +18,8 @@ public struct CountdownCard: View {
     public init(countdown: Countdown) {
         self.countdown = countdown
     }
+    
+    @State private var confetti: Int = 1
     
     public var body: some View {
         GeometryReader { geometry in
@@ -33,9 +36,19 @@ public struct CountdownCard: View {
             .padding(.top, 80)
             .padding(20)
             .frame(width: geometry.size.width)
-//            .confettiCannon(counter: 1, num: 100, rainHeight: 1000, openingAngle: .zero, closingAngle: .radians(2 * .pi))
             .background {
                 BackgroundDisplay(background: countdown.currentBackground)
+            }
+            .confettiCannon(counter: $confetti, num: 100, colors: countdown.currentTintColor.discretizedGradient(numberOfShades: 10), rainHeight: 1.5 * geometry.size.height, radius: 0.7 * max(geometry.size.height, geometry.size.width))
+            .onAppear {
+                if countdown.isComplete && countdown.isToday {
+                    confetti += 1
+                }
+            }
+            .onChange(of: countdown.isComplete) { _, isComplete in
+                if isComplete && countdown.isToday {
+                    confetti += 1
+                }
             }
         }
     }

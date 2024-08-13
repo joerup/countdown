@@ -35,6 +35,7 @@
 		01C3C7D42A7CD14000475FC4 /* HolidayEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C3C7D32A7CD14000475FC4 /* HolidayEditor.swift */; };
 		01CE90AD2ADC5959000537C5 /* SettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01CE90AC2ADC5959000537C5 /* SettingsMenu.swift */; };
 		01D3349B2AE1E93D00C47472 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C2090E2AE0CA7700F798CD /* CloudKit.framework */; };
+		01D9E0B32C6B16FF0043F000 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 01D9E0B22C6B16FF0043F000 /* ConfettiSwiftUI */; };
 		01E092362A9DB807006BDABF /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 01E092352A9DB807006BDABF /* ConfettiSwiftUI */; };
 		01E0923E2A9EB0AB006BDABF /* CountdownData in Frameworks */ = {isa = PBXBuildFile; productRef = 01E0923D2A9EB0AB006BDABF /* CountdownData */; };
 		01E092402A9EB0AB006BDABF /* CountdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 01E0923F2A9EB0AB006BDABF /* CountdownUI */; };
@@ -169,6 +170,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				01D9E0B32C6B16FF0043F000 /* ConfettiSwiftUI in Frameworks */,
 				01E410A12C062DA900F7B936 /* Messages.framework in Frameworks */,
 				01E410B12C062DC900F7B936 /* CloudKit.framework in Frameworks */,
 				01E410B52C062DDC00F7B936 /* CountdownUI in Frameworks */,
@@ -367,6 +369,7 @@
 			packageProductDependencies = (
 				01E410B22C062DD700F7B936 /* CountdownData */,
 				01E410B42C062DDC00F7B936 /* CountdownUI */,
+				01D9E0B22C6B16FF0043F000 /* ConfettiSwiftUI */,
 			);
 			productName = Countdown.messages;
 			productReference = 01E4109F2C062DA900F7B936 /* Countdown.messages.appex */;
@@ -633,7 +636,7 @@
 				CODE_SIGN_ENTITLEMENTS = Countdown/Countdown.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_ASSET_PATHS = "\"Countdown/Preview Content\"";
 				DEVELOPMENT_TEAM = 52RCCS37U6;
 				ENABLE_PREVIEWS = YES;
@@ -670,7 +673,7 @@
 				CODE_SIGN_ENTITLEMENTS = Countdown/Countdown.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_ASSET_PATHS = "\"Countdown/Preview Content\"";
 				DEVELOPMENT_TEAM = 52RCCS37U6;
 				ENABLE_PREVIEWS = YES;
@@ -872,6 +875,11 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		014FCD342AE4AA2300C56FAF /* ConfettiSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 01E092342A9DB723006BDABF /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */;
+			productName = ConfettiSwiftUI;
+		};
+		01D9E0B22C6B16FF0043F000 /* ConfettiSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 01E092342A9DB723006BDABF /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */;
 			productName = ConfettiSwiftUI;

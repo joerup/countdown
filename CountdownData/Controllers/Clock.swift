@@ -129,6 +129,15 @@ public final class Clock {
         }
     }
     
+    // Edit countdown
+    public func edit(_ countdown: Countdown) {
+        Task {
+            stop()
+            synchronize()
+            await start()
+        }
+    }
+    
     // Delete countdown
     public func delete(_ countdown: Countdown) {
         countdowns.removeAll(where: { $0 == countdown })
