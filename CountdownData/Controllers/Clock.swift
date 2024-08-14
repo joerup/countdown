@@ -225,9 +225,6 @@ public final class Clock {
                 content.title = countdown.displayName
                 content.body = "It's time for \(countdown.displayName)!"
                 content.sound = UNNotificationSound.default
-                if let url = countdown.getURL() {
-                    content.userInfo = ["url": url]
-                }
                 
                 let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
                 let request = UNNotificationRequest(identifier: countdown.id.uuidString, content: content, trigger: trigger)

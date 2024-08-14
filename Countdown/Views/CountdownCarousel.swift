@@ -92,8 +92,10 @@ struct CountdownCarousel: View {
             VStack(spacing: 0) {
                 if editing, let countdown = clock.selectedCountdown {
                     CountdownEditor(countdown: countdown, editing: $editing, onDelete: {
-                        clock.select(nil)
-                        self.editing = false
+                        withAnimation {
+                            clock.select(nil)
+                            self.editing = false
+                        }
                     })
                     Spacer(minLength: 0)
                 } else {
