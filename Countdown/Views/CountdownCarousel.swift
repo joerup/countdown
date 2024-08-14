@@ -57,9 +57,6 @@ struct CountdownCarousel: View {
             UIImpactFeedbackGenerator().impactOccurred()
         }
         .onChange(of: scenePhase) { _, phase in
-            if case .active = phase {
-                UIImpactFeedbackGenerator().impactOccurred()
-            }
             withAnimation {
                 offset = .zero
             }
@@ -191,8 +188,9 @@ struct CountdownCarousel: View {
                 }
             }
             .onEnded { _ in
-                clock.resumeTickUpdates()
-                
+                DispatchQueue.main.asyncAfter(deadline: .now() + clock.delay) {
+                    clock.resumeTickUpdates()
+                }
                 disableHorizontalDrag = false
                 disableVerticalDrag = false
                 
