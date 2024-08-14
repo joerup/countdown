@@ -14,12 +14,10 @@ public struct CounterDisplay: View {
     var size: CGFloat
     
     var tintColor: Color
-    var textStyle: Card.TextStyle
     
-    public init(timeRemaining: Date.TimeRemaining, tintColor: Color, textStyle: Card.TextStyle, size: CGFloat) {
+    public init(timeRemaining: Date.TimeRemaining, tintColor: Color, size: CGFloat) {
         self.timeRemaining = timeRemaining
         self.tintColor = tintColor
-        self.textStyle = textStyle
         self.size = size
     }
     
@@ -39,10 +37,9 @@ public struct CounterDisplay: View {
         HStack(alignment: .firstTextBaseline, spacing: 1) {
             if let value {
                 Text(String(format: "%02i", abs(value)))
-                    .font(.system(size: textStyle.width == .expanded ? size*0.8 : size))
-                    .fontDesign(textStyle.design)
-                    .fontWeight(textStyle.weight)
-                    .fontWidth(textStyle.width)
+                    .font(.system(size: size))
+                    .fontWeight(.bold)
+                    .fontWidth(.condensed)
                     .foregroundStyle(tintColor)
                     .minimumScaleFactor(0.5)
                     .monospacedDigit()
@@ -50,10 +47,8 @@ public struct CounterDisplay: View {
                     Text(unit).foregroundStyle(tintColor)
                     Text(unit).foregroundStyle(.thinMaterial.opacity(0.5))
                 }
-                .font(.system(size: (textStyle.width == .expanded ? size*0.8 : size)*5/6))
-                .fontDesign(textStyle.design)
-                .fontWeight(textStyle.weight)
-                .fontWidth(textStyle.width)
+                .font(.system(size: size*5/6))
+                .fontWeight(.bold)
                 .fontWidth(.condensed)
             }
         }

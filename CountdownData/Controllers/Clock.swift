@@ -29,6 +29,9 @@ public final class Clock {
     // tick update boolean
     public private(set) var tick: Bool = false
     
+    // tick updates enabled
+    private var tickUpdatesEnabled: Bool = true
+    
     // standard delay constant
     public let delay: Double = 0.35
     
@@ -66,6 +69,15 @@ public final class Clock {
         }
     }
     
+    // Save changes when the view enters the background
+    public func didEnterBackground() {
+        WidgetCenter.shared.reloadAllTimelines()
+        Task {
+            await scheduleNotifications()
+        }
+        stop()
+    }
+    
     // Stop the clock when the view disappears
     public func didBecomeInactive() {
         WidgetCenter.shared.reloadAllTimelines()
@@ -82,6 +94,16 @@ public final class Clock {
         await loadCards()
         synchronize()
         await start()
+    }
+    
+    // Pause/Resume tick updates
+    // Pausing means view will not force updated on tick
+    // This is useful during gestures, for example
+    public func pauseTickUpdates() {
+        tickUpdatesEnabled = false
+    }
+    public func resumeTickUpdates() {
+        tickUpdatesEnabled = true
     }
     
     
@@ -124,6 +146,7 @@ public final class Clock {
         modelContext.insert(countdown)
         Task {
             stop()
+            await scheduleNotifications()
             synchronize()
             await start()
         }
@@ -133,6 +156,7 @@ public final class Clock {
     public func edit(_ countdown: Countdown) {
         Task {
             stop()
+            await scheduleNotifications()
             synchronize()
             await start()
         }
@@ -201,6 +225,9 @@ public final class Clock {
                 content.title = countdown.displayName
                 content.body = "It's time for \(countdown.displayName)!"
                 content.sound = UNNotificationSound.default
+                if let url = countdown.getURL() {
+                    content.userInfo = ["url": url]
+                }
                 
                 let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
                 let request = UNNotificationRequest(identifier: countdown.id.uuidString, content: content, trigger: trigger)
@@ -224,15 +251,20 @@ public final class Clock {
         }
     }
     
+    // Tick
+    
     // Start the clock
     private func start() async {
         // a short delay to start the clock when the next realtime second ticks
         let initialDelay: Double = 1 - Double(Date.now.component(.nanosecond))/1E9
         self.tick.toggle()
+        self.tickUpdatesEnabled = true
         DispatchQueue.main.asyncAfter(deadline: .now() + initialDelay) {
             self.timer?.invalidate()
             self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-                self.tick.toggle()
+                if self.tickUpdatesEnabled {
+                    self.tick.toggle()
+                }
                 for countdown in self.countdowns {
                     countdown.tick()
                 }

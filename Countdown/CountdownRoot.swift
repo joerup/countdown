@@ -42,7 +42,9 @@ struct CountdownRoot: View {
         .onChange(of: scenePhase) { _, phase in
             switch phase {
             case .active: clock.didBecomeActive()
-            default: clock.didBecomeInactive()
+            case .background: clock.didEnterBackground()
+            case .inactive: clock.didBecomeInactive()
+            default: break
             }
         }
     }

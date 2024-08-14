@@ -31,6 +31,10 @@ struct CountdownCarousel: View {
     @Binding var editing: Bool
     
     @State private var offset: CGSize = .zero
+    
+    @State private var disableHorizontalDrag: Bool = false
+    @State private var disableVerticalDrag: Bool = false
+    
     private var offsetScale: CGFloat {
         1 - min(abs(offset.height)/1000, 1)
     }
@@ -52,7 +56,10 @@ struct CountdownCarousel: View {
         .onAppear {
             UIImpactFeedbackGenerator().impactOccurred()
         }
-        .onChange(of: scenePhase) { _, _ in
+        .onChange(of: scenePhase) { _, phase in
+            if case .active = phase {
+                UIImpactFeedbackGenerator().impactOccurred()
+            }
             withAnimation {
                 offset = .zero
             }
@@ -78,7 +85,7 @@ struct CountdownCarousel: View {
                     .offset(x: 2*editingScale*(size.width*offsetScale+15))
             }
             if let countdown = clock.selectedCountdown {
-                cardDisplay(countdown: countdown, size: size)
+                cardDisplay(countdown: countdown, isSelected: true, size: size)
             }
         }
     }
@@ -130,8 +137,8 @@ struct CountdownCarousel: View {
         }
     }
     
-    private func cardDisplay(countdown: Countdown, size: CGSize) -> some View {
-        CountdownCard(countdown: countdown)
+    private func cardDisplay(countdown: Countdown, isSelected: Bool = false, size: CGSize) -> some View {
+        CountdownCard(countdown: countdown, isSelected: isSelected)
             .clipShape(RoundedRectangle(cornerRadius: offset == .zero && !editing ? 0 : 40))
             .shadow(radius: 10)
             .offset(offset)
@@ -156,17 +163,24 @@ struct CountdownCarousel: View {
     private func cardGesture(size: CGSize) -> some Gesture {
         DragGesture()
             .onChanged { value in
+                clock.pauseTickUpdates()
+                
                 self.offset = value.translation
-                // reject vertical scrolling if editing
-                if editing {
+                
+                // reject scroll directions
+                if editing || disableVerticalDrag {
                     offset.height = 0
                 }
-                // prioritize single direction
-                if abs(offset.height) > abs(offset.width) {
+                if disableHorizontalDrag {
                     offset.width = 0
                 }
+                
+                // prioritize single direction
+                if abs(offset.height) > abs(offset.width) {
+                    disableHorizontalDrag = true
+                }
                 if abs(offset.width) > abs(offset.height) {
-                    offset.height = 0
+                    disableVerticalDrag = true
                 }
                 // dismiss if scrolled far enough vertically
                 if offsetScale <= 0.3 {
@@ -177,6 +191,11 @@ struct CountdownCarousel: View {
                 }
             }
             .onEnded { _ in
+                clock.resumeTickUpdates()
+                
+                disableHorizontalDrag = false
+                disableVerticalDrag = false
+                
                 withAnimation(.easeInOut(duration: clock.delay)) {
                     if abs(offset.height) > 100 {
                         clock.select(nil)

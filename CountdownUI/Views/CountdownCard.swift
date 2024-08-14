@@ -12,14 +12,18 @@ import ConfettiSwiftUI
 public struct CountdownCard: View {
     
     @Environment(Clock.self) private var clock
+    @Environment(\.scenePhase) private var scenePhase
     
     private var countdown: Countdown
+    private var isSelected: Bool
     
-    public init(countdown: Countdown) {
+    @State private var confettiCannonReady: Bool = true
+    @State private var confettiTrigger: Int = 1
+    
+    public init(countdown: Countdown, isSelected: Bool = false) {
         self.countdown = countdown
+        self.isSelected = isSelected
     }
-    
-    @State private var confetti: Int = 1
     
     public var body: some View {
         GeometryReader { geometry in
@@ -28,7 +32,7 @@ public struct CountdownCard: View {
                 Spacer()
                 VStack(spacing: 0) {
                     DaysDisplay(daysRemaining: countdown.daysRemaining, tintColor: countdown.currentTintColor, textStyle: countdown.currentTextStyle, size: 150)
-                    CounterDisplay(timeRemaining: countdown.timeRemaining, tintColor: countdown.currentTintColor, textStyle: countdown.currentTextStyle, size: 37.5)
+                    CounterDisplay(timeRemaining: countdown.timeRemaining, tintColor: countdown.currentTintColor, size: 37.5)
                 }
             }
             .id(clock.tick)
@@ -39,17 +43,32 @@ public struct CountdownCard: View {
             .background {
                 BackgroundDisplay(background: countdown.currentBackground)
             }
-            .confettiCannon(counter: $confetti, num: 100, colors: countdown.currentTintColor.discretizedGradient(numberOfShades: 10), rainHeight: 1.5 * geometry.size.height, radius: 0.7 * max(geometry.size.height, geometry.size.width))
+            .confettiCannon(counter: $confettiTrigger, num: 100, colors: countdown.currentTintColor.discretizedGradient(numberOfShades: 10), rainHeight: 1.5 * geometry.size.height, radius: 0.7 * max(geometry.size.height, geometry.size.width))
             .onAppear {
-                if countdown.isComplete && countdown.isToday {
-                    confetti += 1
+                shootConfetti()
+            }
+            .onTapGesture {
+                shootConfetti()
+            }
+            .onChange(of: countdown.isComplete) { _, _ in
+                shootConfetti()
+            }
+            .onChange(of: scenePhase) { _, phase in
+                if case .active = phase {
+                    shootConfetti()
                 }
             }
-            .onChange(of: countdown.isComplete) { _, isComplete in
-                if isComplete && countdown.isToday {
-                    confetti += 1
-                }
-            }
+        }
+    }
+    
+    private func shootConfetti() {
+        guard confettiCannonReady, isSelected else { return }
+        guard countdown.isComplete && countdown.isToday else { return }
+        confettiTrigger += 1
+        confettiCannonReady = false
+        UIImpactFeedbackGenerator().impactOccurred()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+            confettiCannonReady = true
         }
     }
 }

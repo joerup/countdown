@@ -16,6 +16,15 @@ extension Card {
     public enum Background {
         case photo(_ photo: UIImage)
         case loading
+        
+//        public func size() -> Int {
+//            switch self {
+//            case .photo(let photo):
+//                return photo.compressed(size: Card.maxPhotoSize)?.count ?? 0
+//            default:
+//                return 0
+//            }
+//        }
     }
     
     public enum BackgroundData: Codable, Hashable {
