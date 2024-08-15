@@ -17,7 +17,7 @@ public class Premium {
 
     // Premium is currently active
     public var isActive: Bool {
-        true// !purchasedProductIDs.isEmpty
+        !purchasedProductIDs.isEmpty
     }
     
     public init() { }
