@@ -71,7 +71,7 @@ public struct CountdownSquareText: View {
     public var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .leading, spacing: 0) {
-                TitleDisplay(title: title, date: dateString, tintColor: tintColor, size: geometry.size.height*0.135, alignment: .leading)
+                TitleDisplay(title: title, date: dateString, tintColor: tintColor, titleSize: geometry.size.height*0.135, dateSize: geometry.size.height*0.1, alignment: .leading)
                     .frame(height: geometry.size.height*0.5)
                 HStack(alignment: .bottom) {
                     Spacer()

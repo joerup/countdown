@@ -14,19 +14,21 @@ public struct TitleDisplay: View {
     private var dateString: String
     private var tintColor: Color
     
-    private var size: CGFloat
+    private var titleSize: CGFloat
+    private var dateSize: CGFloat
     private var alignment: HorizontalAlignment
 
-    public init(title: String, date: String, tintColor: Color, size: CGFloat, alignment: HorizontalAlignment = .center) {
+    public init(title: String, date: String, tintColor: Color, titleSize: CGFloat, dateSize: CGFloat, alignment: HorizontalAlignment = .center) {
         self.titleString = title
         self.dateString = date
         self.tintColor = tintColor
-        self.size = size
+        self.titleSize = titleSize
+        self.dateSize = dateSize
         self.alignment = alignment
     }
     
     public var body: some View {
-        VStack(alignment: alignment, spacing: size*0.15) {
+        VStack(alignment: alignment, spacing: titleSize*0.15) {
             title()
             date()
             Spacer(minLength: 0)
@@ -38,7 +40,7 @@ public struct TitleDisplay: View {
     @ViewBuilder
     private func title() -> some View {
         Text(titleString)
-            .font(.system(size: size))
+            .font(.system(size: titleSize))
             .fontWeight(.bold)
             .fontDesign(.rounded)
             .foregroundStyle(tintColor)
@@ -50,7 +52,7 @@ public struct TitleDisplay: View {
     private func date() -> some View {
         Text(dateString)
             .textCase(.uppercase)
-            .font(.system(size: size*0.6))
+            .font(.system(size: dateSize))
             .fontWeight(.medium)
             .fontWidth(.condensed)
             .foregroundStyle(tintColor)

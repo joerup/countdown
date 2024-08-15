@@ -12,6 +12,7 @@ import CountdownUI
 struct CardEditor: View {
     
     @Environment(\.modelContext) var modelContext
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
     var card: Card
     
@@ -46,7 +47,11 @@ struct CardEditor: View {
                 editText.toggle()
             }
             .popover(isPresented: $editText) {
-                textEditor
+                if horizontalSizeClass == .compact {
+                    textEditor
+                } else {
+                    textEditor.frame(minWidth: 492, minHeight: 185)
+                }
             }
         }
         .padding(.horizontal)
@@ -111,7 +116,7 @@ struct CardEditor: View {
                         }
                     }
                     .scrollIndicators(.hidden)
-                    .padding(.vertical)
+                    .padding(.bottom)
                     
                     ScrollView(.horizontal) {
                         HStack {

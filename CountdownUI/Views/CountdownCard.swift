@@ -28,7 +28,7 @@ public struct CountdownCard: View {
     public var body: some View {
         GeometryReader { geometry in
             VStack {
-                TitleDisplay(title: countdown.displayName, date: countdown.dateString, tintColor: countdown.currentTintColor, size: 40)
+                TitleDisplay(title: countdown.displayName, date: countdown.dateString, tintColor: countdown.currentTintColor, titleSize: 40, dateSize: 24)
                 Spacer()
                 VStack(spacing: 0) {
                     DaysDisplay(daysRemaining: countdown.daysRemaining, tintColor: countdown.currentTintColor, textStyle: countdown.currentTextStyle, size: 150)

@@ -28,15 +28,17 @@ struct CountdownBubble: View {
             }
             .padding(sent ? .trailing : .leading, 7)
             .padding(.top, 35)
-            .padding(.horizontal, 15)
-            .padding(.bottom, 10)
+            .padding(.leading, 10)
+            .padding(.trailing, 15)
+            .padding(.bottom, 5)
             .background(background)
         } else {
             CountdownSquareText(instance: instance)
                 .padding(sent ? .trailing : .leading, 7)
                 .padding(.top, 35)
-                .padding(.horizontal, 15)
-                .padding(.bottom, 10)
+                .padding(.leading, 10)
+                .padding(.trailing, 15)
+                .padding(.bottom, 5)
                 .background(background)
                 .overlay(alignment: .topTrailing) {
                     saveButton
