@@ -10,6 +10,7 @@ import CountdownData
 
 public struct CountdownSquare: View {
     
+    private var countdownID: UUID
     private var title: String
     private var dateString: String
     private var daysRemaining: Int
@@ -17,13 +18,17 @@ public struct CountdownSquare: View {
     private var textStyle: Card.TextStyle
     private var background: Card.Background?
     
-    public init(countdown: Countdown) {
+    private var animation: Namespace.ID
+    
+    public init(countdown: Countdown, animation: Namespace.ID) {
+        self.countdownID = countdown.id
         self.title = countdown.displayName
         self.dateString = countdown.dateString
         self.daysRemaining = countdown.daysRemaining
         self.tintColor = countdown.currentTintColor
         self.textStyle = countdown.currentTextStyle
         self.background = countdown.currentBackgroundIcon
+        self.animation = animation
     }
     
     public var body: some View {

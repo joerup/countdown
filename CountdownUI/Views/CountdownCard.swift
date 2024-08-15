@@ -17,12 +17,15 @@ public struct CountdownCard: View {
     private var countdown: Countdown
     private var isSelected: Bool
     
+    private var animation: Namespace.ID
+    
     @State private var confettiCannonReady: Bool = true
     @State private var confettiTrigger: Int = 1
     
-    public init(countdown: Countdown, isSelected: Bool = false) {
+    public init(countdown: Countdown, isSelected: Bool = false, animation: Namespace.ID) {
         self.countdown = countdown
         self.isSelected = isSelected
+        self.animation = animation
     }
     
     public var body: some View {

@@ -42,9 +42,11 @@ struct CountdownView: View {
     
     @State private var newCountdown: EventType? = nil
     
+    @Namespace private var animation
+    
     var body: some View {
         NavigationStack {
-            CountdownGrid(countdowns: sortedCountdowns, showArchive: showArchive)
+            CountdownGrid(countdowns: sortedCountdowns, showArchive: showArchive, animation: animation)
                 .navigationBarTitleDisplayMode(.inline)
                 .overlay {
                     if sortedCountdowns.isEmpty {
@@ -61,8 +63,8 @@ struct CountdownView: View {
         .searchable(text: $searchText, isPresented: $showSearch, placement: .navigationBarDrawer)
         .opacity(clock.selectedCountdown == nil ? 1 : 0)
         .overlay {
-            if clock.selectedCountdown != nil {
-                CountdownCarousel(countdowns: sortedCountdowns, editing: $editing)
+            if let _ = clock.selectedCountdown {
+                CountdownCarousel(countdowns: sortedCountdowns, editing: $editing, animation: animation)
             }
         }
         .tint(.pink)

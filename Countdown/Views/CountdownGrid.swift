@@ -26,6 +26,8 @@ struct CountdownGrid: View {
     @State private var deleteCountdown: Bool = false
     @State private var deleteCountdownValue: Countdown?
     
+    var animation: Namespace.ID
+    
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
@@ -37,7 +39,7 @@ struct CountdownGrid: View {
                                 clock.select(countdown)
                             }
                         } label: {
-                            CountdownSquare(countdown: countdown)
+                            CountdownSquare(countdown: countdown, animation: animation)
                                 .aspectRatio(1.0, contentMode: .fill)
                                 .frame(maxWidth: 200)
                                 .background(Color.blue.opacity(0.2))
@@ -46,14 +48,14 @@ struct CountdownGrid: View {
                         .clipShape(RoundedRectangle(cornerRadius: 20))
                         .shadow(radius: 5)
                         .contextMenu {
-                            if countdown.canEditDestination {
-                                Button {
-                                    self.editDestinationValue = countdown
-                                    self.editDestination.toggle()
-                                } label: {
-                                    Label("Edit Date", systemImage: "calendar")
-                                }
-                            }
+//                            if countdown.canEditDestination {
+//                                Button {
+//                                    self.editDestinationValue = countdown
+//                                    self.editDestination.toggle()
+//                                } label: {
+//                                    Label("Edit Date", systemImage: "calendar")
+//                                }
+//                            }
 //                            Button {
 //                                self.shareCountdownValue = countdown
 //                                self.shareCountdown.toggle()

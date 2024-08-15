@@ -18,6 +18,8 @@ struct CountdownGrid: View {
         return countdowns.filter { !$0.isPastDay } .sorted()
     }
     
+    @Namespace private var animation
+    
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
@@ -26,7 +28,7 @@ struct CountdownGrid: View {
                         Button {
                             createMessage(countdown)
                         } label: {
-                            CountdownSquare(countdown: countdown)
+                            CountdownSquare(countdown: countdown, animation: animation)
                                 .cornerRadius(20)
                                 .aspectRatio(1.0, contentMode: .fill)
                                 .frame(maxWidth: 200)

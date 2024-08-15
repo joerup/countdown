@@ -45,6 +45,8 @@ struct CountdownCarousel: View {
         offsetScale * editingScale
     }
     
+    var animation: Namespace.ID
+    
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -137,7 +139,7 @@ struct CountdownCarousel: View {
     }
     
     private func cardDisplay(countdown: Countdown, isSelected: Bool = false, size: CGSize) -> some View {
-        CountdownCard(countdown: countdown, isSelected: isSelected)
+        CountdownCard(countdown: countdown, isSelected: isSelected, animation: animation)
             .clipShape(RoundedRectangle(cornerRadius: offset == .zero && !editing ? 0 : 40))
             .shadow(radius: 10)
             .offset(offset)
