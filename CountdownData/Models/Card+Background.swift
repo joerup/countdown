@@ -13,8 +13,6 @@ extension Card {
     public static let maxPhotoSize: Double = 750000
     public static let maxIconSize: Double = 50000
     
-    public static let maxIconDimension: CGFloat = 500
-    
     public enum Background {
         case photo(_ photo: UIImage)
         case loading
@@ -27,6 +25,15 @@ extension Card {
 //                return 0
 //            }
 //        }
+        
+        public func resized(maxSize: CGFloat) -> Background {
+            switch self {
+            case .photo(let image):
+                return .photo(image.resizedIfTooLarge(withSize: maxSize) ?? image)
+            case .loading:
+                return .loading
+            }
+        }
     }
     
     public enum BackgroundData: Codable, Hashable {
@@ -37,11 +44,11 @@ extension Card {
         public func background() async -> Background? {
             switch self {
             case .photo(let data):
-                if let photo = UIImage(data: data)?.resizedIfTooLarge(withSize: Card.maxIconDimension) {
+                if let photo = UIImage(data: data) {
                     return .photo(photo)
                 }
             case .photoLink(let url):
-                if let data = try? Data(contentsOf: url), let image = UIImage(data: data)?.resizedIfTooLarge(withSize: Card.maxIconDimension) {
+                if let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
                     return .photo(image)
                 }
             }
@@ -51,11 +58,7 @@ extension Card {
         public var icon: BackgroundData? {
             switch self {
             case .photo(let data):
-                if let photo = UIImage(data: data),
-                   let compressed = photo.square()?
-                                         .resizedIfTooLarge(withSize: Card.maxIconDimension)?
-                                         .compressed(size: Card.maxIconSize)
-                {
+                if let photo = UIImage(data: data), let compressed = photo.square()?.compressed(size: Card.maxIconSize) {
                     return .photo(compressed)
                 }
             case .photoLink(_):
