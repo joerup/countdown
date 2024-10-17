@@ -67,13 +67,6 @@ struct CountdownGrid: View {
                             } label: {
                                 Label("Delete", systemImage: "trash")
                             }
-                            Button {
-                                countdown.displayName = "Halloween"
-                                countdown.occasion = .annualDate(calendar: "gregorian", month: 10, day: 31)
-                                clock.edit(countdown)
-                            } label: {
-                                Text("CHANGE TO OCT 31")
-                            }
                         }
                         .padding(5)
                     }

@@ -65,6 +65,7 @@ public final class Clock {
         guard !isActive else { return }
         isActive = true
         fetchData()
+        synchronize()
         resetWidgets()
         Task {
             await loadCards()
