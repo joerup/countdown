@@ -64,8 +64,8 @@ public final class Clock {
     public func didBecomeActive() {
         guard !isActive else { return }
         isActive = true
-        fetchData()
         synchronize()
+        fetchData()
         resetWidgets()
         Task {
             await loadCards()

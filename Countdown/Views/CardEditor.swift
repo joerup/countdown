@@ -46,7 +46,7 @@ struct CardEditor: View {
             iconButton("textformat") {
                 editText.toggle()
             }
-            .popover(isPresented: $editText) {
+            .popover(isPresented: $editText, arrowEdge: .bottom) {
                 if horizontalSizeClass == .compact {
                     textEditor
                 } else {
