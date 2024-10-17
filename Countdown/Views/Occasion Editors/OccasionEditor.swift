@@ -11,7 +11,6 @@ import CountdownData
 struct OccasionEditor: View {
     
     @Environment(Clock.self) private var clock
-    @Environment(\.modelContext) private var modelContext
     
     @Environment(\.dismiss) var dismiss
     

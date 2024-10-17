@@ -12,7 +12,6 @@ import CountdownUI
 struct CountdownGrid: View {
     
     @Environment(Clock.self) private var clock
-    @Environment(\.modelContext) private var modelContext
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
     var countdowns: [Countdown]

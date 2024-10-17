@@ -37,7 +37,7 @@ struct CardEditor: View {
                 Button("None") {
                     card.setBackground(nil)
                     UIImpactFeedbackGenerator().impactOccurred()
-                    updateCard()
+                    saveCard(reload: true)
                 }
             } message: {
                 Text("Choose a new background")
@@ -61,14 +61,14 @@ struct CardEditor: View {
         } onReturn: { photo in
             card.setBackground(.photo(photo))
             UIImpactFeedbackGenerator().impactOccurred()
-            updateCard()
+            saveCard(reload: true)
         }
         .unsplashMenu(isPresented: $showUnsplashLibrary) {
             card.loadingBackground()
         } onReturn: { photo in
             card.setBackground(.photo(photo))
             UIImpactFeedbackGenerator().impactOccurred()
-            updateCard()
+            saveCard(reload: true)
         }
         .onAppear {
             tintColor = card.tintColor
@@ -76,18 +76,21 @@ struct CardEditor: View {
         }
         .onChange(of: tintColor) { _, color in
             card.tintColor = color
+            saveCard()
         }
         .onChange(of: textStyle) { _, style in
             card.textStyle = style
+            saveCard()
         }
     }
     
-    private func updateCard() {
-        if card == card.countdown?.card {
+    private func saveCard(reload: Bool = false) {
+        if reload, card == card.countdown?.card {
             Task {
                 await card.countdown?.loadCards()
             }
         }
+        try? modelContext.save()
     }
     
     private var textEditor: some View {

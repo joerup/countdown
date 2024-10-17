@@ -14,7 +14,6 @@ struct CountdownView: View {
     
     @Environment(Clock.self) private var clock
     @Environment(Premium.self) private var premium
-    @Environment(\.modelContext) private var modelContext
     
     @Environment(\.requestReview) private var requestReview
     @AppStorage("reviewOpens") private var reviewOpens: Int = 0

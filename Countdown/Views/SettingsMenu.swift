@@ -11,8 +11,8 @@ import SwiftData
 
 struct SettingsMenu: View {
     
+    @Environment(Clock.self) private var clock
     @Environment(Premium.self) private var premium
-    @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
@@ -46,6 +46,11 @@ struct SettingsMenu: View {
                 }
                 Section {
                     Toggle("Notifications", isOn: $notifications)
+                        .onChange(of: notifications) { _, _ in
+                            Task {
+                                await clock.refresh()
+                            }
+                        }
                 }
                 Section {
                     Link(destination: URL(string: "https://www.joerup.com/countdown")!) {

@@ -12,7 +12,6 @@ import CountdownUI
 struct CountdownEditor: View {
     
     @Environment(Clock.self) private var clock: Clock
-    @Environment(\.modelContext) private var modelContext
     
     var countdown: Countdown
     

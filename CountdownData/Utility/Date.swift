@@ -21,7 +21,7 @@ public extension Date {
     }
     
     func timeRemaining(relativeTo reference: Date = .now) -> TimeRemaining {
-        let components = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: .now, to: self < reference ? reference : self)
+        let components = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: reference, to: self < reference ? reference : self)
         guard let day = components.day, let hour = components.hour, let minute = components.minute, let second = components.second else { return .none }
         return TimeRemaining(day: day, hour: hour, minute: minute, second: second)
     }

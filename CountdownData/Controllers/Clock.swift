@@ -14,8 +14,8 @@ import WidgetKit
 @Observable
 public final class Clock {
     
-    // notifications enabled setting
-    @AppStorage("notifications") private static var notifications: Bool = true
+    // whether this is active mode
+    public private(set) var isActive: Bool = false
     
     // whether all data has loaded
     public private(set) var isLoaded: Bool = false
@@ -49,6 +49,9 @@ public final class Clock {
         self.modelContext = modelContext
     }
     
+    // notifications enabled setting
+    @AppStorage("notifications") public static var notifications: Bool = true
+    
     
     // MARK: - Active Mode Setup
     // Used for the main app interface
@@ -59,6 +62,7 @@ public final class Clock {
     // Load all data when the view appears
     // Set counters and start clock
     public func didBecomeActive() {
+        isActive = true
         fetchData()
         WidgetCenter.shared.reloadAllTimelines()
         Task {
@@ -80,6 +84,7 @@ public final class Clock {
     
     // Stop the clock when the view disappears
     public func didBecomeInactive() {
+        isActive = false
         WidgetCenter.shared.reloadAllTimelines()
         Task {
             await scheduleNotifications()
@@ -144,21 +149,27 @@ public final class Clock {
     public func add(_ countdown: Countdown) {
         countdowns.append(countdown)
         modelContext.insert(countdown)
-        Task {
-            stop()
-            await scheduleNotifications()
-            synchronize()
-            await start()
+        try? modelContext.save()
+        if isActive {
+            Task {
+                stop()
+                await scheduleNotifications()
+                synchronize()
+                await start()
+            }
         }
     }
     
     // Edit countdown
     public func edit(_ countdown: Countdown) {
-        Task {
-            stop()
-            await scheduleNotifications()
-            synchronize()
-            await start()
+        try? modelContext.save()
+        if isActive {
+            Task {
+                stop()
+                await scheduleNotifications()
+                synchronize()
+                await start()
+            }
         }
     }
     
@@ -166,6 +177,7 @@ public final class Clock {
     public func delete(_ countdown: Countdown) {
         countdowns.removeAll(where: { $0 == countdown })
         modelContext.delete(countdown)
+        try? modelContext.save()
     }
     
     
@@ -206,6 +218,11 @@ public final class Clock {
     // Schedule notifications for all countdowns
     // Removes all pending notifications and replaces with new ones
     private func scheduleNotifications() async {
+        
+        // remove all notifications currently pending
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+    
+        // make sure notification setting is enabled to continue
         guard Self.notifications else { return }
         
         do {
@@ -214,8 +231,6 @@ public final class Clock {
                 print("No access to schedule notifications")
                 return
             }
-            // remove all notifications currently pending
-            UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
             
             // schedule new notifications
             for countdown in countdowns.filter(\.isActive) {
@@ -233,7 +248,6 @@ public final class Clock {
                 
                 print("Notification set for \(countdown.name)")
             }
-            
         } catch {
             print(error)
         }

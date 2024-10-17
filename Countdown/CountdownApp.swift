@@ -25,7 +25,7 @@ struct CountdownApp: App {
         do {
             container = try ModelContainer(for: Countdown.self)
         } catch {
-            fatalError("Failed to create ModelContainer for Movie.")
+            fatalError("Failed to create ModelContainer.")
         }
     }
 }

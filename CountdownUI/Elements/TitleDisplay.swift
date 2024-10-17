@@ -46,6 +46,7 @@ public struct TitleDisplay: View {
             .foregroundStyle(tintColor)
             .lineLimit(2)
             .multilineTextAlignment(alignment == .leading ? .leading : .center)
+            .fixedSize(horizontal: false, vertical: true)
     }
     
     @ViewBuilder
@@ -56,6 +57,9 @@ public struct TitleDisplay: View {
             .fontWeight(.medium)
             .fontWidth(.condensed)
             .foregroundStyle(tintColor)
+            .lineLimit(2)
+            .multilineTextAlignment(alignment == .leading ? .leading : .center)
+            .fixedSize(horizontal: false, vertical: true)
     }
 }
 

@@ -12,14 +12,13 @@ import SwiftData
 
 struct CountdownBubble: View {
     
-    @Environment(\.modelContext) var modelContext
-    
     var instance: CountdownInstance
     var existingCountdown: Countdown?
     var sent: Bool
     
     var update: (CountdownInstance?,Bool?) -> ()
-    var append: (Countdown) -> ()
+    var add: (Countdown) -> ()
+    var edit: (Countdown) -> ()
     
     var body: some View {
         if let existingCountdown, instance.compareTo(countdown: existingCountdown), let url = existingCountdown.getURL() {
@@ -54,12 +53,10 @@ struct CountdownBubble: View {
         Button {
             if let existingCountdown {
                 existingCountdown.match(instance)
-                print("matched \(existingCountdown)")
+                edit(existingCountdown)
             } else {
                 let countdown = Countdown(from: instance)
-                append(countdown)
-                modelContext.insert(countdown)
-                print("added \(countdown)")
+                add(countdown)
             }
             update(instance, sent)
         } label: {
