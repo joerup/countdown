@@ -26,6 +26,23 @@ public extension UIImage {
         draw(in: CGRect(origin: .zero, size: canvasSize))
         return UIGraphicsGetImageFromCurrentImageContext()
     }
+    
+    func resized(withSize newSize: CGFloat) -> UIImage? {
+        let canvasSize = CGSize(width: newSize * min(1.0, size.width/size.height), height: newSize * min(1.0, size.height/size.width))
+        UIGraphicsBeginImageContextWithOptions(canvasSize, false, scale)
+        defer { UIGraphicsEndImageContext() }
+        draw(in: CGRect(origin: .zero, size: canvasSize))
+        return UIGraphicsGetImageFromCurrentImageContext()
+    }
+    
+    func resizedIfTooLarge(withSize newSize: CGFloat) -> UIImage? {
+        guard size.height > newSize || size.width > newSize else { return self }
+        let canvasSize = CGSize(width: newSize * min(1.0, size.width/size.height), height: newSize * min(1.0, size.height/size.width))
+        UIGraphicsBeginImageContextWithOptions(canvasSize, false, scale)
+        defer { UIGraphicsEndImageContext() }
+        draw(in: CGRect(origin: .zero, size: canvasSize))
+        return UIGraphicsGetImageFromCurrentImageContext()
+    }
 
     func compressed(size: Double) -> Data? {
         guard let minimum = jpegData(compressionQuality: 0) else { return nil }
