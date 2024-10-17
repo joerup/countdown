@@ -24,6 +24,7 @@ struct CountdownWidget: Widget {
                     .containerBackground(for: .widget) {
                         BackgroundDisplay(background: countdown.currentBackgroundIcon, blurRadius: 1)
                             .padding(.bottom, -3)
+                            .overlay(Color.blue.opacity(0.6))
                     }
                     .widgetURL(countdown.getURL())
             } else {

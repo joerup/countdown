@@ -62,9 +62,10 @@ public final class Clock {
     // Load all data when the view appears
     // Set counters and start clock
     public func didBecomeActive() {
+        guard !isActive else { return }
         isActive = true
         fetchData()
-        WidgetCenter.shared.reloadAllTimelines()
+        resetWidgets()
         Task {
             await loadCards()
             await scheduleNotifications()
@@ -73,9 +74,11 @@ public final class Clock {
         }
     }
     
-    // Save changes when the view enters the background
+    // Stop the clock when the view enters the background
     public func didEnterBackground() {
-        WidgetCenter.shared.reloadAllTimelines()
+        guard isActive else { return }
+        isActive = false
+        resetWidgets()
         Task {
             await scheduleNotifications()
         }
@@ -84,8 +87,9 @@ public final class Clock {
     
     // Stop the clock when the view disappears
     public func didBecomeInactive() {
+        guard isActive else { return }
         isActive = false
-        WidgetCenter.shared.reloadAllTimelines()
+        resetWidgets()
         Task {
             await scheduleNotifications()
         }
@@ -190,9 +194,23 @@ public final class Clock {
             let descriptor = FetchDescriptor<Countdown>(predicate: predicate)
             let countdowns = try modelContext.fetch(descriptor)
             
-            // reload if countdowns has changed
-            // checks if there is any fetched countdown which is not identical to one here in the clock already
-            if countdowns.contains(where: { countdown in self.countdowns.first(where: { $0 == countdown })?.compareTo(countdown: countdown) != true }) {
+            // check if there are any differences between the fetched countdowns and stored countdowns
+            // if so, we need to modify the stored countdowns array
+            // (note: this works b/c if the clock was just initialized, there will be no stored countdowns yet)
+            let allCountdownsMatch =
+                countdowns.allSatisfy { newCountdown in
+                    if let oldCountdown = self.countdowns.first(where: { $0 == newCountdown }) {
+                        return oldCountdown.compareTo(countdown: newCountdown)
+                    } else {
+                        return false
+                    }
+                } &&
+                self.countdowns.allSatisfy { oldCountdown in
+                    countdowns.contains(oldCountdown)
+                }
+            
+            // (re)populate the stored countdowns if necessary
+            if !allCountdownsMatch {
                 self.countdowns = countdowns
                 self.isLoaded = false
             }
@@ -213,6 +231,12 @@ public final class Clock {
         for countdown in countdowns {
             await countdown.loadCards()
         }
+    }
+    
+    // Reload widget timelines
+    // Forces all widgets to update their views
+    private func resetWidgets() {
+        WidgetCenter.shared.reloadAllTimelines()
     }
     
     // Schedule notifications for all countdowns
@@ -266,12 +290,23 @@ public final class Clock {
     
     // Start the clock
     private func start() async {
+        self.tickUpdatesEnabled = true
+        
+        // initial tick for setup
+        self.tick.toggle()
+        
         // a short delay to start the clock when the next realtime second ticks
         let initialDelay: Double = 1 - Double(Date.now.component(.nanosecond))/1E9
-        self.tick.toggle()
-        self.tickUpdatesEnabled = true
         DispatchQueue.main.asyncAfter(deadline: .now() + initialDelay) {
             self.timer?.invalidate()
+            
+            // tick exactly on the second
+            self.tick.toggle()
+            for countdown in self.countdowns {
+                countdown.tick()
+            }
+            
+            // repeatedly tick every second after this
             self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
                 if self.tickUpdatesEnabled {
                     self.tick.toggle()
@@ -279,9 +314,10 @@ public final class Clock {
                 for countdown in self.countdowns {
                     countdown.tick()
                 }
-                print("tick")
             }
         }
+        
+        // now setup is done
         isLoaded = true
     }
     

@@ -59,6 +59,7 @@ class MessageController: MSMessagesAppViewController {
         alternateLayout.trailingCaption = "\(countdown.date.daysRemaining()) days"
         alternateLayout.subcaption = countdown.dateString
         if case .photo(let photo) = countdown.currentBackground, let image = photo.square() {
+            // this is a hacky way to send the image without encoding it in a URL
             alternateLayout.image = image
         }
         

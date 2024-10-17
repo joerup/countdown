@@ -39,6 +39,9 @@ struct CountdownRoot: View {
                 clock.select(id)
             }
         }
+        .onAppear {
+            clock.didBecomeActive()
+        }
         .onChange(of: scenePhase) { _, phase in
             switch phase {
             case .active: clock.didBecomeActive()
