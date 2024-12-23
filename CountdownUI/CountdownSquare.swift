@@ -18,9 +18,7 @@ public struct CountdownSquare: View {
     private var textStyle: Card.TextStyle
     private var background: Card.Background?
     
-    private var animation: Namespace.ID
-    
-    public init(countdown: Countdown, animation: Namespace.ID) {
+    public init(countdown: Countdown) {
         self.countdownID = countdown.id
         self.title = countdown.displayName
         self.dateString = countdown.dateString
@@ -28,18 +26,19 @@ public struct CountdownSquare: View {
         self.tintColor = countdown.currentTintColor
         self.textStyle = countdown.currentTextStyle
         self.background = countdown.currentBackgroundIcon
-        self.animation = animation
     }
     
     public var body: some View {
-        CountdownSquareText(title: title, dateString: dateString, daysRemaining: daysRemaining, tintColor: tintColor, textStyle: textStyle)
-            .padding([.horizontal, .top])
-            .padding(.bottom, 5)
-            .background {
-                BackgroundDisplay(background: background, blurRadius: 1)
-                    .ignoresSafeArea()
-                    .padding(.bottom, -5)
-            }
+        GeometryReader { geometry in
+            CountdownSquareText(title: title, dateString: dateString, daysRemaining: daysRemaining, tintColor: tintColor, textStyle: textStyle)
+                .padding([.horizontal, .top], geometry.size.width*0.1)
+                .padding(.bottom, geometry.size.width*0.04)
+                .background {
+                    BackgroundDisplay(background: background, blurRadius: 1)
+                        .ignoresSafeArea()
+                        .padding(.bottom, -geometry.size.width*0.01)
+                }
+        }
     }
 }
 
@@ -50,6 +49,8 @@ public struct CountdownSquareText: View {
     private var daysRemaining: Int
     private var tintColor: Color
     private var textStyle: Card.TextStyle
+    
+    private let scale: CGFloat = 300
     
     public init(countdown: Countdown) {
         self.title = countdown.displayName
@@ -76,15 +77,18 @@ public struct CountdownSquareText: View {
     public var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .leading, spacing: 0) {
-                TitleDisplay(title: title, date: dateString, tintColor: tintColor, titleSize: geometry.size.height*0.135, dateSize: geometry.size.height*0.1, alignment: .leading)
-                    .frame(height: geometry.size.height*0.5)
+                TitleDisplay(title: title, date: dateString, tintColor: tintColor, titleSize: scale*0.15, dateSize: scale*0.12, alignment: .leading)
+                Spacer(minLength: 0)
                 HStack(alignment: .bottom) {
-                    Spacer()
-                    DaysDisplay(daysRemaining: daysRemaining, tintColor: tintColor, textStyle: textStyle, size: geometry.size.height*0.5)
-                        .padding(.trailing, 3)
+                    Spacer(minLength: 0)
+                    DaysDisplay(daysRemaining: daysRemaining, tintColor: tintColor, textStyle: textStyle, size: scale*0.5)
+                        .padding(.trailing, scale*0.05)
+                        .padding(.bottom, -scale*0.07)
                 }
-                .frame(height: geometry.size.height*0.5)
             }
+            .frame(width: scale, height: scale)
+            .scaleEffect(geometry.size.width/scale)
+            .frame(width: geometry.size.width, height: geometry.size.width)
         }
     }
 }

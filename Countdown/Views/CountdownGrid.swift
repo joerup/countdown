@@ -38,14 +38,14 @@ struct CountdownGrid: View {
                                 clock.select(countdown)
                             }
                         } label: {
-                            CountdownSquare(countdown: countdown, animation: animation)
+                            CountdownSquare(countdown: countdown)
                                 .aspectRatio(1.0, contentMode: .fill)
                                 .frame(maxWidth: 200)
                                 .background(Color.blue.opacity(0.2))
-                                .id(clock.tick)
                         }
                         .clipShape(RoundedRectangle(cornerRadius: 20))
                         .shadow(radius: 5)
+                        .id(clock.tick)
                         .contextMenu {
 //                            if countdown.canEditDestination {
 //                                Button {

@@ -28,7 +28,7 @@ struct CountdownGrid: View {
                         Button {
                             createMessage(countdown)
                         } label: {
-                            CountdownSquare(countdown: countdown, animation: animation)
+                            CountdownSquare(countdown: countdown)
                                 .cornerRadius(20)
                                 .aspectRatio(1.0, contentMode: .fill)
                                 .frame(maxWidth: 200)

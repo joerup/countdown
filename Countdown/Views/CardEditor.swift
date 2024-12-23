@@ -160,13 +160,12 @@ struct CardEditor: View {
     
     private func circle(_ icon: String) -> some View {
         ZStack {
-            Image(systemName: icon).foregroundStyle(.foreground)
-            Image(systemName: icon).foregroundStyle(.tint).opacity(0.5)
+            Image(systemName: icon).foregroundStyle(.tint)
         }
         .imageScale(.large)
         .fontWeight(.semibold)
         .frame(width: 50, height: 50)
-        .background(Circle().fill(.fill))
+        .background(Circle().fill(.white).opacity(0.3))
     }
     
     private func colorCircle(_ color: some ShapeStyle) -> some View {

@@ -33,6 +33,17 @@
    }
 },
  {
+   "name": "Pascha (Orthodox Easter)",
+   "displayName": "Pascha",
+   "occasion": {
+      "annualOther": {
+         "calendar": "gregorian",
+         "tag": "orthodox_easter",
+         "offset": 0
+      }
+   }
+},
+ {
    "name": "Thanksgiving (U.S.)",
    "displayName": "Thanksgiving",
    "occasion": {

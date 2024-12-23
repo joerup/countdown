@@ -179,10 +179,6 @@ public final class Countdown {
     
     // MARK: - Other
     
-    public var canEditDestination: Bool {
-        return type == .custom
-    }
-    
     // Create a link to open this countdown via id
     public func getURL() -> URL? {
         var components = URLComponents()

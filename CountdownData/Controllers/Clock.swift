@@ -290,7 +290,7 @@ public final class Clock {
     // Tick
     
     // Start the clock
-    private func start() async {
+    @MainActor private func start() async {
         self.tickUpdatesEnabled = true
         
         // initial tick for setup

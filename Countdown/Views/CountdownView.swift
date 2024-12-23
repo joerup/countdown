@@ -30,8 +30,6 @@ struct CountdownView: View {
         }
     }
     
-    @State private var editing: Bool = false
-    
     @State private var showSettings: Bool = false
     @State private var showArchive: Bool = false
     @State private var showSearch: Bool = false
@@ -39,7 +37,7 @@ struct CountdownView: View {
     
     @State private var searchText: String = ""
     
-    @State private var newCountdown: EventType? = nil
+    @State private var newCountdown: Bool = false
     
     @Namespace private var animation
     
@@ -63,14 +61,13 @@ struct CountdownView: View {
         .opacity(clock.selectedCountdown == nil ? 1 : 0)
         .overlay {
             if let _ = clock.selectedCountdown {
-                CountdownCarousel(countdowns: sortedCountdowns, editing: $editing, animation: animation)
+                CountdownCarousel(countdowns: sortedCountdowns, animation: animation)
             }
         }
         .tint(.pink)
-        .sheet(item: $newCountdown) { type in
-            OccasionEditor(type: type) { countdown in
+        .sheet(isPresented: $newCountdown) {
+            OccasionCreator { countdown in
                 clock.select(countdown)
-                self.editing = true
             }
         }
         .sheet(isPresented: $showSettings) {
@@ -130,12 +127,8 @@ struct CountdownView: View {
         }
         ToolbarItem(placement: .topBarTrailing) {
             if premium.isActive || clock.countdowns.filter(\.isActive).count < 4 {
-                Menu {
-                    ForEach(EventType.allCases) { type in
-                        Button(type.displayName) {
-                            newCountdown = type
-                        }
-                    }
+                Button {
+                    newCountdown.toggle()
                 } label: {
                     Image(systemName: "plus")
                         .fontWeight(.bold)

@@ -35,7 +35,9 @@ struct DateEditor: View {
                     DatePicker("Time", selection: $time, displayedComponents: [.hourAndMinute])
                 }
             }
-            Section {
+            Section(
+                footer: Text(repeatAnnually ? "This countdown will roll over to the next year automatically." : "")
+            ){
                 Toggle("Repeat Annually", isOn: $repeatAnnually)
             }
         }

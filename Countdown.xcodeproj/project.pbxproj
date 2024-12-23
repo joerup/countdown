@@ -19,8 +19,9 @@
 		015DD3DC2A77483A000EB3C0 /* CountdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015DD3D42A77483A000EB3C0 /* CountdownView.swift */; };
 		015DD3DE2A77483A000EB3C0 /* PhotoMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015DD3D72A77483A000EB3C0 /* PhotoMenu.swift */; };
 		015DD3DF2A77483A000EB3C0 /* OccasionEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015DD3D82A77483A000EB3C0 /* OccasionEditor.swift */; };
-		015DD3E12A77483A000EB3C0 /* CountdownEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015DD3DA2A77483A000EB3C0 /* CountdownEditor.swift */; };
 		015DD4212A79BBBA000EB3C0 /* DateEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015DD4202A79BBBA000EB3C0 /* DateEditor.swift */; };
+		0163E5E22D188D68004D60C9 /* CountdownCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163E5E12D188D68004D60C9 /* CountdownCard.swift */; };
+		0163E5E42D18C4C6004D60C9 /* OccasionCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163E5E32D18C4BB004D60C9 /* OccasionCreator.swift */; };
 		017AD9852C0973FD0096E27A /* CountdownBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 017AD9842C0973FD0096E27A /* CountdownBubble.swift */; };
 		017AD9872C0A5E080096E27A /* ShareMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 017AD9862C0A5E080096E27A /* ShareMenu.swift */; };
 		01B31AB32A81D0D100002F15 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01B31A972A81CFE800002F15 /* WidgetKit.framework */; };
@@ -110,8 +111,9 @@
 		015DD3D42A77483A000EB3C0 /* CountdownView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountdownView.swift; sourceTree = "<group>"; };
 		015DD3D72A77483A000EB3C0 /* PhotoMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoMenu.swift; sourceTree = "<group>"; };
 		015DD3D82A77483A000EB3C0 /* OccasionEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OccasionEditor.swift; sourceTree = "<group>"; };
-		015DD3DA2A77483A000EB3C0 /* CountdownEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountdownEditor.swift; sourceTree = "<group>"; };
 		015DD4202A79BBBA000EB3C0 /* DateEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateEditor.swift; sourceTree = "<group>"; };
+		0163E5E12D188D68004D60C9 /* CountdownCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownCard.swift; sourceTree = "<group>"; };
+		0163E5E32D18C4BB004D60C9 /* OccasionCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OccasionCreator.swift; sourceTree = "<group>"; };
 		017AD9842C0973FD0096E27A /* CountdownBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownBubble.swift; sourceTree = "<group>"; };
 		017AD9862C0A5E080096E27A /* ShareMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareMenu.swift; sourceTree = "<group>"; };
 		01B31A972A81CFE800002F15 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -184,6 +186,7 @@
 		0114EAA22A8FE0240013EE87 /* Occasion Editors */ = {
 			isa = PBXGroup;
 			children = (
+				0163E5E32D18C4BB004D60C9 /* OccasionCreator.swift */,
 				015DD3D82A77483A000EB3C0 /* OccasionEditor.swift */,
 				015DD4202A79BBBA000EB3C0 /* DateEditor.swift */,
 				01C3C7D32A7CD14000475FC4 /* HolidayEditor.swift */,
@@ -242,7 +245,7 @@
 				015DD3D42A77483A000EB3C0 /* CountdownView.swift */,
 				01C2086B2AE04B8B00F798CD /* CountdownGrid.swift */,
 				01C208692AE049B500F798CD /* CountdownCarousel.swift */,
-				015DD3DA2A77483A000EB3C0 /* CountdownEditor.swift */,
+				0163E5E12D188D68004D60C9 /* CountdownCard.swift */,
 				014FCD322AE48FB300C56FAF /* CardEditor.swift */,
 				0114EAA22A8FE0240013EE87 /* Occasion Editors */,
 				015DD3D62A77483A000EB3C0 /* Background Editors */,
@@ -456,12 +459,13 @@
 				01CE90AD2ADC5959000537C5 /* SettingsMenu.swift in Sources */,
 				015DD4212A79BBBA000EB3C0 /* DateEditor.swift in Sources */,
 				015DD3DF2A77483A000EB3C0 /* OccasionEditor.swift in Sources */,
-				015DD3E12A77483A000EB3C0 /* CountdownEditor.swift in Sources */,
 				01FA61962A8312EA003BDA2B /* UnsplashMenu.swift in Sources */,
 				01C3C7D42A7CD14000475FC4 /* HolidayEditor.swift in Sources */,
 				017AD9872C0A5E080096E27A /* ShareMenu.swift in Sources */,
 				0157B7D52A8758D2007CF704 /* CountdownRoot.swift in Sources */,
 				01C2086C2AE04B8B00F798CD /* CountdownGrid.swift in Sources */,
+				0163E5E42D18C4C6004D60C9 /* OccasionCreator.swift in Sources */,
+				0163E5E22D188D68004D60C9 /* CountdownCard.swift in Sources */,
 				015DD3C02A774807000EB3C0 /* CountdownApp.swift in Sources */,
 				014FCD332AE48FB300C56FAF /* CardEditor.swift in Sources */,
 				015DD3DC2A77483A000EB3C0 /* CountdownView.swift in Sources */,
@@ -636,7 +640,7 @@
 				CODE_SIGN_ENTITLEMENTS = Countdown/Countdown.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Countdown/Preview Content\"";
 				DEVELOPMENT_TEAM = 52RCCS37U6;
 				ENABLE_PREVIEWS = YES;
@@ -654,7 +658,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.rupertusapps.Countdown;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -673,7 +677,7 @@
 				CODE_SIGN_ENTITLEMENTS = Countdown/Countdown.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Countdown/Preview Content\"";
 				DEVELOPMENT_TEAM = 52RCCS37U6;
 				ENABLE_PREVIEWS = YES;
@@ -691,7 +695,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.rupertusapps.Countdown;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

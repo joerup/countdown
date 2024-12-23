@@ -25,10 +25,10 @@ public struct DaysDisplay: View {
     
     public var body: some View {
         number(daysRemaining, size: fit(daysRemaining))
-            .frame(height: 1.2 * fit(daysRemaining))
             .foregroundStyle(.thickMaterial)
             .environment(\.colorScheme, .light)
             .shadow(radius: 10)
+            .padding(.bottom, 0.25 * (size - fit(daysRemaining)))
     }
     
     private func fit(_ number: Int) -> CGFloat {

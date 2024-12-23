@@ -28,12 +28,18 @@ public extension Date {
     
     var dateString: String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = timeIntervalSinceNow < 86400*335 && timeIntervalSinceNow > -86400*30 ? "EEE MMM d" : "EEE MMM d YYYY"
+        dateFormatter.dateFormat = timeIntervalSinceNow < 86400*335 && timeIntervalSinceNow > -86400*30 ? "EEE MMM d" : "EEE MMM d yyyy"
         return dateFormatter.string(from: self)
     }
     var timeString: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = component(.minute) == 0 ? "ha" : "h:mma"
+        return dateFormatter.string(from: self)
+    }
+    
+    var fullDateString: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEEE, MMMM d, yyyy"
         return dateFormatter.string(from: self)
     }
     
