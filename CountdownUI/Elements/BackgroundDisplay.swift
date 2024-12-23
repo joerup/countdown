@@ -11,23 +11,31 @@ import CountdownData
 public struct BackgroundDisplay: View {
     
     private var background: Card.Background?
+    private var color: Color
+    private var fade: Double
     private var blurRadius: Double = 0
     
-    public init(background: Card.Background?, blurRadius: Double = 0) {
+    public init(background: Card.Background?, color: Color, fade: Double, blurRadius: Double = 0) {
         self.background = background
+        self.color = color
+        self.fade = fade
         self.blurRadius = blurRadius
     }
     
     public var body: some View {
-        Group {
+        ZStack {
+            Rectangle().fill(color)
             switch background {
             case .photo(let photo):
                 Image(uiImage: photo)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .blur(radius: blurRadius)
-            case .loading, nil:
-                Rectangle().fill(Color.init(red: 163/255, green: 55/255, blue: 68/255))
+                    .opacity(fade)
+            case .loading:
+                ProgressView()
+            default:
+                EmptyView()
             }
         }
     }

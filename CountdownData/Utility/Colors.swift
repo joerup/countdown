@@ -8,9 +8,13 @@
 import Foundation
 import SwiftUI
 
+typealias RGBColor = [Double]
+
 public extension Color {
     
     static let standardColors: [Color] = [.gray, .pink, .red, .orange, .yellow, .green, .mint, .teal, .cyan, .blue, .indigo, .purple, .brown]
+    
+    static let defaultColor = Color.init(red: 163/255, green: 55/255, blue: 68/255)
     
     init(rgb: [Double]) {
         self.init(red: rgb[0], green: rgb[1], blue: rgb[2])

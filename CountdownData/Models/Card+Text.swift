@@ -10,10 +10,6 @@ import SwiftUI
 
 extension Card {
     
-    public typealias Tint = [Double]
-    
-    public typealias TextShadow = Double
-    
     public enum TextStyle: Int, Codable, Identifiable, CaseIterable {
         case standard
         case round

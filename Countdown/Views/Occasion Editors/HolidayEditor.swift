@@ -14,26 +14,50 @@ struct HolidayDetails: View {
     @Binding var displayName: String
     @Binding var occasion: Occasion?
     
+    @State private var showMoreDates: Bool = false
+    
     var body: some View {
         List {
-            Section("Holiday") {
-                Text(name)
+            Section("Name") {
+                TextField("Event Name", text: $displayName)
             }
+            banner
             if let occasion {
                 Section("Occurs") {
-                    Text(occasion.string)
+                    HStack {
+                        if occasion.repeatAnnually {
+                            Image(systemName: "repeat")
+                        }
+                        Text(occasion.string)
+                    }
+                    .foregroundStyle(.secondary)
                 }
-                Section(
-                    header: Text("Upcoming Dates"),
-                    footer: Text("This countdown will roll over to the next year automatically.")
-                ){
-                    ForEach(Array(occasion.futureDates(10).enumerated()), id: \.element) { index, date in
+                Section("Upcoming Dates") {
+                    ForEach(occasion.futureDates(showMoreDates ? 10 : 3), id: \.self) { date in
                         Text(date.fullDateString)
-                            .foregroundStyle(index == 0 ? .primary : .secondary)
+                            .foregroundStyle(.secondary)
+                    }
+                    Button("Show \(showMoreDates ? "Less" : "More")") {
+                        showMoreDates.toggle()
                     }
                 }
             }
         }
+    }
+    
+    private var banner: some View {
+        Section {
+            HStack(alignment: .top) {
+                Image(systemName: "info.circle.fill")
+                    .font(.title3)
+                    .foregroundColor(.blue)
+                Text("This countdown is automatically set to the next date of \(name).")
+                    .font(.callout)
+                    .foregroundColor(.primary)
+            }
+            .listRowBackground(Color.blue.opacity(0.1))
+        }
+        .textCase(nil)
     }
 }
 
@@ -78,9 +102,9 @@ struct Holidays: View {
                     Text(holiday.name)
                     Spacer()
                     Text(holiday.occasion.date.dateString)
-                        .foregroundStyle(.gray)
+                        .foregroundStyle(.secondary)
                     Image(systemName: "chevron.right")
-                        .foregroundStyle(.gray)
+                        .foregroundStyle(.tertiary)
                 }
                 .foregroundColor(.primary)
             }

@@ -18,7 +18,15 @@ public final class Card {
     @Attribute(.externalStorage) public private(set) var backgroundData: BackgroundData?
     @Attribute(.externalStorage) public private(set) var backgroundIconData: BackgroundData?
     
-    private var tint: Tint = Color.white.rgb
+    private var backgroundRGB: RGBColor = Color.defaultColor.rgb
+    public var backgroundColor: Color {
+        get { Color(rgb: backgroundRGB) }
+        set { self.backgroundRGB = newValue.rgb }
+    }
+    
+    public var backgroundFade: Double = 1.0
+    
+    private var tint: RGBColor = Color.white.rgb
     public var tintColor: Color {
         get { Color(rgb: tint) }
         set { self.tint = newValue.rgb }
@@ -26,7 +34,7 @@ public final class Card {
     
     public var textStyle: TextStyle = TextStyle.round
     
-    public var textShadow: TextShadow = 0
+    public var textShadow: Double = 0
     
     public init() { }
     
@@ -34,6 +42,8 @@ public final class Card {
         self.tint = instance.tint
         self.textStyle = instance.textStyle
         self.textShadow = instance.textShadow
+        self.backgroundRGB = instance.backgroundRGB
+        self.backgroundFade = instance.backgroundFade
         self.backgroundData = instance.backgroundData
         self.backgroundIconData = instance.backgroundIconData
         self.backgroundID = instance.backgroundID
@@ -42,6 +52,8 @@ public final class Card {
         self.tint = instance.tint
         self.textStyle = instance.textStyle
         self.textShadow = instance.textShadow
+        self.backgroundRGB = instance.backgroundRGB
+        self.backgroundFade = instance.backgroundFade
         self.backgroundData = instance.backgroundData
         self.backgroundIconData = instance.backgroundIconData
         self.backgroundID = instance.backgroundID

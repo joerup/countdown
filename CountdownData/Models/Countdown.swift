@@ -62,13 +62,20 @@ public final class Countdown {
     @Transient public var currentBackgroundIcon: Card.Background?
     @Transient public var currentBackgroundID: UUID = UUID()
     
+    public var currentBackgroundColor: Color {
+        return card?.backgroundColor ?? .defaultColor
+    }
+    public var currentBackgroundFade: Double {
+        return card?.backgroundFade ?? 1.0
+    }
+    
     public var currentTintColor: Color {
         return card?.tintColor ?? .white
     }
     public var currentTextStyle: Card.TextStyle {
         return card?.textStyle ?? .standard
     }
-    public var currentTextShadow: Card.TextShadow {
+    public var currentTextShadow: Double {
         return card?.textShadow ?? 0
     }
     
@@ -119,6 +126,8 @@ public final class Countdown {
         self.currentTintColor.rgb == countdown.currentTintColor.rgb &&
         self.currentTextStyle == countdown.currentTextStyle &&
         self.currentTextShadow == countdown.currentTextShadow &&
+        self.currentBackgroundColor == countdown.currentBackgroundColor &&
+        self.currentBackgroundFade == countdown.currentBackgroundFade &&
         self.card?.backgroundID == countdown.card?.backgroundID
     }
     

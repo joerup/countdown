@@ -46,7 +46,7 @@ struct CountdownBubble: View {
     }
     
     private var background: some View {
-        BackgroundDisplay(background: instance.currentBackgroundIcon, blurRadius: 1)
+        BackgroundDisplay(background: instance.currentBackgroundIcon, color: instance.backgroundColor, fade: instance.backgroundFade, blurRadius: 1)
     }
     
     private var saveButton: some View {

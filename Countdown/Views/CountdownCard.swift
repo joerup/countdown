@@ -51,7 +51,7 @@ public struct CountdownCard: View {
         .padding(20)
         .frame(width: size.width)
         .background {
-            BackgroundDisplay(background: countdown.currentBackground, blurRadius: 10)
+            BackgroundDisplay(background: countdown.currentBackground, color: countdown.currentBackgroundColor, fade: countdown.currentBackgroundFade, blurRadius: 10)
                 .opacity(0.75)
                 .id(clock.tick)
         }

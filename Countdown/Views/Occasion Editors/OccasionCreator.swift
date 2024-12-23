@@ -45,7 +45,7 @@ struct OccasionCreator: View {
                             Text("Custom Event")
                             Spacer()
                             Image(systemName: "chevron.right")
-                                .foregroundStyle(.gray)
+                                .foregroundStyle(.tertiary)
                         }
                     }
                 }

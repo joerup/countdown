@@ -24,7 +24,7 @@ struct CountdownWidget: Widget {
                 CountdownSquareText(countdown: countdown)
                     .padding(.bottom, -10)
                     .containerBackground(for: .widget) {
-                        BackgroundDisplay(background: countdown.currentBackgroundIcon?.resized(maxSize: maxSize), blurRadius: 1)
+                        BackgroundDisplay(background: countdown.currentBackgroundIcon?.resized(maxSize: maxSize), color: countdown.currentBackgroundColor, fade: countdown.currentBackgroundFade, blurRadius: 1)
                             .padding(.bottom, -3)
                     }
                     .widgetURL(countdown.getURL())
