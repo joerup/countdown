@@ -86,7 +86,7 @@ public final class CountdownInstance: Codable {
         textStyle = (try? container.decode(Card.TextStyle.self, forKey: .textStyle)) ?? .standard
         textShadow = (try? container.decode(Double.self, forKey: .textShadow)) ?? 0
         backgroundRGB = (try? container.decode(RGBColor.self, forKey: .backgroundColor)) ?? Color.defaultColor.rgb
-        backgroundFade = (try? container.decode(Double.self, forKey: .backgroundFade)) ?? 0
+        backgroundFade = (try? container.decode(Double.self, forKey: .backgroundFade)) ?? 1.0
         backgroundData = try? container.decode(Card.BackgroundData.self, forKey: .backgroundData)
         backgroundIconData = try? container.decode(Card.BackgroundData.self, forKey: .backgroundIconData)
         backgroundID = (try? container.decode(UUID.self, forKey: .backgroundID)) ?? UUID()

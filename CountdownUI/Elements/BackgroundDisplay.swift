@@ -24,18 +24,23 @@ public struct BackgroundDisplay: View {
     
     public var body: some View {
         ZStack {
-            Rectangle().fill(color)
             switch background {
             case .photo(let photo):
                 Image(uiImage: photo)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .blur(radius: blurRadius)
-                    .opacity(fade)
+                    .overlay {
+                        Rectangle()
+                            .fill(color)
+                            .opacity(fade)
+                    }
             case .loading:
-                ProgressView()
-            default:
-                EmptyView()
+                Color.defaultColor
+            case nil:
+                Rectangle()
+                    .fill(color)
+                    .opacity(fade)
             }
         }
     }

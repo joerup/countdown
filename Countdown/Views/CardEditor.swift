@@ -18,9 +18,12 @@ struct CardEditor: View {
     
     @State private var tintColor: Color = .white
     @State private var textStyle: Card.TextStyle = .standard
-    @State private var textWeight: Font.Weight = .regular
+    
+    @State private var backgroundColor: Color = .defaultColor
+    @State private var backgroundFade: Double = 1.0
     
     @State private var editBackground = false
+    @State private var editFill = false
     @State private var editText = false
     
     @State private var showPhotoLibrary = false
@@ -35,12 +38,21 @@ struct CardEditor: View {
                 Button("Photo Library") { showPhotoLibrary.toggle() }
                 Button("Unsplash") { showUnsplashLibrary.toggle() }
                 Button("None") {
-                    card.setBackground(nil)
-                    UIImpactFeedbackGenerator().impactOccurred()
-                    saveCard(reload: true)
+                    setBackground(nil)
                 }
             } message: {
                 Text("Choose a new background")
+            }
+            
+            iconButton("paintbrush") {
+                editFill.toggle()
+            }
+            .popover(isPresented: $editFill, arrowEdge: .bottom) {
+                if horizontalSizeClass == .compact {
+                    fillEditor
+                } else {
+                    fillEditor.frame(minWidth: 492, minHeight: 185)
+                }
             }
             
             iconButton("textformat") {
@@ -59,20 +71,18 @@ struct CardEditor: View {
         .photoMenu(isPresented: $showPhotoLibrary) {
             card.loadingBackground()
         } onReturn: { photo in
-            card.setBackground(.photo(photo))
-            UIImpactFeedbackGenerator().impactOccurred()
-            saveCard(reload: true)
+            setBackground(.photo(photo))
         }
         .unsplashMenu(isPresented: $showUnsplashLibrary) {
             card.loadingBackground()
         } onReturn: { photo in
-            card.setBackground(.photo(photo))
-            UIImpactFeedbackGenerator().impactOccurred()
-            saveCard(reload: true)
+            setBackground(.photo(photo))
         }
         .onAppear {
             tintColor = card.tintColor
             textStyle = card.textStyle
+            backgroundColor = card.backgroundColor
+            backgroundFade = card.backgroundFade
         }
         .onChange(of: tintColor) { _, color in
             card.tintColor = color
@@ -81,6 +91,35 @@ struct CardEditor: View {
         .onChange(of: textStyle) { _, style in
             card.textStyle = style
             saveCard()
+        }
+        .onChange(of: backgroundColor) { _, color in
+            card.backgroundColor = color
+            saveCard()
+        }
+        .onChange(of: backgroundFade) { _, fade in
+            card.backgroundFade = fade
+            saveCard()
+        }
+    }
+    
+    private func setBackground(_ data: Card.BackgroundData?) {
+        card.setBackground(data)
+        UIImpactFeedbackGenerator().impactOccurred()
+        saveCard(reload: true)
+        if data != nil {
+            if backgroundFade == 1.0 {
+                backgroundFade = 0
+            }
+            if backgroundColor == .defaultColor {
+                backgroundColor = .white
+            }
+        } else {
+            if backgroundFade == 0 {
+                backgroundFade = 1.0
+            }
+            if backgroundColor == .white {
+                backgroundColor = .defaultColor
+            }
         }
     }
     
@@ -93,60 +132,73 @@ struct CardEditor: View {
         try? modelContext.save()
     }
     
-    private var textEditor: some View {
-        NavigationStack {
-            ScrollView {
-                VStack {
-                    
-                    ScrollView(.horizontal) {
-                        HStack {
-                            ForEach(Card.TextStyle.allCases, id: \.self) { style in
-                                Button {
-                                    textStyle = style
-                                } label: {
-                                    Text("123")
-                                        .font(.title)
-                                        .fontDesign(style.design)
-                                        .fontWeight(style.weight)
-                                        .fontWidth(style.width)
-                                        .foregroundStyle(textStyle == style ? .pink : .black)
-                                        .lineLimit(0).minimumScaleFactor(0.5)
-                                        .frame(width: 70, height: 70)
-                                        .background(.fill)
-                                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                                }
-                            }
-                        }
-                    }
-                    .scrollIndicators(.hidden)
-                    .padding(.bottom)
-                    
-                    ScrollView(.horizontal) {
-                        HStack {
-                            ForEach(0..<5) { i in
-                                let color = Color.init(white: Double(i)/4)
-                                Button {
-                                    tintColor = color
-                                } label: {
-                                    colorCircle(color)
-                                }
-                            }
-                            ForEach(0..<12) { i in
-                                let color = Color(hue: Double(i)/12, saturation: 0.3, brightness: 1.0)
-                                Button {
-                                    tintColor = color
-                                } label: {
-                                    colorCircle(color)
-                                }
-                            }
-                            colorCircle(AngularGradient(colors: [.red,.orange,.yellow,.green,.mint,.teal,.cyan,.blue,.purple,.pink], center: .center))
-                                .overlay(ColorPicker("", selection: $tintColor, supportsOpacity: false).labelsHidden().opacity(0.015))
-                        }
-                    }
-                    .scrollIndicators(.hidden)
+    private var fillEditor: some View {
+        ScrollView {
+            VStack {
+                HStack {
+                    Slider(value: $backgroundFade, in: 0...1).padding()
+                    ColorPicker("", selection: $backgroundColor, supportsOpacity: false).labelsHidden()
                 }
-                .safeAreaPadding()
+                .padding(.horizontal)
+                .tint(.pink)
             }
+        }
+        .presentationDetents([.height(200)])
+        .presentationCornerRadius(20)
+    }
+    
+    private var textEditor: some View {
+        ScrollView {
+            VStack {
+                
+                ScrollView(.horizontal) {
+                    HStack {
+                        ForEach(Card.TextStyle.allCases, id: \.self) { style in
+                            Button {
+                                textStyle = style
+                            } label: {
+                                Text("123")
+                                    .font(.title)
+                                    .fontDesign(style.design)
+                                    .fontWeight(style.weight)
+                                    .fontWidth(style.width)
+                                    .foregroundStyle(textStyle == style ? .pink : .black)
+                                    .lineLimit(0).minimumScaleFactor(0.5)
+                                    .frame(width: 70, height: 70)
+                                    .background(.fill)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                            }
+                        }
+                    }
+                }
+                .scrollIndicators(.hidden)
+                .padding(.bottom)
+                
+                ScrollView(.horizontal) {
+                    HStack {
+                        ForEach(0..<5) { i in
+                            let color = Color.init(white: Double(i)/4)
+                            Button {
+                                tintColor = color
+                            } label: {
+                                colorCircle(color)
+                            }
+                        }
+                        ForEach(0..<12) { i in
+                            let color = Color(hue: Double(i)/12, saturation: 0.3, brightness: 1.0)
+                            Button {
+                                tintColor = color
+                            } label: {
+                                colorCircle(color)
+                            }
+                        }
+                        colorCircle(AngularGradient(colors: [.red,.orange,.yellow,.green,.mint,.teal,.cyan,.blue,.purple,.pink], center: .center))
+                            .overlay(ColorPicker("", selection: $tintColor, supportsOpacity: false).labelsHidden())
+                    }
+                }
+                .scrollIndicators(.hidden)
+            }
+            .safeAreaPadding()
         }
         .presentationDetents([.height(200)])
         .presentationCornerRadius(20)
