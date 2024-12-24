@@ -17,7 +17,9 @@ struct UnsplashMenu: ViewModifier {
     @Binding var isPresented: Bool
     
     var onSelect: () -> Void
-    var onReturn: (Data) -> Void
+    var onReturn: (Card.BackgroundData) -> Void
+    
+    @State private var selectedImage: ImageData?
     
     func body(content: Content) -> some View {
         content
@@ -25,20 +27,29 @@ struct UnsplashMenu: ViewModifier {
                 UnsplashPhotoPickerView(configuration: configuration) { photos in
                     onSelect()
                     Task {
-                        if let photo = photos.first, let url = photo.urls[.regular], let (data, _) = try? await URLSession.shared.data(from: url) {
-                            // limit to 750 kB for safe storage in CloudKit
-                            if let image = UIImage(data: data), let photoData = image.compressed(size: Card.maxPhotoSize) {
-                                onReturn(photoData)
-                            }
+                        if let photo = photos.first, let url = photo.urls[.regular], let (data, _) = try? await URLSession.shared.data(from: url), let image = UIImage(data: data) {
+                            selectedImage = ImageData(image: image)
                         }
                     }
                 }
+            }
+            .sheet(item: $selectedImage) { image in
+                ImageRepositionView(
+                    image: image.image,
+                    onConfirm: { offset, scale in
+                        onReturn(.transformedPhoto(image.data, offsetX: offset.width, offsetY: offset.height, scale: scale))
+                        selectedImage = nil
+                    },
+                    onCancel: {
+                        selectedImage = nil
+                    }
+                )
             }
     }
 }
 
 extension View {
-    func unsplashMenu(isPresented: Binding<Bool>, onSelect: @escaping () -> Void, onReturn: @escaping (Data) -> Void) -> some View {
+    func unsplashMenu(isPresented: Binding<Bool>, onSelect: @escaping () -> Void, onReturn: @escaping (Card.BackgroundData) -> Void) -> some View {
         modifier(UnsplashMenu(isPresented: isPresented, onSelect: onSelect, onReturn: onReturn))
     }
 }

@@ -43,18 +43,16 @@ struct CountdownGrid: View {
                                 .frame(maxWidth: 200)
                                 .background(Color.blue.opacity(0.2))
                         }
-                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                        .clipShape(RoundedRectangle(cornerRadius: 22.5))
                         .shadow(radius: 5)
                         .id(clock.tick)
                         .contextMenu {
-//                            if countdown.canEditDestination {
-//                                Button {
-//                                    self.editDestinationValue = countdown
-//                                    self.editDestination.toggle()
-//                                } label: {
-//                                    Label("Edit Date", systemImage: "calendar")
-//                                }
-//                            }
+                            Button {
+                                self.editDestinationValue = countdown
+                                self.editDestination.toggle()
+                            } label: {
+                                Label("Edit Date", systemImage: "calendar")
+                            }
 //                            Button {
 //                                self.shareCountdownValue = countdown
 //                                self.shareCountdown.toggle()

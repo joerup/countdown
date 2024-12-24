@@ -24,7 +24,8 @@ public final class Card {
         set { self.backgroundRGB = newValue.rgb }
     }
     
-    public var backgroundFade: Double = 1.0
+    public var backgroundFade: Double = 0
+    public var backgroundBlur: Double = 0
     
     private var tint: RGBColor = Color.white.rgb
     public var tintColor: Color {
@@ -44,6 +45,7 @@ public final class Card {
         self.textShadow = instance.textShadow
         self.backgroundRGB = instance.backgroundRGB
         self.backgroundFade = instance.backgroundFade
+        self.backgroundBlur = instance.backgroundBlur
         self.backgroundData = instance.backgroundData
         self.backgroundIconData = instance.backgroundIconData
         self.backgroundID = instance.backgroundID
@@ -54,6 +56,7 @@ public final class Card {
         self.textShadow = instance.textShadow
         self.backgroundRGB = instance.backgroundRGB
         self.backgroundFade = instance.backgroundFade
+        self.backgroundBlur = instance.backgroundBlur
         self.backgroundData = instance.backgroundData
         self.backgroundIconData = instance.backgroundIconData
         self.backgroundID = instance.backgroundID

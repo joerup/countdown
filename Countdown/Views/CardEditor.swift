@@ -20,28 +20,53 @@ struct CardEditor: View {
     @State private var textStyle: Card.TextStyle = .standard
     
     @State private var backgroundColor: Color = .defaultColor
-    @State private var backgroundFade: Double = 1.0
+    @State private var backgroundFade: Double = 0
+    @State private var backgroundBlur: Double = 0
     
     @State private var editBackground = false
+    @State private var newBackground = false
     @State private var editFill = false
     @State private var editText = false
     
     @State private var showPhotoLibrary = false
     @State private var showUnsplashLibrary = false
+    @State private var showRepositionMenu = false
+    
+    private var image: UIImage? {
+        card.countdown?.currentBackground?.image
+    }
     
     var body: some View {
         HStack {
             iconButton("photo") {
-                editBackground.toggle()
+                if image != nil {
+                    editBackground.toggle()
+                } else {
+                    newBackground.toggle()
+                }
             }
-            .confirmationDialog("Change background", isPresented: $editBackground) {
-                Button("Photo Library") { showPhotoLibrary.toggle() }
-                Button("Unsplash") { showUnsplashLibrary.toggle() }
-                Button("None") {
+            .confirmationDialog("Background", isPresented: $editBackground) {
+                Button("New Background") {
+                    newBackground.toggle()
+                }
+                Button("Reposition") {
+                    showRepositionMenu.toggle()
+                }
+                Button("Remove", role: .destructive) {
                     setBackground(nil)
                 }
             } message: {
-                Text("Choose a new background")
+                Text("Edit Background")
+            }
+            .confirmationDialog("Change Background", isPresented: $newBackground) {
+                Button("Photo Library") {
+                    showPhotoLibrary.toggle()
+                }
+                Button("Unsplash") {
+                    showUnsplashLibrary.toggle()
+                }
+            } message: {
+                Text("New Background")
             }
             
             iconButton("paintbrush") {
@@ -70,19 +95,23 @@ struct CardEditor: View {
         .tint(card.tintColor)
         .photoMenu(isPresented: $showPhotoLibrary) {
             card.loadingBackground()
-        } onReturn: { photo in
-            setBackground(.photo(photo))
+        } onReturn: { background in
+            setBackground(background)
         }
         .unsplashMenu(isPresented: $showUnsplashLibrary) {
             card.loadingBackground()
-        } onReturn: { photo in
-            setBackground(.photo(photo))
+        } onReturn: { background in
+            setBackground(background)
+        }
+        .repositionMenu(isPresented: $showRepositionMenu, image: image, data: card.backgroundData) { background in
+            setBackground(background)
         }
         .onAppear {
             tintColor = card.tintColor
             textStyle = card.textStyle
             backgroundColor = card.backgroundColor
             backgroundFade = card.backgroundFade
+            backgroundBlur = card.backgroundBlur
         }
         .onChange(of: tintColor) { _, color in
             card.tintColor = color
@@ -98,6 +127,10 @@ struct CardEditor: View {
         }
         .onChange(of: backgroundFade) { _, fade in
             card.backgroundFade = fade
+            saveCard()
+        }
+        .onChange(of: backgroundBlur) { _, blur in
+            card.backgroundBlur = blur
             saveCard()
         }
     }
@@ -141,6 +174,9 @@ struct CardEditor: View {
                 }
                 .padding(.horizontal)
                 .tint(.pink)
+                Slider(value: $backgroundBlur, in: 0...10).padding()
+                    .padding(.horizontal)
+                    .tint(.pink)
             }
         }
         .presentationDetents([.height(200)])

@@ -22,6 +22,8 @@
 		015DD4212A79BBBA000EB3C0 /* DateEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015DD4202A79BBBA000EB3C0 /* DateEditor.swift */; };
 		0163E5E22D188D68004D60C9 /* CountdownCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163E5E12D188D68004D60C9 /* CountdownCard.swift */; };
 		0163E5E42D18C4C6004D60C9 /* OccasionCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163E5E32D18C4BB004D60C9 /* OccasionCreator.swift */; };
+		0163E5E62D19FF3B004D60C9 /* ImageRepositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163E5E52D19FF38004D60C9 /* ImageRepositionView.swift */; };
+		0163E5E82D1A0D07004D60C9 /* RepositionMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163E5E72D1A0CFE004D60C9 /* RepositionMenu.swift */; };
 		017AD9852C0973FD0096E27A /* CountdownBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 017AD9842C0973FD0096E27A /* CountdownBubble.swift */; };
 		017AD9872C0A5E080096E27A /* ShareMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 017AD9862C0A5E080096E27A /* ShareMenu.swift */; };
 		01B31AB32A81D0D100002F15 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01B31A972A81CFE800002F15 /* WidgetKit.framework */; };
@@ -114,6 +116,8 @@
 		015DD4202A79BBBA000EB3C0 /* DateEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateEditor.swift; sourceTree = "<group>"; };
 		0163E5E12D188D68004D60C9 /* CountdownCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownCard.swift; sourceTree = "<group>"; };
 		0163E5E32D18C4BB004D60C9 /* OccasionCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OccasionCreator.swift; sourceTree = "<group>"; };
+		0163E5E52D19FF38004D60C9 /* ImageRepositionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRepositionView.swift; sourceTree = "<group>"; };
+		0163E5E72D1A0CFE004D60C9 /* RepositionMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositionMenu.swift; sourceTree = "<group>"; };
 		017AD9842C0973FD0096E27A /* CountdownBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownBubble.swift; sourceTree = "<group>"; };
 		017AD9862C0A5E080096E27A /* ShareMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareMenu.swift; sourceTree = "<group>"; };
 		01B31A972A81CFE800002F15 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -261,6 +265,8 @@
 			children = (
 				015DD3D72A77483A000EB3C0 /* PhotoMenu.swift */,
 				01FA61952A8312EA003BDA2B /* UnsplashMenu.swift */,
+				0163E5E52D19FF38004D60C9 /* ImageRepositionView.swift */,
+				0163E5E72D1A0CFE004D60C9 /* RepositionMenu.swift */,
 			);
 			path = "Background Editors";
 			sourceTree = "<group>";
@@ -456,6 +462,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0163E5E82D1A0D07004D60C9 /* RepositionMenu.swift in Sources */,
+				0163E5E62D19FF3B004D60C9 /* ImageRepositionView.swift in Sources */,
 				01CE90AD2ADC5959000537C5 /* SettingsMenu.swift in Sources */,
 				015DD4212A79BBBA000EB3C0 /* DateEditor.swift in Sources */,
 				015DD3DF2A77483A000EB3C0 /* OccasionEditor.swift in Sources */,

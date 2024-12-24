@@ -37,7 +37,7 @@ public struct CountdownCard: View {
             CountdownSquare(countdown: countdown)
                 .aspectRatio(1.0, contentMode: .fit)
                 .frame(maxWidth: min(size.width * 0.7, 400))
-                .clipShape(RoundedRectangle(cornerRadius: 25))
+                .clipShape(RoundedRectangle(cornerRadius: 35))
                 .shadow(radius: 10)
                 .padding()
             if let card = countdown.card {
@@ -51,8 +51,8 @@ public struct CountdownCard: View {
         .padding(20)
         .frame(width: size.width)
         .background {
-            BackgroundDisplay(background: countdown.currentBackground, color: countdown.currentBackgroundColor, fade: countdown.currentBackgroundFade, blurRadius: 10)
-                .opacity(0.75)
+            BackgroundDisplay(background: countdown.currentBackground, color: countdown.currentBackgroundColor, fade: countdown.currentBackgroundFade, blur: 20, fullScreen: true)
+                .overlay(Material.ultraThin)
                 .id(clock.tick)
         }
         .confettiCannon(counter: $confettiTrigger, num: 100, colors: countdown.currentTintColor.discretizedGradient(numberOfShades: 10), rainHeight: 1.5 * size.height, radius: 0.7 * max(size.height, size.width))

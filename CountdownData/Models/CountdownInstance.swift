@@ -27,6 +27,7 @@ public final class CountdownInstance: Codable {
     private(set) var backgroundRGB: RGBColor
     public var backgroundColor: Color { Color(rgb: backgroundRGB) }
     public private(set) var backgroundFade: Double
+    public private(set) var backgroundBlur: Double
     
     public private(set) var backgroundData: Card.BackgroundData?
     public private(set) var backgroundIconData: Card.BackgroundData?
@@ -55,6 +56,7 @@ public final class CountdownInstance: Codable {
         self.textShadow = countdown.currentTextShadow
         self.backgroundRGB = countdown.currentBackgroundColor.rgb
         self.backgroundFade = countdown.currentBackgroundFade
+        self.backgroundBlur = countdown.currentBackgroundBlur
         self.backgroundData = countdown.card?.backgroundData
         self.backgroundIconData = countdown.card?.backgroundIconData
         self.backgroundID = countdown.card?.backgroundID ?? UUID()
@@ -71,7 +73,7 @@ public final class CountdownInstance: Codable {
     enum CodingKeys: CodingKey {
         case timestamp, countdownID, name, displayName, type, occasion,
              tint, textStyle, textShadow,
-             backgroundColor, backgroundFade,
+             backgroundColor, backgroundFade, backgroundBlur,
              backgroundData, backgroundIconData, backgroundID
     }
     public required init(from decoder: Decoder) throws {
@@ -86,7 +88,8 @@ public final class CountdownInstance: Codable {
         textStyle = (try? container.decode(Card.TextStyle.self, forKey: .textStyle)) ?? .standard
         textShadow = (try? container.decode(Double.self, forKey: .textShadow)) ?? 0
         backgroundRGB = (try? container.decode(RGBColor.self, forKey: .backgroundColor)) ?? Color.defaultColor.rgb
-        backgroundFade = (try? container.decode(Double.self, forKey: .backgroundFade)) ?? 1.0
+        backgroundFade = (try? container.decode(Double.self, forKey: .backgroundFade)) ?? 0
+        backgroundBlur = (try? container.decode(Double.self, forKey: .backgroundBlur)) ?? 0
         backgroundData = try? container.decode(Card.BackgroundData.self, forKey: .backgroundData)
         backgroundIconData = try? container.decode(Card.BackgroundData.self, forKey: .backgroundIconData)
         backgroundID = (try? container.decode(UUID.self, forKey: .backgroundID)) ?? UUID()
@@ -104,6 +107,7 @@ public final class CountdownInstance: Codable {
         try container.encode(textShadow, forKey: .textShadow)
         try container.encode(backgroundRGB, forKey: .backgroundColor)
         try container.encode(backgroundFade, forKey: .backgroundFade)
+        try container.encode(backgroundBlur, forKey: .backgroundBlur)
         if case .photoLink(_) = backgroundData {
             try container.encode(backgroundData, forKey: .backgroundData)
             try container.encode(backgroundIconData, forKey: .backgroundIconData)
@@ -123,6 +127,7 @@ public final class CountdownInstance: Codable {
         self.textShadow == countdown.currentTextShadow &&
         self.backgroundRGB == countdown.currentBackgroundColor.rgb &&
         self.backgroundFade == countdown.currentBackgroundFade &&
+        self.backgroundBlur == countdown.currentBackgroundBlur &&
         self.backgroundID == countdown.card?.backgroundID
     }
     

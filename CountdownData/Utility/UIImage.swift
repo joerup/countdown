@@ -107,3 +107,19 @@ public extension UIImage {
         return newImage
     }
 }
+
+public struct ImageData: Identifiable {
+    public let id: UUID
+    public let image: UIImage
+    public let data: Data
+    
+    public init?(image: UIImage) {
+        self.id = UUID()
+        guard let data = image.compressed(size: Card.maxPhotoSize),
+              let image = UIImage(data: data) else {
+            return nil
+        }
+        self.data = data
+        self.image = image
+    }
+}

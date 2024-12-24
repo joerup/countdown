@@ -47,7 +47,7 @@ struct HolidayDetails: View {
     
     private var banner: some View {
         Section {
-            HStack(alignment: .top) {
+            HStack {
                 Image(systemName: "info.circle.fill")
                     .font(.title3)
                     .foregroundColor(.blue)

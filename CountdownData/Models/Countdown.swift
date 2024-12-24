@@ -66,7 +66,10 @@ public final class Countdown {
         return card?.backgroundColor ?? .defaultColor
     }
     public var currentBackgroundFade: Double {
-        return card?.backgroundFade ?? 1.0
+        return card?.backgroundFade ?? 0
+    }
+    public var currentBackgroundBlur: Double {
+        return card?.backgroundBlur ?? 0
     }
     
     public var currentTintColor: Color {

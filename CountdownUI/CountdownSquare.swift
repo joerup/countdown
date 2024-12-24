@@ -19,6 +19,7 @@ public struct CountdownSquare: View {
     private var background: Card.Background?
     private var backgroundColor: Color
     private var backgroundFade: Double
+    private var backgroundBlur: Double
     
     public init(countdown: Countdown) {
         self.countdownID = countdown.id
@@ -27,9 +28,10 @@ public struct CountdownSquare: View {
         self.daysRemaining = countdown.daysRemaining
         self.tintColor = countdown.currentTintColor
         self.textStyle = countdown.currentTextStyle
-        self.background = countdown.currentBackgroundIcon
+        self.background = countdown.currentBackground
         self.backgroundColor = countdown.currentBackgroundColor
         self.backgroundFade = countdown.currentBackgroundFade
+        self.backgroundBlur = countdown.currentBackgroundBlur
     }
     
     public var body: some View {
@@ -38,7 +40,7 @@ public struct CountdownSquare: View {
                 .padding([.horizontal, .top], geometry.size.width*0.1)
                 .padding(.bottom, geometry.size.width*0.04)
                 .background {
-                    BackgroundDisplay(background: background, color: backgroundColor, fade: backgroundFade, blurRadius: 1)
+                    BackgroundDisplay(background: background, color: backgroundColor, fade: backgroundFade, blur: backgroundBlur)
                         .ignoresSafeArea()
                         .padding(.bottom, -geometry.size.width*0.01)
                 }
