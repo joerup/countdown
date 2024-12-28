@@ -97,7 +97,6 @@ struct SettingsMenu: View {
                         dismiss()
                     } label: {
                         Text("Done")
-                            .fontDesign(.rounded)
                             .fontWeight(.semibold)
                     }
                 }

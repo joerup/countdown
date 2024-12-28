@@ -11,18 +11,23 @@ import CountdownData
 public struct CounterDisplay: View {
     
     var timeRemaining: Date.TimeRemaining
-    var size: CGFloat
     
     var tintColor: Color
+    var textStyle: Card.TextStyle
+    var textWeight: Font.Weight
     
-    public init(timeRemaining: Date.TimeRemaining, tintColor: Color, size: CGFloat) {
+    var size: CGFloat
+    
+    public init(timeRemaining: Date.TimeRemaining, tintColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, size: CGFloat) {
         self.timeRemaining = timeRemaining
         self.tintColor = tintColor
+        self.textStyle = textStyle
+        self.textWeight = textWeight
         self.size = size
     }
     
     public var body: some View {
-        HStack {
+        HStack(spacing: 15) {
             numberUnit(timeRemaining.day, unit: "d", size: size)
             numberUnit(timeRemaining.hour, unit: "h", size: size)
             numberUnit(timeRemaining.minute, unit: "m", size: size)
@@ -30,30 +35,37 @@ public struct CounterDisplay: View {
         }
         .foregroundStyle(.thickMaterial)
         .environment(\.colorScheme, .light)
-        .shadow(radius: 10)
     }
     
     private func numberUnit(_ value: Int?, unit: String, size: CGFloat) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 1) {
             if let value {
-                Text(String(format: "%02i", abs(value)))
-                    .font(.system(size: size))
-                    .fontWeight(.bold)
-                    .fontWidth(.condensed)
-                    .foregroundStyle(tintColor)
-                    .minimumScaleFactor(0.5)
-                    .monospacedDigit()
+                HStack(spacing: 2) {
+                    ForEach(Array(String(format: "%02i", abs(value))), id: \.self) { char in
+                        Text(String(char))
+                            .font(.system(size: size))
+                            .fontWeight(.medium)
+                            .fontDesign(.monospaced)
+                            .foregroundStyle(tintColor)
+                            .minimumScaleFactor(0.5)
+                            .monospacedDigit()
+                            .background {
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(Material.ultraThin)
+                            }
+                    }
+                }
                 ZStack {
                     Text(unit).foregroundStyle(tintColor)
                     Text(unit).foregroundStyle(.thinMaterial.opacity(0.5))
                 }
-                .font(.system(size: size*5/6))
-                .fontWeight(.bold)
+                .font(.system(size: size * 5 / 6))
+                .fontWeight(.light)
                 .fontWidth(.condensed)
             }
         }
-        .frame(height: size*1.2)
     }
+
 }
 
 

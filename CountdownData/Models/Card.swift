@@ -33,8 +33,8 @@ public final class Card {
         set { self.tint = newValue.rgb }
     }
     
-    public var textStyle: TextStyle = TextStyle.round
-    
+    public var textStyle: TextStyle = TextStyle.standard
+    public var textWeight: Int = Font.Weight.medium.rawValue
     public var textShadow: Double = 0
     
     public init() { }
@@ -42,6 +42,7 @@ public final class Card {
     public init(from instance: CountdownInstance) {
         self.tint = instance.tint
         self.textStyle = instance.textStyle
+        self.textWeight = instance.textWeight
         self.textShadow = instance.textShadow
         self.backgroundRGB = instance.backgroundRGB
         self.backgroundFade = instance.backgroundFade
@@ -53,6 +54,7 @@ public final class Card {
     public func match(_ instance: CountdownInstance) {
         self.tint = instance.tint
         self.textStyle = instance.textStyle
+        self.textWeight = instance.textWeight
         self.textShadow = instance.textShadow
         self.backgroundRGB = instance.backgroundRGB
         self.backgroundFade = instance.backgroundFade

@@ -12,16 +12,21 @@ public struct TitleDisplay: View {
     
     private var titleString: String
     private var dateString: String
+    
     private var tintColor: Color
+    private var textStyle: Card.TextStyle
+    private var textWeight: Font.Weight
     
     private var titleSize: CGFloat
     private var dateSize: CGFloat
     private var alignment: HorizontalAlignment
 
-    public init(title: String, date: String, tintColor: Color, titleSize: CGFloat, dateSize: CGFloat, alignment: HorizontalAlignment = .center) {
+    public init(title: String, date: String, tintColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, titleSize: CGFloat, dateSize: CGFloat, alignment: HorizontalAlignment = .center) {
         self.titleString = title
         self.dateString = date
         self.tintColor = tintColor
+        self.textStyle = textStyle
+        self.textWeight = textWeight
         self.titleSize = titleSize
         self.dateSize = dateSize
         self.alignment = alignment
@@ -41,8 +46,9 @@ public struct TitleDisplay: View {
     private func title() -> some View {
         Text(titleString)
             .font(.system(size: titleSize))
-            .fontWeight(.bold)
-            .fontDesign(.rounded)
+            .fontWeight(textWeight.bolder())
+            .fontDesign(textStyle.design)
+            .fontWidth(textStyle.width)
             .foregroundStyle(tintColor)
             .lineLimit(2)
             .multilineTextAlignment(alignment == .leading ? .leading : .center)
@@ -53,7 +59,7 @@ public struct TitleDisplay: View {
         Text(dateString)
             .textCase(.uppercase)
             .font(.system(size: dateSize))
-            .fontWeight(.medium)
+            .fontWeight(textWeight)
             .fontWidth(.condensed)
             .foregroundStyle(tintColor)
             .lineLimit(2)

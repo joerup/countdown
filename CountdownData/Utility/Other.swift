@@ -18,6 +18,15 @@ public extension GeometryProxy {
     }
 }
 
+public extension Double {
+    
+    private static let EPS = 1e-4
+    
+    func isApproximately(_ other: Self) -> Bool {
+        return abs(self - other) < Self.EPS
+    }
+}
+
 public extension Int {
     
     var ordinalString: String {

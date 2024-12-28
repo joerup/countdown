@@ -18,97 +18,49 @@ struct CardEditor: View {
     
     @State private var tintColor: Color = .white
     @State private var textStyle: Card.TextStyle = .standard
+    @State private var textWeight: Int = Font.Weight.medium.rawValue
+    @State private var textShadow: Double = 0
     
     @State private var backgroundColor: Color = .defaultColor
     @State private var backgroundFade: Double = 0
     @State private var backgroundBlur: Double = 0
     
     @State private var editBackground = false
-    @State private var newBackground = false
-    @State private var editFill = false
     @State private var editText = false
     
     @State private var showPhotoLibrary = false
     @State private var showUnsplashLibrary = false
     @State private var showRepositionMenu = false
     
-    private var image: UIImage? {
-        card.countdown?.currentBackground?.image
+    private var background: Card.Background? {
+        card.countdown?.currentBackground
     }
     
     var body: some View {
         HStack {
             iconButton("photo") {
-                if image != nil {
-                    editBackground.toggle()
-                } else {
-                    newBackground.toggle()
+                editBackground.toggle()
+            }
+            .popover(isPresented: $editBackground, arrowEdge: .bottom) {
+                editorMenu(title: "Background") {
+                    backgroundEditor
                 }
             }
-            .confirmationDialog("Background", isPresented: $editBackground) {
-                Button("New Background") {
-                    newBackground.toggle()
-                }
-                Button("Reposition") {
-                    showRepositionMenu.toggle()
-                }
-                Button("Remove", role: .destructive) {
-                    setBackground(nil)
-                }
-            } message: {
-                Text("Edit Background")
-            }
-            .confirmationDialog("Change Background", isPresented: $newBackground) {
-                Button("Photo Library") {
-                    showPhotoLibrary.toggle()
-                }
-                Button("Unsplash") {
-                    showUnsplashLibrary.toggle()
-                }
-            } message: {
-                Text("New Background")
-            }
-            
-            iconButton("paintbrush") {
-                editFill.toggle()
-            }
-            .popover(isPresented: $editFill, arrowEdge: .bottom) {
-                if horizontalSizeClass == .compact {
-                    fillEditor
-                } else {
-                    fillEditor.frame(minWidth: 492, minHeight: 185)
-                }
-            }
-            
             iconButton("textformat") {
                 editText.toggle()
             }
             .popover(isPresented: $editText, arrowEdge: .bottom) {
-                if horizontalSizeClass == .compact {
+                editorMenu(title: "Text Style") {
                     textEditor
-                } else {
-                    textEditor.frame(minWidth: 492, minHeight: 185)
                 }
             }
         }
         .padding(.horizontal)
-        .tint(card.tintColor)
-        .photoMenu(isPresented: $showPhotoLibrary) {
-            card.loadingBackground()
-        } onReturn: { background in
-            setBackground(background)
-        }
-        .unsplashMenu(isPresented: $showUnsplashLibrary) {
-            card.loadingBackground()
-        } onReturn: { background in
-            setBackground(background)
-        }
-        .repositionMenu(isPresented: $showRepositionMenu, image: image, data: card.backgroundData) { background in
-            setBackground(background)
-        }
         .onAppear {
             tintColor = card.tintColor
             textStyle = card.textStyle
+            textWeight = card.textWeight
+            textShadow = card.textShadow
             backgroundColor = card.backgroundColor
             backgroundFade = card.backgroundFade
             backgroundBlur = card.backgroundBlur
@@ -119,6 +71,14 @@ struct CardEditor: View {
         }
         .onChange(of: textStyle) { _, style in
             card.textStyle = style
+            saveCard()
+        }
+        .onChange(of: textWeight) { _, weight in
+            card.textWeight = weight
+            saveCard()
+        }
+        .onChange(of: textShadow) { _, shadow in
+            card.textShadow = shadow
             saveCard()
         }
         .onChange(of: backgroundColor) { _, color in
@@ -165,85 +125,149 @@ struct CardEditor: View {
         try? modelContext.save()
     }
     
-    private var fillEditor: some View {
-        ScrollView {
-            VStack {
+    private func editorMenu<Content: View>(title: String, content: @escaping () -> Content) -> some View {
+        Group {
+            if horizontalSizeClass == .compact {
+                EditorMenu(title: title, content: content)
+                    .presentationDetents([.height(350)])
+                    .presentationCornerRadius(20)
+            } else {
+                EditorMenu(title: title, content: content)
+                    .frame(minWidth: 492, minHeight: 185)
+            }
+        }
+        .presentationBackground(Material.ultraThin)
+    }
+    
+    private var backgroundEditor: some View {
+        VStack {
+            Menu {
+                Section {
+                    Button("Photo Library") {
+                        showPhotoLibrary.toggle()
+                    }
+                    Button("Unsplash") {
+                        showUnsplashLibrary.toggle()
+                    }
+                    Button("No Image", role: .destructive) {
+                        setBackground(nil)
+                    }
+                }
+                Button("Reposition", systemImage: "crop") {
+                    showRepositionMenu.toggle()
+                }
+            } label: {
+                BackgroundDisplay(background: background)
+                    .aspectRatio(1.0, contentMode: .fill)
+                    .frame(maxWidth: 100)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .shadow(radius: 10)
+                    .overlay {
+                        Image(systemName: "photo")
+                            .font(.title)
+                            .foregroundStyle(.gray)
+                    }
+                    .padding([.horizontal, .bottom])
+            }
+            
+            if background?.allowOverlays ?? false {
+                
                 HStack {
                     Slider(value: $backgroundFade, in: 0...1).padding()
                     ColorPicker("", selection: $backgroundColor, supportsOpacity: false).labelsHidden()
+                        .frame(minWidth: 50)
                 }
-                .padding(.horizontal)
-                .tint(.pink)
-                Slider(value: $backgroundBlur, in: 0...10).padding()
-                    .padding(.horizontal)
-                    .tint(.pink)
+                .tint(backgroundColor)
+                
+                HStack {
+                    Slider(value: $backgroundBlur, in: 0...10).padding()
+                        .tint(.gray)
+                    Image(systemName: "drop")
+                        .imageScale(.large)
+                        .foregroundStyle(.cyan)
+                        .frame(minWidth: 50)
+                }
             }
         }
-        .presentationDetents([.height(200)])
-        .presentationCornerRadius(20)
+        .photoMenu(isPresented: $showPhotoLibrary) {
+            
+        } onCancel: {
+            
+        } onReturn: { background in
+            setBackground(background)
+        }
+        .unsplashMenu(isPresented: $showUnsplashLibrary) {
+            
+        } onCancel: {
+            
+        } onReturn: { background in
+            setBackground(background)
+        }
+        .repositionMenu(isPresented: $showRepositionMenu, image: background?.image, data: card.backgroundData) {
+            
+        } onReturn: { background in
+            setBackground(background)
+        }
     }
     
     private var textEditor: some View {
-        ScrollView {
-            VStack {
-                
-                ScrollView(.horizontal) {
-                    HStack {
-                        ForEach(Card.TextStyle.allCases, id: \.self) { style in
-                            Button {
-                                textStyle = style
-                            } label: {
-                                Text("123")
-                                    .font(.title)
-                                    .fontDesign(style.design)
-                                    .fontWeight(style.weight)
-                                    .fontWidth(style.width)
-                                    .foregroundStyle(textStyle == style ? .pink : .black)
-                                    .lineLimit(0).minimumScaleFactor(0.5)
-                                    .frame(width: 70, height: 70)
-                                    .background(.fill)
-                                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                            }
+        VStack {
+            
+            ScrollView(.horizontal) {
+                HStack {
+                    ForEach(Card.TextStyle.allCases, id: \.self) { style in
+                        Button {
+                            textStyle = style
+                        } label: {
+                            Text("12")
+                                .font(.largeTitle)
+                                .fontWeight(Font.Weight(rawValue: textWeight))
+                                .fontDesign(style.design)
+                                .fontWidth(style.width)
+                                .foregroundStyle(textStyle == style ? .pink : .black)
+                                .lineLimit(0).minimumScaleFactor(0.5)
+                                .frame(width: 70, height: 70)
+                                .background(.fill)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
                         }
                     }
                 }
-                .scrollIndicators(.hidden)
-                .padding(.bottom)
-                
-                ScrollView(.horizontal) {
-                    HStack {
-                        ForEach(0..<5) { i in
-                            let color = Color.init(white: Double(i)/4)
-                            Button {
-                                tintColor = color
-                            } label: {
-                                colorCircle(color)
-                            }
-                        }
-                        ForEach(0..<12) { i in
-                            let color = Color(hue: Double(i)/12, saturation: 0.3, brightness: 1.0)
-                            Button {
-                                tintColor = color
-                            } label: {
-                                colorCircle(color)
-                            }
-                        }
-                        colorCircle(AngularGradient(colors: [.red,.orange,.yellow,.green,.mint,.teal,.cyan,.blue,.purple,.pink], center: .center))
-                            .overlay(ColorPicker("", selection: $tintColor, supportsOpacity: false).labelsHidden())
-                    }
-                }
-                .scrollIndicators(.hidden)
             }
-            .safeAreaPadding()
+            .scrollIndicators(.hidden)
+            .padding(.bottom)
+            
+            HStack {
+                Image(systemName: "textformat")
+                    .imageScale(.large)
+                    .fontWeight(.light)
+                    .foregroundStyle(.gray)
+                Slider(
+                    value: Binding(
+                        get: { Double(textWeight) },
+                        set: { textWeight = Int($0) }
+                    ),
+                    in: Double(Font.Weight.minimum + 1)...Double(Font.Weight.maximum - 1),
+                    step: 1
+                )
+                .tint(.pink)
+                Image(systemName: "textformat")
+                    .imageScale(.large)
+                    .fontWeight(.heavy)
+                    .foregroundStyle(.gray)
+            }
+            
+            Divider()
+                .padding(.vertical)
+            
+            CustomColorPicker(color: $tintColor)
         }
-        .presentationDetents([.height(200)])
-        .presentationCornerRadius(20)
     }
     
     private func iconButton(_ icon: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             circle(icon)
         }
+        .tint(card.tintColor)
     }
     
     private func circle(_ icon: String) -> some View {
@@ -254,16 +278,5 @@ struct CardEditor: View {
         .fontWeight(.semibold)
         .frame(width: 50, height: 50)
         .background(Circle().fill(.white).opacity(0.3))
-    }
-    
-    private func colorCircle(_ color: some ShapeStyle) -> some View {
-        Circle()
-            .fill(color)
-            .frame(width: 50, height: 50)
-            .overlay {
-                Circle()
-                    .stroke(.fill, lineWidth: 5)
-            }
-            .frame(width: 55, height: 55)
     }
 }

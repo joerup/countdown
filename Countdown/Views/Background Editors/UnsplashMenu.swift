@@ -17,6 +17,7 @@ struct UnsplashMenu: ViewModifier {
     @Binding var isPresented: Bool
     
     var onSelect: () -> Void
+    var onCancel: () -> Void
     var onReturn: (Card.BackgroundData) -> Void
     
     @State private var selectedImage: ImageData?
@@ -41,6 +42,7 @@ struct UnsplashMenu: ViewModifier {
                         selectedImage = nil
                     },
                     onCancel: {
+                        onCancel()
                         selectedImage = nil
                     }
                 )
@@ -49,8 +51,8 @@ struct UnsplashMenu: ViewModifier {
 }
 
 extension View {
-    func unsplashMenu(isPresented: Binding<Bool>, onSelect: @escaping () -> Void, onReturn: @escaping (Card.BackgroundData) -> Void) -> some View {
-        modifier(UnsplashMenu(isPresented: isPresented, onSelect: onSelect, onReturn: onReturn))
+    func unsplashMenu(isPresented: Binding<Bool>, onSelect: @escaping () -> Void, onCancel: @escaping () -> Void, onReturn: @escaping (Card.BackgroundData) -> Void) -> some View {
+        modifier(UnsplashMenu(isPresented: isPresented, onSelect: onSelect, onCancel: onCancel, onReturn: onReturn))
     }
 }
 

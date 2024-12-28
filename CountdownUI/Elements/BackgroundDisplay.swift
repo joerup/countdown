@@ -16,7 +16,7 @@ public struct BackgroundDisplay: View {
     private var blur: Double
     private var fullScreen: Bool
     
-    public init(background: Card.Background?, color: Color, fade: Double, blur: Double = 0, fullScreen: Bool = false) {
+    public init(background: Card.Background?, color: Color = .white, fade: Double = 0, blur: Double = 0, fullScreen: Bool = false) {
         self.background = background
         self.color = color
         self.fade = fade
@@ -30,13 +30,11 @@ public struct BackgroundDisplay: View {
             case .photo(let photo):
                 Image(uiImage: photo)
                     .resizable()
-                    .aspectRatio(contentMode: .fill)
                     .blur(radius: blur)
             case .transformedPhoto(let photo, let offset, let scale):
                 if fullScreen {
                     Image(uiImage: photo)
                         .resizable()
-                        .aspectRatio(contentMode: .fill)
                         .blur(radius: blur)
                 } else if let croppedPhoto = photo.cropped(offset: offset, scale: scale) {
                     Image(uiImage: croppedPhoto)
@@ -44,12 +42,14 @@ public struct BackgroundDisplay: View {
                         .blur(radius: blur)
                 }
             case .loading, nil:
-                EmptyView()
+                Color.defaultColor
             }
             
-            Rectangle()
-                .fill(color)
-                .opacity(fade)
+            if background?.allowOverlays ?? false {
+                Rectangle()
+                    .fill(color)
+                    .opacity(fade)
+            }
         }
     }
 }

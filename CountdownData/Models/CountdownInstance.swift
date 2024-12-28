@@ -22,6 +22,7 @@ public final class CountdownInstance: Codable {
     private(set) var tint: RGBColor
     public var tintColor: Color { Color(rgb: tint) }
     public private(set) var textStyle: Card.TextStyle
+    public private(set) var textWeight: Int
     public private(set) var textShadow: Double
     
     private(set) var backgroundRGB: RGBColor
@@ -53,6 +54,7 @@ public final class CountdownInstance: Codable {
         self.occasion = countdown.occasion
         self.tint = countdown.currentTintColor.rgb
         self.textStyle = countdown.currentTextStyle
+        self.textWeight = countdown.currentTextWeight
         self.textShadow = countdown.currentTextShadow
         self.backgroundRGB = countdown.currentBackgroundColor.rgb
         self.backgroundFade = countdown.currentBackgroundFade
@@ -72,7 +74,7 @@ public final class CountdownInstance: Codable {
     
     enum CodingKeys: CodingKey {
         case timestamp, countdownID, name, displayName, type, occasion,
-             tint, textStyle, textShadow,
+             tint, textStyle, textWeight, textShadow,
              backgroundColor, backgroundFade, backgroundBlur,
              backgroundData, backgroundIconData, backgroundID
     }
@@ -86,6 +88,7 @@ public final class CountdownInstance: Codable {
         occasion = try container.decode(Occasion.self, forKey: .occasion)
         tint = (try? container.decode(RGBColor.self, forKey: .tint)) ?? [0,0,0]
         textStyle = (try? container.decode(Card.TextStyle.self, forKey: .textStyle)) ?? .standard
+        textWeight = (try? container.decode(Int.self, forKey: .textWeight)) ?? Font.Weight.medium.rawValue
         textShadow = (try? container.decode(Double.self, forKey: .textShadow)) ?? 0
         backgroundRGB = (try? container.decode(RGBColor.self, forKey: .backgroundColor)) ?? Color.defaultColor.rgb
         backgroundFade = (try? container.decode(Double.self, forKey: .backgroundFade)) ?? 0
@@ -104,6 +107,7 @@ public final class CountdownInstance: Codable {
         try container.encode(occasion, forKey: .occasion)
         try container.encode(tint, forKey: .tint)
         try container.encode(textStyle, forKey: .textStyle)
+        try container.encode(textWeight, forKey: .textWeight)
         try container.encode(textShadow, forKey: .textShadow)
         try container.encode(backgroundRGB, forKey: .backgroundColor)
         try container.encode(backgroundFade, forKey: .backgroundFade)
@@ -124,6 +128,7 @@ public final class CountdownInstance: Codable {
         self.occasion == countdown.occasion &&
         self.tint == countdown.currentTintColor.rgb &&
         self.textStyle == countdown.currentTextStyle &&
+        self.textWeight == countdown.currentTextWeight &&
         self.textShadow == countdown.currentTextShadow &&
         self.backgroundRGB == countdown.currentBackgroundColor.rgb &&
         self.backgroundFade == countdown.currentBackgroundFade &&

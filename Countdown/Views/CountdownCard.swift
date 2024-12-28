@@ -44,7 +44,8 @@ public struct CountdownCard: View {
                 CardEditor(card: card)
             }
             Spacer(minLength: 0)
-            CounterDisplay(timeRemaining: countdown.timeRemaining, tintColor: countdown.currentTintColor, size: 37.5)
+            CounterDisplay(timeRemaining: countdown.timeRemaining, tintColor: countdown.currentTintColor, textStyle: countdown.currentTextStyle, textWeight: Font.Weight(rawValue: countdown.currentTextWeight), size: 37.5)
+            Spacer(minLength: 0)
         }
         .padding(.bottom, 50)
         .padding(.top, 80)

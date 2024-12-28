@@ -31,12 +31,14 @@ extension Card {
             }
         }
         
-        public var weight: Font.Weight {
+        public var secondaryDesign: Font.Design {
             switch self {
             case .serif:
-                return .heavy
+                return .serif
+            case .round:
+                return .rounded
             default:
-                return .bold
+                return .default
             }
         }
         

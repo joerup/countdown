@@ -39,6 +39,15 @@ extension Card {
                 return nil
             }
         }
+        
+        public var allowOverlays: Bool {
+            switch self {
+            case .photo(_), .transformedPhoto(_, _, _):
+                return true
+            case .loading:
+                return false
+            }
+        }
     }
     
     public enum BackgroundData: Codable, Hashable {

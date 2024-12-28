@@ -19,12 +19,10 @@ public extension Color {
     init(rgb: [Double]) {
         self.init(red: rgb[0], green: rgb[1], blue: rgb[2])
     }
-    
     var rgb: [Double] {
-        guard let components = colorComponents else { return [0,0,0] }
+        guard let components = rgbComponents else { return [0,0,0] }
         return [components.red, components.green, components.blue]
     }
-    
     var red: Double {
         return rgb[0]
     }
@@ -33,6 +31,23 @@ public extension Color {
     }
     var blue: Double {
         return rgb[2]
+    }
+    
+    init(hsv: [Double]) {
+        self.init(hue: hsv[0], saturation: hsv[1], brightness: hsv[2])
+    }
+    var hsv: [Double] {
+        guard let components = hsvComponents else { return [0,0,0] }
+        return [components.hue, components.saturation, components.value]
+    }
+    var hue: Double {
+        return hsv[0]
+    }
+    var saturation: Double {
+        return hsv[1]
+    }
+    var value: Double {
+        return hsv[2]
     }
     
     func lighter(by percentage: CGFloat = 0.5) -> Color {
@@ -111,7 +126,7 @@ extension Color: Codable {
     }
 
     public func encode(to encoder: Encoder) throws {
-        guard let colorComponents = self.colorComponents else {
+        guard let colorComponents = self.rgbComponents else {
             return
         }
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -126,18 +141,29 @@ extension Color: Codable {
 fileprivate extension Color {
     typealias SystemColor = UIColor
     
-    var colorComponents: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat)? {
+    var rgbComponents: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat)? {
         var r: CGFloat = 0
         var g: CGFloat = 0
         var b: CGFloat = 0
         var a: CGFloat = 0
         
         guard SystemColor(self).getRed(&r, green: &g, blue: &b, alpha: &a) else {
-            // Pay attention that the color should be convertible into RGB format
-            // Colors using hue, saturation and brightness won't work
             return nil
         }
         
         return (r, g, b, a)
+    }
+    
+    var hsvComponents: (hue: CGFloat, saturation: CGFloat, value: CGFloat, alpha: CGFloat)? {
+        var h: CGFloat = 0
+        var s: CGFloat = 0
+        var b: CGFloat = 0
+        var a: CGFloat = 0
+        
+        guard SystemColor(self).getHue(&h, saturation: &s, brightness: &b, alpha: &a) else {
+            return nil
+        }
+        
+        return (h, s, b, a)
     }
 }

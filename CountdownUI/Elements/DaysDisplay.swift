@@ -15,11 +15,13 @@ public struct DaysDisplay: View {
     
     var tintColor: Color
     var textStyle: Card.TextStyle
+    var textWeight: Font.Weight
     
-    public init(daysRemaining: Int, tintColor: Color, textStyle: Card.TextStyle, size: CGFloat) {
+    public init(daysRemaining: Int, tintColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, size: CGFloat) {
         self.daysRemaining = daysRemaining
         self.tintColor = tintColor
         self.textStyle = textStyle
+        self.textWeight = textWeight
         self.size = size
     }
     
@@ -39,9 +41,9 @@ public struct DaysDisplay: View {
     private func number(_ value: Int?, size: CGFloat) -> some View {
         if let value {
             Text(String(value))
-                .font(.system(size: textStyle.width == .expanded ? size*0.9 : size))
+                .font(.system(size: size))
+                .fontWeight(textWeight)
                 .fontDesign(textStyle.design)
-                .fontWeight(textStyle.weight)
                 .fontWidth(textStyle.width)
                 .foregroundStyle(tintColor)
                 .lineLimit(0).minimumScaleFactor(0.5)

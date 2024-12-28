@@ -17,15 +17,17 @@ struct RepositionMenu: ViewModifier {
     var initialOffset: CGSize?
     var initialScale: CGFloat?
     
-    var onConfirm: (Card.BackgroundData) -> Void
+    var onCancel: () -> Void
+    var onReturn: (Card.BackgroundData) -> Void
     
-    init(isPresented: Binding<Bool>, image: UIImage?, data: Card.BackgroundData?, onConfirm: @escaping (Card.BackgroundData) -> Void) {
+    init(isPresented: Binding<Bool>, image: UIImage?, data: Card.BackgroundData?, onCancel: @escaping () -> Void, onReturn: @escaping (Card.BackgroundData) -> Void) {
         self._isPresented = isPresented
         self.data = data
         self.image = image
         self.initialOffset = data?.transforms.offset
         self.initialScale = data?.transforms.scale
-        self.onConfirm = onConfirm
+        self.onCancel = onCancel
+        self.onReturn = onReturn
     }
     
     func body(content: Content) -> some View {
@@ -38,11 +40,12 @@ struct RepositionMenu: ViewModifier {
                         initialScale: initialScale,
                         onConfirm: { offset, scale in
                             if let newData = data?.repositioned(offset: offset, scale: scale) {
-                                onConfirm(newData)
+                                onReturn(newData)
                             }
                             isPresented = false
                         },
                         onCancel: {
+                            onCancel()
                             isPresented = false
                         }
                     )
@@ -52,7 +55,7 @@ struct RepositionMenu: ViewModifier {
 }
 
 extension View {
-    func repositionMenu(isPresented: Binding<Bool>, image: UIImage?, data: Card.BackgroundData?, onConfirm: @escaping (Card.BackgroundData) -> Void) -> some View {
-        self.modifier(RepositionMenu(isPresented: isPresented, image: image, data: data, onConfirm: onConfirm))
+    func repositionMenu(isPresented: Binding<Bool>, image: UIImage?, data: Card.BackgroundData?, onCancel: @escaping () -> Void, onReturn: @escaping (Card.BackgroundData) -> Void) -> some View {
+        self.modifier(RepositionMenu(isPresented: isPresented, image: image, data: data, onCancel: onCancel, onReturn: onReturn))
     }
 }

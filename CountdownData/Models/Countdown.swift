@@ -78,6 +78,9 @@ public final class Countdown {
     public var currentTextStyle: Card.TextStyle {
         return card?.textStyle ?? .standard
     }
+    public var currentTextWeight: Int {
+        return card?.textWeight ?? Font.Weight.medium.rawValue
+    }
     public var currentTextShadow: Double {
         return card?.textShadow ?? 0
     }
