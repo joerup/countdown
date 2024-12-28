@@ -61,7 +61,7 @@ struct ImageRepositionView: View {
                             .fill(Color(UIColor.systemBackground).opacity(0.5))
                             .padding(-padding)
                         selectorShape
-                            .stroke(Color.pink, lineWidth: 5)
+                            .stroke(Color.gray, lineWidth: 5)
                             .frame(width: geometry.size.minimum, height: geometry.size.minimum)
                     }
                     .gesture(
@@ -93,7 +93,6 @@ struct ImageRepositionView: View {
                 self.lastScale = currentScale
             }
             .clipped()
-            .navigationBarTitle("Adjust", displayMode: .inline)
             .navigationBarItems(
                 leading: Button("Cancel") {
                     onCancel()
@@ -102,7 +101,7 @@ struct ImageRepositionView: View {
                     onConfirm(dragOffset, currentScale)
                 } label: {
                     Text("Apply")
-                        .fontWeight(.bold)
+                        .fontWeight(.semibold)
                 }
             )
         }

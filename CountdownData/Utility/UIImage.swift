@@ -63,6 +63,20 @@ public extension UIImage {
         }
     }
     
+    func cropped(offset: CGSize, scale: CGFloat) -> UIImage? {
+        let imageSize = self.size
+        let size = min(imageSize.width, imageSize.height) / scale
+        let x = imageSize.width / 2 - offset.width - size / 2
+        let y = imageSize.height / 2 - offset.height - size / 2
+        let cropRect = CGRect(x: x, y: y, width: size, height: size)
+
+        guard let cgImage = self.cgImage, let croppedCGImage = cgImage.cropping(to: cropRect) else {
+            return nil
+        }
+
+        return UIImage(cgImage: croppedCGImage)
+    }
+    
     func withTextOverlay(text: String, textColor: UIColor = .black, font: UIFont = UIFont.systemFont(ofSize: 200), atPoint point: CGPoint) -> UIImage {
         // Setup the font attributes that will be later used to dictate how the text should be drawn
         let textFontAttributes = [

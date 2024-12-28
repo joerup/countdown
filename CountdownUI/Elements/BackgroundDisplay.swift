@@ -38,8 +38,9 @@ public struct BackgroundDisplay: View {
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .blur(radius: blur)
-                } else {
-                    CroppedImage(image: photo, cropRect: imageSquare(imageSize: photo.size, offset: offset, scale: scale))
+                } else if let croppedPhoto = photo.cropped(offset: offset, scale: scale) {
+                    Image(uiImage: croppedPhoto)
+                        .resizable()
                         .blur(radius: blur)
                 }
             case .loading, nil:
@@ -50,13 +51,6 @@ public struct BackgroundDisplay: View {
                 .fill(color)
                 .opacity(fade)
         }
-    }
-    
-    private func imageSquare(imageSize: CGSize, offset: CGSize, scale: CGFloat) -> CGRect {
-        let size = imageSize.minimum / scale
-        let x = imageSize.width/2 - offset.width - size/2
-        let y = imageSize.height/2 - offset.height - size/2
-        return CGRect(x: x, y: y, width: size, height: size)
     }
 }
 
