@@ -14,6 +14,7 @@ public struct CountdownSquare: View {
     private var title: String
     private var dateString: String
     private var daysRemaining: Int
+    private var layout: Card.Layout
     private var tintColor: Color
     private var textStyle: Card.TextStyle
     private var textWeight: Int
@@ -27,6 +28,7 @@ public struct CountdownSquare: View {
         self.title = countdown.displayName
         self.dateString = countdown.dateString
         self.daysRemaining = countdown.daysRemaining
+        self.layout = countdown.currentLayout
         self.tintColor = countdown.currentTintColor
         self.textStyle = countdown.currentTextStyle
         self.textWeight = countdown.currentTextWeight
@@ -38,7 +40,7 @@ public struct CountdownSquare: View {
     
     public var body: some View {
         GeometryReader { geometry in
-            CountdownSquareText(title: title, dateString: dateString, daysRemaining: daysRemaining, tintColor: tintColor, textStyle: textStyle, textWeight: textWeight)
+            CountdownSquareText(title: title, dateString: dateString, daysRemaining: daysRemaining, layout: layout, tintColor: tintColor, textStyle: textStyle, textWeight: textWeight)
                 .padding([.horizontal, .top], geometry.size.width*0.1)
                 .padding(.bottom, geometry.size.width*0.04)
                 .background {
@@ -54,6 +56,7 @@ public struct CountdownSquareText: View {
     private var title: String
     private var dateString: String
     private var daysRemaining: Int
+    private var layout: Card.Layout
     private var tintColor: Color
     private var textStyle: Card.TextStyle
     private var textWeight: Font.Weight
@@ -64,6 +67,7 @@ public struct CountdownSquareText: View {
         self.title = countdown.displayName
         self.dateString = countdown.dateString
         self.daysRemaining = countdown.daysRemaining
+        self.layout = countdown.currentLayout
         self.tintColor = countdown.currentTintColor
         self.textStyle = countdown.currentTextStyle
         self.textWeight = Font.Weight(rawValue: countdown.currentTextWeight)
@@ -72,14 +76,16 @@ public struct CountdownSquareText: View {
         self.title = instance.displayName
         self.dateString = instance.dateString
         self.daysRemaining = instance.daysRemaining
+        self.layout = instance.layout
         self.tintColor = instance.tintColor
         self.textStyle = instance.textStyle
         self.textWeight = Font.Weight(rawValue: instance.textWeight)
     }
-    public init(title: String, dateString: String, daysRemaining: Int, tintColor: Color, textStyle: Card.TextStyle, textWeight: Int) {
+    public init(title: String, dateString: String, daysRemaining: Int, layout: Card.Layout, tintColor: Color, textStyle: Card.TextStyle, textWeight: Int) {
         self.title = title
         self.dateString = dateString
         self.daysRemaining = daysRemaining
+        self.layout = layout
         self.tintColor = tintColor
         self.textStyle = textStyle
         self.textWeight = Font.Weight(rawValue: textWeight)
@@ -87,14 +93,20 @@ public struct CountdownSquareText: View {
     
     public var body: some View {
         GeometryReader { geometry in
-            VStack(alignment: .leading, spacing: 0) {
-                TitleDisplay(title: title, date: dateString, tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, titleSize: scale*0.15, dateSize: scale*0.12, alignment: .leading)
-                Spacer(minLength: 0)
-                HStack(alignment: .bottom) {
-                    Spacer(minLength: 0)
-                    DaysDisplay(daysRemaining: daysRemaining, tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, size: scale*0.5)
-                        .padding(.trailing, scale*0.04)
-                        .padding(.bottom, -scale*0.08)
+            Group {
+                switch layout {
+                case .standard(let titleAlignment, let titleSize, let numberAlignment, let numberSize, let showDate):
+                    VStack(alignment: titleAlignment.alignment, spacing: 0) {
+                        TitleDisplay(title: title, date: dateString, tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, titleSize: scale * titleSize * 0.15, dateSize: scale * min(1.0, titleSize) * 0.12, showDate: showDate, alignment: titleAlignment.alignment)
+                        Spacer(minLength: 0)
+                        HStack {
+                            if numberAlignment == .trailing || numberAlignment == .center { Spacer(minLength: 0) }
+                            DaysDisplay(daysRemaining: daysRemaining, tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, size: scale * numberSize * 0.5)
+                                .padding(numberAlignment.oppositeEdge, scale * numberSize * 0.04)
+                                .padding(.bottom, -scale * numberSize * 0.08)
+                            if numberAlignment == .leading || numberAlignment == .center { Spacer(minLength: 0) }
+                        }
+                    }
                 }
             }
             .frame(width: scale, height: scale)

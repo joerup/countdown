@@ -24,6 +24,7 @@
 		0163E5E42D18C4C6004D60C9 /* OccasionCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163E5E32D18C4BB004D60C9 /* OccasionCreator.swift */; };
 		0163E5E62D19FF3B004D60C9 /* ImageRepositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163E5E52D19FF38004D60C9 /* ImageRepositionView.swift */; };
 		0163E5E82D1A0D07004D60C9 /* RepositionMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163E5E72D1A0CFE004D60C9 /* RepositionMenu.swift */; };
+		0176DCF22D211875007FEA03 /* LayoutEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0176DCF12D211872007FEA03 /* LayoutEditor.swift */; };
 		017846A92D1F97CA0048055A /* EditorMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 017846A82D1F97C60048055A /* EditorMenu.swift */; };
 		017846AB2D2099E20048055A /* CustomColorPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 017846AA2D2099DF0048055A /* CustomColorPicker.swift */; };
 		017AD9852C0973FD0096E27A /* CountdownBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 017AD9842C0973FD0096E27A /* CountdownBubble.swift */; };
@@ -120,6 +121,7 @@
 		0163E5E32D18C4BB004D60C9 /* OccasionCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OccasionCreator.swift; sourceTree = "<group>"; };
 		0163E5E52D19FF38004D60C9 /* ImageRepositionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRepositionView.swift; sourceTree = "<group>"; };
 		0163E5E72D1A0CFE004D60C9 /* RepositionMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositionMenu.swift; sourceTree = "<group>"; };
+		0176DCF12D211872007FEA03 /* LayoutEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutEditor.swift; sourceTree = "<group>"; };
 		017846A82D1F97C60048055A /* EditorMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorMenu.swift; sourceTree = "<group>"; };
 		017846AA2D2099DF0048055A /* CustomColorPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColorPicker.swift; sourceTree = "<group>"; };
 		017AD9842C0973FD0096E27A /* CountdownBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownBubble.swift; sourceTree = "<group>"; };
@@ -273,6 +275,7 @@
 				0163E5E72D1A0CFE004D60C9 /* RepositionMenu.swift */,
 				017846A82D1F97C60048055A /* EditorMenu.swift */,
 				017846AA2D2099DF0048055A /* CustomColorPicker.swift */,
+				0176DCF12D211872007FEA03 /* LayoutEditor.swift */,
 			);
 			path = "Background Editors";
 			sourceTree = "<group>";
@@ -477,6 +480,7 @@
 				01C3C7D42A7CD14000475FC4 /* HolidayEditor.swift in Sources */,
 				017AD9872C0A5E080096E27A /* ShareMenu.swift in Sources */,
 				0157B7D52A8758D2007CF704 /* CountdownRoot.swift in Sources */,
+				0176DCF22D211875007FEA03 /* LayoutEditor.swift in Sources */,
 				01C2086C2AE04B8B00F798CD /* CountdownGrid.swift in Sources */,
 				017846AB2D2099E20048055A /* CustomColorPicker.swift in Sources */,
 				0163E5E42D18C4C6004D60C9 /* OccasionCreator.swift in Sources */,

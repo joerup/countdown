@@ -51,13 +51,13 @@ public struct CounterDisplay: View {
                             .monospacedDigit()
                             .background {
                                 RoundedRectangle(cornerRadius: 4)
-                                    .fill(Material.ultraThin)
+                                    .fill(Material.ultraThin.opacity(0.5))
                             }
                     }
                 }
                 ZStack {
-                    Text(unit).foregroundStyle(tintColor)
-                    Text(unit).foregroundStyle(.thinMaterial.opacity(0.5))
+                    Text(unit).foregroundStyle(.white)
+                    Text(unit).foregroundStyle(tintColor.opacity(0.5))
                 }
                 .font(.system(size: size * 5 / 6))
                 .fontWeight(.light)

@@ -18,7 +18,7 @@ public final class Card {
     @Attribute(.externalStorage) public private(set) var backgroundData: BackgroundData?
     @Attribute(.externalStorage) public private(set) var backgroundIconData: BackgroundData?
     
-    private var backgroundRGB: RGBColor = Color.defaultColor.rgb
+    private var backgroundRGB: RGBColor = Color.white.rgb
     public var backgroundColor: Color {
         get { Color(rgb: backgroundRGB) }
         set { self.backgroundRGB = newValue.rgb }
@@ -26,6 +26,8 @@ public final class Card {
     
     public var backgroundFade: Double = 0
     public var backgroundBlur: Double = 0
+    
+    public var layout: Layout?
     
     private var tint: RGBColor = Color.white.rgb
     public var tintColor: Color {
@@ -50,6 +52,7 @@ public final class Card {
         self.backgroundData = instance.backgroundData
         self.backgroundIconData = instance.backgroundIconData
         self.backgroundID = instance.backgroundID
+        self.layout = instance.layout
     }
     public func match(_ instance: CountdownInstance) {
         self.tint = instance.tint
@@ -62,6 +65,7 @@ public final class Card {
         self.backgroundData = instance.backgroundData
         self.backgroundIconData = instance.backgroundIconData
         self.backgroundID = instance.backgroundID
+        self.layout = instance.layout
     }
     
     public func loadingBackground() {

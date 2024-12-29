@@ -107,7 +107,7 @@ struct CountdownView: View {
             }
         }
         ToolbarItem(placement: .topBarTrailing) {
-            if premium.isActive || clock.countdowns.filter(\.isActive).count < 4 {
+            if premium.isActive || clock.countdowns.filter({ !$0.isPastDay }).count < 4 {
                 Button {
                     newCountdown.toggle()
                 } label: {

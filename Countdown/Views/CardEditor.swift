@@ -21,12 +21,15 @@ struct CardEditor: View {
     @State private var textWeight: Int = Font.Weight.medium.rawValue
     @State private var textShadow: Double = 0
     
-    @State private var backgroundColor: Color = .defaultColor
+    @State private var backgroundColor: Color = .white
     @State private var backgroundFade: Double = 0
     @State private var backgroundBlur: Double = 0
     
+    @State private var layout: Card.Layout = .basic
+    
     @State private var editBackground = false
     @State private var editText = false
+    @State private var editLayout = false
     
     @State private var showPhotoLibrary = false
     @State private var showUnsplashLibrary = false
@@ -41,7 +44,7 @@ struct CardEditor: View {
             iconButton("photo") {
                 editBackground.toggle()
             }
-            .popover(isPresented: $editBackground, arrowEdge: .bottom) {
+            .popover(isPresented: $editBackground) {
                 editorMenu(title: "Background") {
                     backgroundEditor
                 }
@@ -49,9 +52,17 @@ struct CardEditor: View {
             iconButton("textformat") {
                 editText.toggle()
             }
-            .popover(isPresented: $editText, arrowEdge: .bottom) {
+            .popover(isPresented: $editText) {
                 editorMenu(title: "Text Style") {
                     textEditor
+                }
+            }
+            iconButton("align.horizontal.left") {
+                editLayout.toggle()
+            }
+            .popover(isPresented: $editLayout) {
+                editorMenu(title: "Layout") {
+                    layoutEditor
                 }
             }
         }
@@ -64,6 +75,7 @@ struct CardEditor: View {
             backgroundColor = card.backgroundColor
             backgroundFade = card.backgroundFade
             backgroundBlur = card.backgroundBlur
+            layout = card.layout ?? .basic
         }
         .onChange(of: tintColor) { _, color in
             card.tintColor = color
@@ -93,27 +105,16 @@ struct CardEditor: View {
             card.backgroundBlur = blur
             saveCard()
         }
+        .onChange(of: layout) { _, layout in
+            card.layout = layout
+            saveCard()
+        }
     }
     
     private func setBackground(_ data: Card.BackgroundData?) {
         card.setBackground(data)
         UIImpactFeedbackGenerator().impactOccurred()
         saveCard(reload: true)
-        if data != nil {
-            if backgroundFade == 1.0 {
-                backgroundFade = 0
-            }
-            if backgroundColor == .defaultColor {
-                backgroundColor = .white
-            }
-        } else {
-            if backgroundFade == 0 {
-                backgroundFade = 1.0
-            }
-            if backgroundColor == .white {
-                backgroundColor = .defaultColor
-            }
-        }
     }
     
     private func saveCard(reload: Bool = false) {
@@ -149,17 +150,21 @@ struct CardEditor: View {
                     Button("Unsplash") {
                         showUnsplashLibrary.toggle()
                     }
-                    Button("No Image", role: .destructive) {
-                        setBackground(nil)
+                    if background?.image != nil {
+                        Button("Remove Photo") {
+                            setBackground(nil)
+                        }
                     }
                 }
-                Button("Reposition", systemImage: "crop") {
-                    showRepositionMenu.toggle()
+                if background?.image != nil {
+                    Button("Reposition", systemImage: "crop") {
+                        showRepositionMenu.toggle()
+                    }
                 }
             } label: {
                 BackgroundDisplay(background: background)
                     .aspectRatio(1.0, contentMode: .fill)
-                    .frame(maxWidth: 100)
+                    .frame(maxWidth: 100, maxHeight: 100)
                     .clipShape(RoundedRectangle(cornerRadius: 20))
                     .shadow(radius: 10)
                     .overlay {
@@ -171,7 +176,6 @@ struct CardEditor: View {
             }
             
             if background?.allowOverlays ?? false {
-                
                 HStack {
                     Slider(value: $backgroundFade, in: 0...1).padding()
                     ColorPicker("", selection: $backgroundColor, supportsOpacity: false).labelsHidden()
@@ -212,7 +216,6 @@ struct CardEditor: View {
     
     private var textEditor: some View {
         VStack {
-            
             ScrollView(.horizontal) {
                 HStack {
                     ForEach(Card.TextStyle.allCases, id: \.self) { style in
@@ -227,7 +230,7 @@ struct CardEditor: View {
                                 .foregroundStyle(textStyle == style ? .pink : .black)
                                 .lineLimit(0).minimumScaleFactor(0.5)
                                 .frame(width: 70, height: 70)
-                                .background(.fill)
+                                .background(Material.ultraThin.opacity(textStyle == style ? 1.0 : 0.25))
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                         }
                     }
@@ -265,6 +268,10 @@ struct CardEditor: View {
         }
     }
     
+    private var layoutEditor: some View {
+        LayoutEditor(layout: $layout)
+    }
+    
     private func iconButton(_ icon: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             circle(icon)
@@ -274,11 +281,14 @@ struct CardEditor: View {
     
     private func circle(_ icon: String) -> some View {
         ZStack {
-            Image(systemName: icon).foregroundStyle(.tint)
+            Image(systemName: icon)
+                .foregroundStyle(.white)
+            Image(systemName: icon)
+                .foregroundStyle(.tint.opacity(0.5))
         }
         .imageScale(.large)
         .fontWeight(.semibold)
         .frame(width: 50, height: 50)
-        .background(Circle().fill(.white).opacity(0.3))
+        .background(Circle().fill(Material.ultraThin.opacity(0.5)))
     }
 }

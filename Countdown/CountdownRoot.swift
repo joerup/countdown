@@ -36,6 +36,7 @@ struct CountdownRoot: View {
         .environment(premium)
         .sheet(isPresented: $premium.showPurchaseScreen) {
             PremiumView()
+                .environment(premium)
         }
         .task {
             await premium.updateOnStart()

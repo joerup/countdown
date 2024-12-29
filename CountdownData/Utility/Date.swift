@@ -46,7 +46,7 @@ public extension Date {
     var fullString: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .medium
+        dateFormatter.timeStyle = .short
         return dateFormatter.string(from: self)
     }
     

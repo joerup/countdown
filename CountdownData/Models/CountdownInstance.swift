@@ -35,6 +35,8 @@ public final class CountdownInstance: Codable {
     public private(set) var backgroundID: UUID
     public private(set) var currentBackgroundIcon: Card.Background?
     
+    public private(set) var layout: Card.Layout = .basic
+    
     public var date: Date {
         occasion.date
     }
@@ -62,6 +64,7 @@ public final class CountdownInstance: Codable {
         self.backgroundData = countdown.card?.backgroundData
         self.backgroundIconData = countdown.card?.backgroundIconData
         self.backgroundID = countdown.card?.backgroundID ?? UUID()
+        self.layout = countdown.card?.layout ?? .basic
     }
     public func setBackground(_ data: Card.BackgroundData?) {
         self.backgroundData = data
@@ -76,7 +79,8 @@ public final class CountdownInstance: Codable {
         case timestamp, countdownID, name, displayName, type, occasion,
              tint, textStyle, textWeight, textShadow,
              backgroundColor, backgroundFade, backgroundBlur,
-             backgroundData, backgroundIconData, backgroundID
+             backgroundData, backgroundIconData, backgroundID,
+             layout
     }
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -90,12 +94,13 @@ public final class CountdownInstance: Codable {
         textStyle = (try? container.decode(Card.TextStyle.self, forKey: .textStyle)) ?? .standard
         textWeight = (try? container.decode(Int.self, forKey: .textWeight)) ?? Font.Weight.medium.rawValue
         textShadow = (try? container.decode(Double.self, forKey: .textShadow)) ?? 0
-        backgroundRGB = (try? container.decode(RGBColor.self, forKey: .backgroundColor)) ?? Color.defaultColor.rgb
+        backgroundRGB = (try? container.decode(RGBColor.self, forKey: .backgroundColor)) ?? Color.white.rgb
         backgroundFade = (try? container.decode(Double.self, forKey: .backgroundFade)) ?? 0
         backgroundBlur = (try? container.decode(Double.self, forKey: .backgroundBlur)) ?? 0
         backgroundData = try? container.decode(Card.BackgroundData.self, forKey: .backgroundData)
         backgroundIconData = try? container.decode(Card.BackgroundData.self, forKey: .backgroundIconData)
         backgroundID = (try? container.decode(UUID.self, forKey: .backgroundID)) ?? UUID()
+        layout = (try? container.decode(Card.Layout.self, forKey: .layout)) ?? .basic
     }
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -133,7 +138,8 @@ public final class CountdownInstance: Codable {
         self.backgroundRGB == countdown.currentBackgroundColor.rgb &&
         self.backgroundFade == countdown.currentBackgroundFade &&
         self.backgroundBlur == countdown.currentBackgroundBlur &&
-        self.backgroundID == countdown.card?.backgroundID
+        self.backgroundID == countdown.card?.backgroundID &&
+        self.layout == countdown.card?.layout
     }
     
     // Create an encoding for this instance

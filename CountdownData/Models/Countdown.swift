@@ -63,13 +63,17 @@ public final class Countdown {
     @Transient public var currentBackgroundID: UUID = UUID()
     
     public var currentBackgroundColor: Color {
-        return card?.backgroundColor ?? .defaultColor
+        return card?.backgroundColor ?? .white
     }
     public var currentBackgroundFade: Double {
         return card?.backgroundFade ?? 0
     }
     public var currentBackgroundBlur: Double {
         return card?.backgroundBlur ?? 0
+    }
+    
+    public var currentLayout: Card.Layout {
+        return card?.layout ?? .basic
     }
     
     public var currentTintColor: Color {
@@ -84,7 +88,6 @@ public final class Countdown {
     public var currentTextShadow: Double {
         return card?.textShadow ?? 0
     }
-    
     
     // MARK: - Configuration
     
@@ -134,7 +137,8 @@ public final class Countdown {
         self.currentTextShadow == countdown.currentTextShadow &&
         self.currentBackgroundColor == countdown.currentBackgroundColor &&
         self.currentBackgroundFade == countdown.currentBackgroundFade &&
-        self.card?.backgroundID == countdown.card?.backgroundID
+        self.card?.backgroundID == countdown.card?.backgroundID &&
+        self.card?.layout == countdown.card?.layout
     }
     
     public func loadCards() async {

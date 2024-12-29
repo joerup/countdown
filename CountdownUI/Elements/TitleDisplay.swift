@@ -19,9 +19,11 @@ public struct TitleDisplay: View {
     
     private var titleSize: CGFloat
     private var dateSize: CGFloat
+    
+    private var showDate: Bool
     private var alignment: HorizontalAlignment
 
-    public init(title: String, date: String, tintColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, titleSize: CGFloat, dateSize: CGFloat, alignment: HorizontalAlignment = .center) {
+    public init(title: String, date: String, tintColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, titleSize: CGFloat, dateSize: CGFloat, showDate: Bool, alignment: HorizontalAlignment = .center) {
         self.titleString = title
         self.dateString = date
         self.tintColor = tintColor
@@ -29,13 +31,16 @@ public struct TitleDisplay: View {
         self.textWeight = textWeight
         self.titleSize = titleSize
         self.dateSize = dateSize
+        self.showDate = showDate
         self.alignment = alignment
     }
     
     public var body: some View {
         VStack(alignment: alignment, spacing: titleSize*0.15) {
             title()
-            date()
+            if showDate {
+                date()
+            }
             Spacer(minLength: 0)
         }
         .environment(\.colorScheme, .light)
