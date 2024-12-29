@@ -14,6 +14,8 @@ public class Premium {
     public let ids = ["com.rupertusapps.Countdown.Premium"]
 
     private(set) var purchasedProductIDs = Set<String>()
+    
+    public var showPurchaseScreen: Bool = false
 
     // Premium is currently active
     public var isActive: Bool {
@@ -31,10 +33,20 @@ public class Premium {
             return []
         }
     }
-
+    
     // Update the transaction states on app launch
     @MainActor
-    public func update() async {
+    public func updateOnStart() async {
+        for await update in Transaction.all {
+            if case .verified(let transaction) = update {
+                processTransaction(transaction)
+            }
+        }
+    }
+
+    // Continuously update the transaction states
+    @MainActor
+    public func updateContinuously() async {
         for await update in Transaction.updates {
             if case .verified(let transaction) = update {
                 processTransaction(transaction)

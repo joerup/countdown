@@ -240,7 +240,8 @@ struct CardEditor: View {
                 Image(systemName: "textformat")
                     .imageScale(.large)
                     .fontWeight(.light)
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(.secondary)
+                    .dynamicTypeSize(..<DynamicTypeSize.xLarge)
                 Slider(
                     value: Binding(
                         get: { Double(textWeight) },
@@ -253,7 +254,8 @@ struct CardEditor: View {
                 Image(systemName: "textformat")
                     .imageScale(.large)
                     .fontWeight(.heavy)
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(.secondary)
+                    .dynamicTypeSize(..<DynamicTypeSize.xLarge)
             }
             
             Divider()

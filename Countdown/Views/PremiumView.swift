@@ -91,7 +91,7 @@ struct PremiumView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.init(red: 163/255, green: 55/255, blue: 68/255))
+        .background(Color.defaultColor)
         .overlay(alignment: .topTrailing) {
             Button {
                 dismiss()

@@ -51,6 +51,7 @@ struct CustomColorPicker: View {
             if !isWhite && !isCustom {
                 Slider(value: $saturation, in: 0.1...0.5)
                     .tint(color)
+                    .padding(.horizontal)
                     .onChange(of: saturation) { _, saturation in
                         color = Color(hue: color.hue, saturation: saturation, brightness: color.value)
                     }

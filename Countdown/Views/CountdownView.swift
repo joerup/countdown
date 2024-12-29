@@ -15,9 +15,6 @@ struct CountdownView: View {
     @Environment(Clock.self) private var clock
     @Environment(Premium.self) private var premium
     
-    @Environment(\.requestReview) private var requestReview
-    @AppStorage("reviewOpens") private var reviewOpens: Int = 0
-    
     var sortedCountdowns: [Countdown] {
         if !searchText.isEmpty {
             return (clock.countdowns.filter {  $0.name.lowercased().starts(with: searchText.lowercased()) } .sorted()
@@ -33,7 +30,6 @@ struct CountdownView: View {
     @State private var showSettings: Bool = false
     @State private var showArchive: Bool = false
     @State private var showSearch: Bool = false
-    @State private var showPremium: Bool = false
     
     @State private var searchText: String = ""
     
@@ -72,21 +68,6 @@ struct CountdownView: View {
         }
         .sheet(isPresented: $showSettings) {
             SettingsMenu()
-        }
-        .sheet(isPresented: $showPremium) {
-            PremiumView()
-        }
-        .onAppear {
-            if !premium.isActive, Int.random(in: 1...5) == 5 {
-                showPremium = true
-            }
-            else {
-                reviewOpens += 1
-                if reviewOpens >= 7 {
-                    requestReview()
-                    reviewOpens = 0
-                }
-            }
         }
     }
     
@@ -135,7 +116,7 @@ struct CountdownView: View {
                 }
             } else {
                 Button {
-                    showPremium.toggle()
+                    premium.showPurchaseScreen.toggle()
                 } label: {
                     Image(systemName: "plus")
                         .fontWeight(.bold)

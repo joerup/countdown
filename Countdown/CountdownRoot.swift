@@ -16,9 +16,12 @@ struct CountdownRoot: View {
     @State private var clock: Clock
     @State private var premium: Premium = Premium()
     
+    @Environment(\.requestReview) private var requestReview
+    @AppStorage("reviewOpens") private var reviewOpens: Int = 0
+    
     init(modelContext: ModelContext) {
         let clock = Clock(modelContext: modelContext)
-        _clock = State(initialValue: clock)
+        _clock = State(initialValue: clock) 
     }
     
     var body: some View {
@@ -31,8 +34,21 @@ struct CountdownRoot: View {
         }
         .environment(clock)
         .environment(premium)
-        .task { 
-            await premium.update()
+        .sheet(isPresented: $premium.showPurchaseScreen) {
+            PremiumView()
+        }
+        .task {
+            await premium.updateOnStart()
+            if !premium.isActive, Int.random(in: 1...5) == 5, reviewOpens > 0 {
+                premium.showPurchaseScreen.toggle()
+            } else {
+                reviewOpens += 1
+                if reviewOpens >= 7 {
+                    requestReview()
+                    reviewOpens = 0
+                }
+            }
+            await premium.updateContinuously()
         }
         .onOpenURL { url in
             if let id = clock.link(from: url) {
