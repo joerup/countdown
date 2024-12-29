@@ -43,7 +43,6 @@ public struct CountdownSquare: View {
                 .padding(.bottom, geometry.size.width*0.04)
                 .background {
                     BackgroundDisplay(background: background, color: backgroundColor, fade: backgroundFade, blur: backgroundBlur)
-                        .ignoresSafeArea()
                         .padding(.bottom, -geometry.size.width*0.01)
                 }
         }

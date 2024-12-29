@@ -30,15 +30,18 @@ public struct BackgroundDisplay: View {
             case .photo(let photo):
                 Image(uiImage: photo)
                     .resizable()
+                    .aspectRatio(contentMode: .fill)
                     .blur(radius: blur)
             case .transformedPhoto(let photo, let offset, let scale):
                 if fullScreen {
                     Image(uiImage: photo)
                         .resizable()
+                        .aspectRatio(contentMode: .fill)
                         .blur(radius: blur)
                 } else if let croppedPhoto = photo.cropped(offset: offset, scale: scale) {
                     Image(uiImage: croppedPhoto)
                         .resizable()
+                        .aspectRatio(contentMode: .fill)
                         .blur(radius: blur)
                 }
             case .loading, nil:
