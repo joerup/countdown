@@ -44,20 +44,21 @@ public struct CountdownCard: View {
                 CardEditor(card: card)
             }
             Spacer(minLength: 0)
-            VStack(spacing: 12) {
+            VStack(spacing: 10) {
                 CounterDisplay(timeRemaining: countdown.timeRemaining, tintColor: countdown.currentTintColor, textStyle: countdown.currentTextStyle, textWeight: Font.Weight(rawValue: countdown.currentTextWeight), size: 37.5)
                 Text(countdown.date.fullString)
                     .font(.title3)
                     .fontWidth(.condensed)
                     .fontWeight(.semibold)
                     .foregroundStyle(.white)
-                    .opacity(0.8)
+                    .opacity(0.9)
             }
             .padding()
             .background(Material.ultraThin.opacity(0.5))
             .clipShape(RoundedRectangle(cornerRadius: 20))
             Spacer(minLength: 0)
         }
+        .environment(\.colorScheme, .light)
         .padding(.bottom, 50)
         .padding(.top, 80)
         .padding(20)

@@ -25,7 +25,7 @@ public final class Countdown {
         occasion.date
     }
     public var dateString: String {
-        "\(date.dateString)\(occasion.includeTime ? " \(date.timeString)" : "")"
+        date.dateString
     }
     
     public var isActive: Bool {

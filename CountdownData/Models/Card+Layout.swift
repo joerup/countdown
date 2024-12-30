@@ -11,9 +11,29 @@ import SwiftUI
 extension Card {
     
     public enum Layout: Codable, Equatable {
-        case standard(titleAlignment: Alignment, titleSize: Double, numberAlignment: Alignment, numberSize: Double, showDate: Bool)
+        case standard(_ options: StandardOptions)
         
-        public static let basic = Self.standard(titleAlignment: .leading, titleSize: 1.0, numberAlignment: .trailing, numberSize: 1.0, showDate: true)
+        public static let basic = Self.standard(.init())
+        
+        public struct StandardOptions: Codable, Equatable {
+            public var titleAlignment: Alignment = .leading
+            public var titleSize: Double = 1.0
+            public var titleCapitalized: Bool = false
+            public var showDate: Bool = true
+            public var numberAlignment: Alignment = .trailing
+            public var numberSize: Double = 1.0
+            
+            public init() { }
+            
+            public init(titleAlignment: Alignment, titleSize: Double, titleCapitalized: Bool, showDate: Bool, numberAlignment: Alignment, numberSize: Double) {
+                self.titleAlignment = titleAlignment
+                self.titleSize = titleSize
+                self.titleCapitalized = titleCapitalized
+                self.numberAlignment = numberAlignment
+                self.numberSize = numberSize
+                self.showDate = showDate
+            }
+        }
     }
     
     public enum LayoutType: Int, Codable, CaseIterable {

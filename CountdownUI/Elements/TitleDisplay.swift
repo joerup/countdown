@@ -21,9 +21,10 @@ public struct TitleDisplay: View {
     private var dateSize: CGFloat
     
     private var showDate: Bool
+    private var titleCapitalized: Bool
     private var alignment: HorizontalAlignment
 
-    public init(title: String, date: String, tintColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, titleSize: CGFloat, dateSize: CGFloat, showDate: Bool, alignment: HorizontalAlignment = .center) {
+    public init(title: String, date: String, tintColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, titleSize: CGFloat, dateSize: CGFloat, showDate: Bool, titleCapitalized: Bool, alignment: HorizontalAlignment = .center) {
         self.titleString = title
         self.dateString = date
         self.tintColor = tintColor
@@ -32,6 +33,7 @@ public struct TitleDisplay: View {
         self.titleSize = titleSize
         self.dateSize = dateSize
         self.showDate = showDate
+        self.titleCapitalized = titleCapitalized
         self.alignment = alignment
     }
     
@@ -56,7 +58,8 @@ public struct TitleDisplay: View {
             .fontWidth(textStyle.width)
             .foregroundStyle(tintColor)
             .lineLimit(2)
-            .multilineTextAlignment(alignment == .leading ? .leading : .center)
+            .multilineTextAlignment(alignment == .leading ? .leading : alignment == .trailing ? .trailing : .center)
+            .textCase(titleCapitalized ? .uppercase : nil)
     }
     
     @ViewBuilder
@@ -68,7 +71,7 @@ public struct TitleDisplay: View {
             .fontWidth(.condensed)
             .foregroundStyle(tintColor)
             .lineLimit(2)
-            .multilineTextAlignment(alignment == .leading ? .leading : .center)
+            .multilineTextAlignment(alignment == .leading ? .leading : alignment == .trailing ? .trailing : .center)
             .fixedSize(horizontal: false, vertical: true)
             .minimumScaleFactor(0.5)
     }

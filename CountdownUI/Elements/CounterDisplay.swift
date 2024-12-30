@@ -44,15 +44,15 @@ public struct CounterDisplay: View {
                     ForEach(Array(String(format: "%02i", abs(value))), id: \.self) { char in
                         Text(String(char))
                             .font(.system(size: size))
-                            .fontWeight(.medium)
+                            .fontWeight(.bold)
                             .fontDesign(.monospaced)
                             .foregroundStyle(tintColor)
                             .minimumScaleFactor(0.5)
                             .monospacedDigit()
-                            .background {
-                                RoundedRectangle(cornerRadius: 4)
-                                    .fill(Material.ultraThin.opacity(0.5))
-                            }
+//                            .background {
+//                                RoundedRectangle(cornerRadius: 4)
+//                                    .fill(Material.ultraThin.opacity(0.5))
+//                            }
                     }
                 }
                 ZStack {
@@ -60,7 +60,7 @@ public struct CounterDisplay: View {
                     Text(unit).foregroundStyle(tintColor.opacity(0.5))
                 }
                 .font(.system(size: size * 5 / 6))
-                .fontWeight(.light)
+                .fontWeight(.regular)
                 .fontWidth(.condensed)
             }
         }

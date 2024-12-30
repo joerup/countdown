@@ -17,16 +17,14 @@ struct RepositionMenu: ViewModifier {
     var initialOffset: CGSize?
     var initialScale: CGFloat?
     
-    var onCancel: () -> Void
     var onReturn: (Card.BackgroundData) -> Void
     
-    init(isPresented: Binding<Bool>, image: UIImage?, data: Card.BackgroundData?, onCancel: @escaping () -> Void, onReturn: @escaping (Card.BackgroundData) -> Void) {
+    init(isPresented: Binding<Bool>, image: UIImage?, data: Card.BackgroundData?, onReturn: @escaping (Card.BackgroundData) -> Void) {
         self._isPresented = isPresented
         self.data = data
         self.image = image
         self.initialOffset = data?.transforms.offset
         self.initialScale = data?.transforms.scale
-        self.onCancel = onCancel
         self.onReturn = onReturn
     }
     
@@ -45,7 +43,6 @@ struct RepositionMenu: ViewModifier {
                             isPresented = false
                         },
                         onCancel: {
-                            onCancel()
                             isPresented = false
                         }
                     )
@@ -55,7 +52,7 @@ struct RepositionMenu: ViewModifier {
 }
 
 extension View {
-    func repositionMenu(isPresented: Binding<Bool>, image: UIImage?, data: Card.BackgroundData?, onCancel: @escaping () -> Void, onReturn: @escaping (Card.BackgroundData) -> Void) -> some View {
-        self.modifier(RepositionMenu(isPresented: isPresented, image: image, data: data, onCancel: onCancel, onReturn: onReturn))
+    func repositionMenu(isPresented: Binding<Bool>, image: UIImage?, data: Card.BackgroundData?, onReturn: @escaping (Card.BackgroundData) -> Void) -> some View {
+        self.modifier(RepositionMenu(isPresented: isPresented, image: image, data: data, onReturn: onReturn))
     }
 }

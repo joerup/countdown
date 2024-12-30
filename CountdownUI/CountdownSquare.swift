@@ -95,16 +95,16 @@ public struct CountdownSquareText: View {
         GeometryReader { geometry in
             Group {
                 switch layout {
-                case .standard(let titleAlignment, let titleSize, let numberAlignment, let numberSize, let showDate):
-                    VStack(alignment: titleAlignment.alignment, spacing: 0) {
-                        TitleDisplay(title: title, date: dateString, tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, titleSize: scale * titleSize * 0.15, dateSize: scale * min(1.0, titleSize) * 0.12, showDate: showDate, alignment: titleAlignment.alignment)
+                case .standard(let layoutOptions):
+                    VStack(alignment: layoutOptions.titleAlignment.alignment, spacing: 0) {
+                        TitleDisplay(title: title, date: dateString, tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, titleSize: scale * layoutOptions.titleSize * 0.15, dateSize: scale * min(1.0, layoutOptions.titleSize) * 0.12, showDate: layoutOptions.showDate, titleCapitalized: layoutOptions.titleCapitalized, alignment: layoutOptions.titleAlignment.alignment)
                         Spacer(minLength: 0)
                         HStack {
-                            if numberAlignment == .trailing || numberAlignment == .center { Spacer(minLength: 0) }
-                            DaysDisplay(daysRemaining: daysRemaining, tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, size: scale * numberSize * 0.5)
-                                .padding(numberAlignment.oppositeEdge, scale * numberSize * 0.04)
-                                .padding(.bottom, -scale * numberSize * 0.08)
-                            if numberAlignment == .leading || numberAlignment == .center { Spacer(minLength: 0) }
+                            if layoutOptions.numberAlignment == .trailing || layoutOptions.numberAlignment == .center { Spacer(minLength: 0) }
+                            DaysDisplay(daysRemaining: daysRemaining, tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, size: scale * layoutOptions.numberSize * 0.5)
+                                .padding(layoutOptions.numberAlignment.oppositeEdge, scale * layoutOptions.numberSize * 0.04)
+                                .padding(.bottom, -scale * layoutOptions.numberSize * 0.08)
+                            if layoutOptions.numberAlignment == .leading || layoutOptions.numberAlignment == .center { Spacer(minLength: 0) }
                         }
                     }
                 }

@@ -13,8 +13,6 @@ struct PhotoMenu: ViewModifier {
     
     @Binding var isPresented: Bool
     
-    var onSelect: () -> Void
-    var onCancel: () -> Void
     var onReturn: (Card.BackgroundData) -> Void
     
     @State private var photoItem: PhotosPickerItem?
@@ -24,7 +22,6 @@ struct PhotoMenu: ViewModifier {
         content
             .photosPicker(isPresented: $isPresented, selection: $photoItem, matching: .images)
             .onChange(of: photoItem) { _, newItem in
-                onSelect()
                 Task {
                     if let newItem, let data = try? await newItem.loadTransferable(type: Data.self), let image = UIImage(data: data) {
                         selectedImage = ImageData(image: image)
@@ -39,7 +36,6 @@ struct PhotoMenu: ViewModifier {
                         selectedImage = nil
                     },
                     onCancel: {
-                        onCancel()
                         selectedImage = nil
                     }
                 )
@@ -48,7 +44,7 @@ struct PhotoMenu: ViewModifier {
 }
 
 extension View {
-    func photoMenu(isPresented: Binding<Bool>, onSelect: @escaping () -> Void, onCancel: @escaping () -> Void, onReturn: @escaping (Card.BackgroundData) -> Void) -> some View {
-        modifier(PhotoMenu(isPresented: isPresented, onSelect: onSelect, onCancel: onCancel, onReturn: onReturn))
+    func photoMenu(isPresented: Binding<Bool>, onReturn: @escaping (Card.BackgroundData) -> Void) -> some View {
+        modifier(PhotoMenu(isPresented: isPresented, onReturn: onReturn))
     }
 }
