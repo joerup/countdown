@@ -62,8 +62,8 @@ public final class Countdown {
     @Transient public var currentBackgroundIcon: Card.Background?
     @Transient public var currentBackgroundID: UUID = UUID()
     
-    public var currentBackgroundColor: Color {
-        return card?.backgroundColor ?? .white
+    public var currentBackgroundColor: Color? {
+        return card?.backgroundColor
     }
     public var currentBackgroundFade: Double {
         return card?.backgroundFade ?? 0

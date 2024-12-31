@@ -9,7 +9,8 @@ import SwiftUI
 
 struct CustomColorPicker<ColorShape: Shape>: View {
     
-    @Binding var color: Color
+    @Binding var color: Color?
+    @Binding var opacity: Double
     var shape: ColorShape
     var sliderValue: SliderValue?
     
@@ -23,14 +24,20 @@ struct CustomColorPicker<ColorShape: Shape>: View {
     @State private var saturation: Double
     @State private var brightness: Double
     
-    private let hueCount: Int = 12
+    private let allowNoColor: Bool
+    private let hueCount: Int
+    private let opacityRange: ClosedRange<Double>
     
     @State private var scrollPosition: Int?
     
-    init(color: Binding<Color>, shape: ColorShape, sliderValue: SliderValue? = nil) {
+    init(color: Binding<Color?>, opacity: Binding<Double>, shape: ColorShape, sliderValue: SliderValue? = nil, allowNoColor: Bool = false, hueCount: Int = 12, opacityRange: ClosedRange<Double> = 0...1) {
         self._color = color
+        self._opacity = opacity
         self.shape = shape
         self.sliderValue = sliderValue
+        self.allowNoColor = allowNoColor
+        self.hueCount = hueCount
+        self.opacityRange = opacityRange
         
         switch sliderValue {
         case .saturation:
@@ -49,59 +56,80 @@ struct CustomColorPicker<ColorShape: Shape>: View {
         VStack(spacing: 20) {
             ScrollView(.horizontal) {
                 HStack {
+                    if allowNoColor {
+                        Button {
+                            self.color = nil
+                        } label: {
+                            colorIcon(Color.white.opacity(color == nil ? 0.5 : 0.1), isSelected: color == nil)
+                                .overlay {
+                                    Image(systemName: "xmark")
+                                        .fontWeight(.semibold)
+                                        .foregroundStyle(.gray)
+                                        .imageScale(.large)
+                                }
+                        }
+                        .id(0)
+                    }
                     Button {
-                        color = .white
+                        self.color = .white
                     } label: {
                         colorIcon(.white, isSelected: isWhite)
                     }
-                    .id(0)
+                    .id(1)
                     ForEach(0..<hueCount, id: \.self) { i in
                         let hue = Double(i)/Double(hueCount)
                         let color = Color(hue: hue, saturation: saturation, brightness: brightness)
                         Button {
                             self.color = color
                         } label: {
-                            colorIcon(color, isSelected: !isWhite && !isCustom && self.color.hue.isApproximately(hue))
+                            colorIcon(color, isSelected: !isWhite && !isCustom && self.color != nil && self.color!.hue.isApproximately(hue))
                         }
-                        .id(i + 1)
+                        .id(i + 2)
                     }
                     colorIcon(AngularGradient(colors: [.teal,.cyan,.blue,.purple,.pink,.red,.orange,.yellow,.green,.mint], center: .center), isSelected: isCustom)
-                        .overlay(ColorPicker("", selection: $color, supportsOpacity: false).labelsHidden().scaleEffect(2.0).opacity(isCustom ? 1 : 0.1))
-                        .id(hueCount + 1)
+                        .overlay(colorIcon(color ?? .white, isSelected: isCustom, bordered: false).scaleEffect(0.7).opacity(isCustom ? 1 : 0))
+                        .overlay(ColorPicker("", selection: Binding(get: { color ?? .white }, set: { color = $0 }), supportsOpacity: false).labelsHidden().scaleEffect(2.0).opacity(0.1))
+                        .id(hueCount + 2)
                 }
             }
             .scrollPosition(id: $scrollPosition, anchor: .center)
             .scrollIndicators(.hidden)
             
-            if !isWhite && !isCustom {
+            if !isWhite && !isCustom, let color {
                 switch sliderValue {
                 case .saturation:
                     CustomSlider(value: $saturation, in: 0.1...0.5, colors: [Color(hue: color.hue, saturation: 0.1, brightness: color.value), Color(hue: color.hue, saturation: 0.5, brightness: color.value)])
                         .tint(color)
-                        .padding(.horizontal)
                         .onChange(of: saturation) { _, saturation in
-                            color = Color(hue: color.hue, saturation: saturation, brightness: color.value)
+                            self.color = Color(hue: color.hue, saturation: saturation, brightness: color.value)
                         }
                 case .brightness:
                     CustomSlider(value: $brightness, in: 0.25...1.0, colors: [Color(hue: color.hue, saturation: color.saturation, brightness: 0.25), Color(hue: color.hue, saturation: color.saturation, brightness: 1.0)])
                         .tint(color)
-                        .padding(.horizontal)
                         .onChange(of: brightness) { _, saturation in
-                            color = Color(hue: color.hue, saturation: color.saturation, brightness: brightness)
+                            self.color = Color(hue: color.hue, saturation: color.saturation, brightness: brightness)
                         }
                 default:
                     EmptyView()
                 }
             }
+            
+            if let color {
+                CustomSlider(value: $opacity, in: opacityRange, opacityGrid: true, colors: [color.opacity(opacityRange.lowerBound), color.opacity(opacityRange.upperBound)])
+                    .tint(color.opacity(opacity))
+            }
+            
         }
         .onAppear {
             updateState(color: color)
             if isWhite {
-                scrollPosition = 0
+                scrollPosition = 1
             } else if isCustom {
-                scrollPosition = hueCount + 1
+                scrollPosition = hueCount + 2
+            } else if let color {
+                scrollPosition = Int(round(color.hue * Double(hueCount))) + 2
             } else {
-                scrollPosition = Int(round(color.hue * Double(hueCount))) + 1
+                scrollPosition = 0
             }
         }
         .onChange(of: color) { _, color in
@@ -109,7 +137,12 @@ struct CustomColorPicker<ColorShape: Shape>: View {
         }
     }
     
-    private func updateState(color: Color) {
+    private func updateState(color: Color?) {
+        guard let color else {
+            isWhite = false
+            isCustom = false
+            return
+        }
         isWhite = color.hue.isApproximately(Color.white.hue) && color.saturation.isApproximately(Color.white.saturation) && color.value.isApproximately(Color.white.value)
         isCustom = !(color.hue * Double(hueCount)).isApproximately((color.hue * Double(hueCount)).rounded())
         if !isWhite && !isCustom {
@@ -124,12 +157,14 @@ struct CustomColorPicker<ColorShape: Shape>: View {
         }
     }
     
-    private func colorIcon(_ color: some ShapeStyle, isSelected: Bool) -> some View {
+    private func colorIcon(_ color: some ShapeStyle, isSelected: Bool, bordered: Bool = true) -> some View {
         shape
             .fill(color)
             .frame(width: 50, height: 50)
             .overlay {
-                shape.stroke(isSelected ? .white : .gray, lineWidth: 5)
+                shape
+                    .stroke(isSelected ? .white : .gray, lineWidth: 5)
+                    .opacity(bordered ? 1 : 0)
             }
             .frame(width: 55, height: 55)
     }

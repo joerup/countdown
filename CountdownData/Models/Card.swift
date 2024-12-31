@@ -18,13 +18,13 @@ public final class Card {
     @Attribute(.externalStorage) public private(set) var backgroundData: BackgroundData?
     @Attribute(.externalStorage) public private(set) var backgroundIconData: BackgroundData?
     
-    private var backgroundRGB: RGBColor = Color.white.rgb
-    public var backgroundColor: Color {
-        get { Color(rgb: backgroundRGB) }
-        set { self.backgroundRGB = newValue.rgb }
+    private var backgroundRGB: RGBColor?
+    public var backgroundColor: Color? {
+        get { if let backgroundRGB { Color(rgb: backgroundRGB) } else { nil } }
+        set { self.backgroundRGB = newValue?.rgb }
     }
     
-    public var backgroundFade: Double = 0
+    public var backgroundFade: Double = 0.4
     public var backgroundBlur: Double = 0
     public var backgroundBrightness: Double = 0
     public var backgroundSaturation: Double = 1.0

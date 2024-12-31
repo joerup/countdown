@@ -11,7 +11,7 @@ import CountdownData
 public struct BackgroundDisplay: View {
         
     private var background: Card.Background?
-    private var color: Color
+    private var color: Color?
     private var fade: Double
     private var blur: Double
     private var brightness: Double
@@ -19,7 +19,7 @@ public struct BackgroundDisplay: View {
     private var contrast: Double
     private var fullScreen: Bool
     
-    public init(background: Card.Background?, color: Color = .white, fade: Double = 0, blur: Double = 0, brightness: Double = 0, saturation: Double = 1.0, contrast: Double = 1.0, fullScreen: Bool = false) {
+    public init(background: Card.Background?, color: Color? = nil, fade: Double = 0, blur: Double = 0, brightness: Double = 0, saturation: Double = 1.0, contrast: Double = 1.0, fullScreen: Bool = false) {
         self.background = background
         self.color = color
         self.fade = fade
@@ -34,41 +34,33 @@ public struct BackgroundDisplay: View {
         ZStack {
             switch background {
             case .photo(let photo):
-                Image(uiImage: photo)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .saturation(saturation)
-                    .brightness(brightness)
-                    .contrast(contrast)
-                    .blur(radius: blur)
+                modifiedImage(photo)
             case .transformedPhoto(let photo, let offset, let scale):
                 if fullScreen {
-                    Image(uiImage: photo)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .saturation(saturation)
-                        .brightness(brightness)
-                        .contrast(contrast)
-                        .blur(radius: blur)
+                    modifiedImage(photo)
                 } else if let croppedPhoto = photo.cropped(offset: offset, scale: scale) {
-                    Image(uiImage: croppedPhoto)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .saturation(saturation)
-                        .brightness(brightness)
-                        .contrast(contrast)
-                        .blur(radius: blur)
+                    modifiedImage(croppedPhoto)
                 }
             case .loading, nil:
                 Color.defaultColor
             }
             
-            if background?.allowOverlays ?? false {
+            if let color, background?.allowOverlays ?? false {
                 Rectangle()
                     .fill(color)
                     .opacity(fade)
             }
         }
+    }
+    
+    private func modifiedImage(_ uiImage: UIImage) -> some View {
+        Image(uiImage: uiImage)
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .saturation(saturation)
+            .brightness(brightness)
+            .contrast(contrast)
+            .blur(radius: blur)
     }
 }
 

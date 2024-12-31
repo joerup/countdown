@@ -17,10 +17,10 @@ struct CardEditor: View {
     
     var card: Card
     
-    @State private var section: CardEditorSection = .layout
+    @State private var section: CardEditorSection = .background
     
     private enum CardEditorSection: String, CaseIterable, Hashable {
-        case layout, background, text
+        case background, layout, text
     }
     
     @State private var savedInstance: CountdownInstance?
@@ -32,7 +32,7 @@ struct CardEditor: View {
     @State private var textOpacity: Double = 1.0
     @State private var textShadow: Double = 0
     
-    @State private var backgroundColor: Color = .white
+    @State private var backgroundColor: Color?
     @State private var backgroundFade: Double = 0
     @State private var backgroundBlur: Double = 0
     @State private var backgroundSaturation: Double = 0
@@ -40,6 +40,8 @@ struct CardEditor: View {
     @State private var backgroundContrast: Double = 0
     
     @State private var layout: Card.Layout = .basic
+    
+    @State private var forceUpdate: Bool = false
     
     private var title: String {
         card.countdown?.displayName ?? "Countdown"
@@ -64,12 +66,13 @@ struct CardEditor: View {
                     if let instance = savedInstance {
                         card.countdown?.match(instance)
                         setStates()
-                        setBackground(savedBackgroundData)
+                        setBackground(savedBackgroundData, resetStates: false)
                     }
                 } label: {
                     Image(systemName: "arrowshape.turn.up.backward.circle")
-                        .imageScale(.large)
-                        .foregroundStyle(.foreground)
+                        .font(.title2)
+                        .foregroundStyle(.white)
+                        .opacity(0.5)
                 }
                 
                 Picker("", selection: $section) {
@@ -78,13 +81,15 @@ struct CardEditor: View {
                     }
                 }
                 .pickerStyle(SegmentedPickerStyle())
+                .padding(.horizontal, 8)
                 
                 Button {
                     dismiss()
                 } label: {
                     Image(systemName: "xmark.circle.fill")
-                        .imageScale(.large)
-                        .foregroundStyle(.foreground)
+                        .font(.title2)
+                        .foregroundStyle(.white)
+                        .opacity(0.5)
                 }
             }
             .padding()
@@ -97,7 +102,10 @@ struct CardEditor: View {
                     case .layout:
                         LayoutEditor(layout: $layout, title: title, dateString: dateString, daysRemaining: daysRemaining, timeRemaining: timeRemaining, tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity)
                     case .background:
-                        BackgroundEditor(background: background, backgroundData: card.backgroundData, backgroundColor: $backgroundColor, backgroundFade: $backgroundFade, backgroundBlur: $backgroundBlur, backgroundSaturation: $backgroundSaturation, backgroundBrightness: $backgroundBrightness, backgroundContrast: $backgroundContrast, setBackground: setBackground(_:))
+                        BackgroundEditor(background: background, backgroundData: card.backgroundData, backgroundColor: $backgroundColor, backgroundFade: $backgroundFade, backgroundBlur: $backgroundBlur, backgroundSaturation: $backgroundSaturation, backgroundBrightness: $backgroundBrightness, backgroundContrast: $backgroundContrast) { background, resetStates in
+                            setBackground(background, resetStates: resetStates)
+                        }
+                        .id(forceUpdate)
                     case .text:
                         TextStyleEditor(textStyle: $textStyle, textWeight: $textWeight, tintColor: $tintColor, textOpacity: $textOpacity)
                     }
@@ -180,10 +188,21 @@ struct CardEditor: View {
         layout = card.layout ?? .basic
     }
     
-    private func setBackground(_ data: Card.BackgroundData?) {
+    private func setBackground(_ data: Card.BackgroundData?, resetStates: Bool) {
         card.setBackground(data)
         UIImpactFeedbackGenerator().impactOccurred()
         saveCard(reload: true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+            forceUpdate.toggle()
+        }
+        if resetStates {
+            backgroundColor = nil
+            backgroundFade = 0.4
+            backgroundBlur = 0
+            backgroundBrightness = 0
+            backgroundSaturation = 1.0
+            backgroundContrast = 1.0
+        }
     }
     
     private func saveCard(reload: Bool = false) {

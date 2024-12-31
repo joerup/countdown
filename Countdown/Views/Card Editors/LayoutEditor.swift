@@ -28,7 +28,7 @@ struct LayoutEditor: View {
     @State private var bottomOptions: Card.Layout.BottomOptions = .init()
     @State private var timerOptions: Card.Layout.TimerOptions = .init()
     
-    private let showLayoutSelector = true
+    private let showLayoutSelector = false
     
     var body: some View {
         VStack {
@@ -56,64 +56,29 @@ struct LayoutEditor: View {
             switch layoutType {
             case .standard:
                 VStack(spacing: 15) {
-                    HStack {
-                        Image(systemName: "textformat.characters")
-                            .imageScale(.large)
-                            .dynamicTypeSize(..<DynamicTypeSize.xLarge)
-                            .frame(minWidth: 50)
-                        alignmentPicker(value: $standardOptions.titleAlignment)
-                        sizeSlider(value: $standardOptions.titleSize)
-                    }
-                    HStack {
-                        Image(systemName: "numbers")
-                            .imageScale(.large)
-                            .dynamicTypeSize(..<DynamicTypeSize.xLarge)
-                            .frame(minWidth: 50)
-                        alignmentPicker(value: $standardOptions.numberAlignment)
-                        sizeSlider(value: $standardOptions.numberSize)
-                    }
+                    alignmentSizeRow(icon: "textformat.characters", alignment: $standardOptions.titleAlignment, size: $standardOptions.titleSize)
+                    alignmentSizeRow(icon: "numbers", alignment: $standardOptions.numberAlignment, size: $standardOptions.numberSize)
+                    
                     Toggle("Show Date", isOn: $standardOptions.showDate)
                         .padding()
-                        .background(Material.ultraThin.opacity(0.25))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .background(RoundedRectangle(cornerRadius: 10).fill(Material.ultraThin).opacity(0.5))
                 }
             case .bottom:
                 VStack(spacing: 15) {
-                    HStack {
-                        Image(systemName: "textformat.characters")
-                            .imageScale(.large)
-                            .dynamicTypeSize(..<DynamicTypeSize.xLarge)
-                            .frame(minWidth: 50)
-                        alignmentPicker(value: $bottomOptions.alignment)
-                        sizeSlider(value: $bottomOptions.size)
-                    }
+                    alignmentSizeRow(icon: "textformat.characters", alignment: $bottomOptions.alignment, size: $bottomOptions.size)
+                    
                     Toggle("Show Date", isOn: $bottomOptions.showDate)
                         .padding()
-                        .background(Material.ultraThin.opacity(0.25))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .background(RoundedRectangle(cornerRadius: 10).fill(Material.ultraThin).opacity(0.5))
                 }
             case .timer:
                 VStack(spacing: 15) {
-                    HStack {
-                        Image(systemName: "textformat.characters")
-                            .imageScale(.large)
-                            .dynamicTypeSize(..<DynamicTypeSize.xLarge)
-                            .frame(minWidth: 50)
-                        alignmentPicker(value: $timerOptions.titleAlignment)
-                        sizeSlider(value: $timerOptions.titleSize)
-                    }
-                    HStack {
-                        Image(systemName: "numbers")
-                            .imageScale(.large)
-                            .dynamicTypeSize(..<DynamicTypeSize.xLarge)
-                            .frame(minWidth: 50)
-                        alignmentPicker(value: $timerOptions.numberAlignment)
-                        sizeSlider(value: $timerOptions.numberSize)
-                    }
+                    alignmentSizeRow(icon: "textformat.characters", alignment: $timerOptions.titleAlignment, size: $timerOptions.titleSize)
+                    alignmentSizeRow(icon: "numbers", alignment: $timerOptions.numberAlignment, size: $timerOptions.numberSize)
+                    
                     Toggle("Show Date", isOn: $timerOptions.showDate)
                         .padding()
-                        .background(Material.ultraThin.opacity(0.25))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .background(RoundedRectangle(cornerRadius: 10).fill(Material.ultraThin).opacity(0.5))
                 }
             }
         }
@@ -157,32 +122,30 @@ struct LayoutEditor: View {
         }
     }
     
-    private func alignmentPicker(value: Binding<Card.Alignment>) -> some View {
-        HStack(spacing: 2) {
-            ForEach(Card.Alignment.allCases, id: \.self) { align in
-                Button {
-                    value.wrappedValue = align
-                } label: {
-                    Image(systemName: align.imageName)
-                        .padding()
-                        .background(Circle().fill(Material.ultraThin.opacity(value.wrappedValue == align ? 1.0 : 0.25)))
+    private func alignmentSizeRow(icon: String, alignment: Binding<Card.Alignment>, size: Binding<Double>) -> some View {
+        HStack {
+            Image(systemName: icon)
+                .imageScale(.large)
+                .fontWeight(.semibold)
+                .dynamicTypeSize(..<DynamicTypeSize.xLarge)
+                .frame(minWidth: 50)
+            
+            HStack(spacing: 0) {
+                ForEach(Card.Alignment.allCases, id: \.self) { align in
+                    Button {
+                        alignment.wrappedValue = align
+                    } label: {
+                        Image(systemName: align.imageName)
+                            .padding(12)
+                            .background(Circle().fill(Color.white.opacity(alignment.wrappedValue == align ? 0.5 : 0.1)))
+                    }
                 }
             }
+            
+            CustomSlider(value: size, in: 0.8...1.25, mask: true, colors: [.pink.lighter(), .pink])
+                .padding(.leading, 3)
         }
-    }
-    
-    private func sizeSlider(value: Binding<Double>) -> some View {
-        HStack {
-            Image(systemName: "textformat.size.smaller")
-                .imageScale(.large)
-                .foregroundStyle(.secondary)
-                .dynamicTypeSize(..<DynamicTypeSize.xLarge)
-            Slider(value: value, in: 0.8...1.25)
-            Image(systemName: "textformat.size.larger")
-                .imageScale(.large)
-                .foregroundStyle(.secondary)
-                .dynamicTypeSize(..<DynamicTypeSize.xLarge)
-        }
-        .padding(.leading)
+        .padding(8)
+        .background(RoundedRectangle(cornerRadius: 10).fill(Material.ultraThin).opacity(0.5))
     }
 }

@@ -18,14 +18,14 @@ struct BackgroundEditor: View {
     var background: Card.Background?
     var backgroundData: Card.BackgroundData?
     
-    @Binding var backgroundColor: Color
+    @Binding var backgroundColor: Color?
     @Binding var backgroundFade: Double
     @Binding var backgroundBlur: Double
     @Binding var backgroundSaturation: Double
     @Binding var backgroundBrightness: Double
     @Binding var backgroundContrast: Double
     
-    var setBackground: (Card.BackgroundData?) -> Void
+    var setBackground: (Card.BackgroundData?, Bool) -> Void
     
     var body: some View {
         VStack {
@@ -40,7 +40,7 @@ struct BackgroundEditor: View {
                         }
                         if background?.image != nil {
                             Button("Remove Photo") {
-                                setBackground(nil)
+                                setBackground(nil, true)
                             }
                         }
                     }
@@ -68,31 +68,31 @@ struct BackgroundEditor: View {
                                 .padding()
                             Image(systemName: "sun.max")
                                 .foregroundStyle(.yellow)
-                                .frame(minWidth: 20)
+                                .frame(minWidth: 25)
                         }
                         HStack(spacing: 0) {
                             Slider(value: $backgroundSaturation, in: 0...2)
                                 .padding()
                             Image(systemName: "paintpalette")
                                 .renderingMode(.original)
-                                .frame(minWidth: 20)
+                                .frame(minWidth: 25)
                         }
                         HStack(spacing: 0) {
                             Slider(value: $backgroundContrast, in: 0.1...1.9)
                                 .padding()
                             Image(systemName: "circle.lefthalf.filled")
                                 .foregroundStyle(.black)
-                                .frame(minWidth: 20)
+                                .frame(minWidth: 25)
                         }
                         HStack(spacing: 0) {
                             Slider(value: $backgroundBlur, in: 0...10)
                                 .padding()
                             Image(systemName: "drop.fill")
                                 .foregroundStyle(.blue)
-                                .frame(minWidth: 20)
+                                .frame(minWidth: 25)
                         }
                     }
-                    .padding(.leading, 8)
+                    .padding(.vertical, -25)
                 }
             }
             
@@ -100,23 +100,17 @@ struct BackgroundEditor: View {
                 .padding(.vertical)
             
             if background?.allowOverlays ?? false {
-                VStack {
-                    CustomColorPicker(color: $backgroundColor, shape: RoundedRectangle(cornerRadius: 10), sliderValue: .brightness)
-                    
-                    CustomSlider(value: $backgroundFade, in: 0...0.8, colors: [.clear, backgroundColor])
-                        .tint(backgroundColor)
-                        .padding()
-                }
+                CustomColorPicker(color: $backgroundColor, opacity: $backgroundFade, shape: RoundedRectangle(cornerRadius: 15), sliderValue: .brightness, allowNoColor: true, opacityRange: 0...0.8)
             }
         }
         .photoMenu(isPresented: $showPhotoLibrary) { background in
-            setBackground(background)
+            setBackground(background, true)
         }
         .unsplashMenu(isPresented: $showUnsplashLibrary) { background in
-            setBackground(background)
+            setBackground(background, true)
         }
         .repositionMenu(isPresented: $showRepositionMenu, image: background?.image, data: backgroundData) { background in
-            setBackground(background)
+            setBackground(background, false)
         }
     }
 }

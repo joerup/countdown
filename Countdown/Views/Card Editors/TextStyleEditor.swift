@@ -15,6 +15,8 @@ struct TextStyleEditor: View {
     @Binding var tintColor: Color
     @Binding var textOpacity: Double
     
+    @State private var scrollPosition: Int?
+    
     var body: some View {
         VStack {
             ScrollView(.horizontal) {
@@ -31,14 +33,19 @@ struct TextStyleEditor: View {
                                 .foregroundStyle(textStyle == style ? .pink : .black)
                                 .lineLimit(0).minimumScaleFactor(0.5)
                                 .frame(width: 70, height: 70)
-                                .background(Material.ultraThin.opacity(textStyle == style ? 1.0 : 0.25))
+                                .background(Color.white.opacity(textStyle == style ? 0.5 : 0.1))
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                         }
+                        .id(style.rawValue)
                     }
                 }
             }
+            .scrollPosition(id: $scrollPosition, anchor: .center)
             .scrollIndicators(.hidden)
             .padding(.bottom)
+            .onAppear {
+                scrollPosition = textStyle.rawValue
+            }
             
             HStack {
                 Image(systemName: "textformat")
@@ -52,7 +59,8 @@ struct TextStyleEditor: View {
                         set: { textWeight = Int(round($0)) }
                     ),
                     in: Double(Font.Weight.minimum + 1)...Double(Font.Weight.maximum - 1),
-                    shape: .widening,
+                    mask: true,
+                    widen: true,
                     colors: [.pink]
                 )
                 .tint(.pink)
@@ -66,11 +74,7 @@ struct TextStyleEditor: View {
             Divider()
                 .padding(.vertical)
             
-            CustomColorPicker(color: $tintColor, shape: Circle(), sliderValue: .saturation)
-            
-            CustomSlider(value: $textOpacity, in: 0.15...1, colors: [tintColor.opacity(0.15), tintColor])
-                .tint(tintColor.opacity(textOpacity))
-                .padding()
+            CustomColorPicker(color: Binding(get: { tintColor }, set: { color in if let color { tintColor = color } }), opacity: $textOpacity, shape: Circle(), sliderValue: .saturation, opacityRange: 0.15...1)
         }
     }
 }

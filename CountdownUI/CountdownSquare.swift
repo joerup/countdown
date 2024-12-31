@@ -25,7 +25,7 @@ public struct CountdownSquare: View {
     private var textOpacity: Double
     
     private var background: Card.Background?
-    private var backgroundColor: Color
+    private var backgroundColor: Color?
     private var backgroundFade: Double
     private var backgroundBlur: Double
     private var backgroundBrightness: Double

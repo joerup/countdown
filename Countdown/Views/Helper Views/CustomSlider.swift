@@ -13,13 +13,10 @@ struct CustomSlider: View {
     
     let range: ClosedRange<Double>
     
-    let sliderShape: SliderShape
-    
+    let mask: Bool
+    let widen: Bool
+    let opacityGrid: Bool
     let colors: [Color]
-    
-    enum SliderShape {
-        case straight, widening
-    }
     
     private var progress: CGFloat {
         let clampedValue = min(max(value, range.lowerBound), range.upperBound)
@@ -30,18 +27,15 @@ struct CustomSlider: View {
     private let trackHeight: CGFloat = 20
     
     private var shape: some Shape {
-        switch sliderShape {
-        case .straight:
-            AnyShape(RoundedRectangle(cornerRadius: 10))
-        case .widening:
-            AnyShape(RoundedTrapezoid(cornerRadius: 5, sideInset: 7))
-        }
+        widen ? AnyShape(RoundedTrapezoid(cornerRadius: 5, sideInset: 5)) : AnyShape(RoundedRectangle(cornerRadius: 10))
     }
     
-    public init(value: Binding<Double>, in range: ClosedRange<Double>, shape: SliderShape = .straight, colors: [Color]) {
+    public init(value: Binding<Double>, in range: ClosedRange<Double>, mask: Bool = false, widen: Bool = false, opacityGrid: Bool = false, colors: [Color] = [.white]) {
         self._value = value
         self.range = range
-        self.sliderShape = shape
+        self.mask = mask
+        self.widen = widen
+        self.opacityGrid = opacityGrid
         self.colors = colors
     }
     
@@ -49,62 +43,82 @@ struct CustomSlider: View {
         GeometryReader { geometry in
             let totalWidth = geometry.size.width
             
-            ZStack(alignment: .leading) {
-                
-                shape
-                    .fill(
-                        LinearGradient(
-                            gradient: Gradient(colors: colors.map { $0.opacity(0.2) }),
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                    .frame(height: trackHeight)
-                
-                LinearGradient(
-                    gradient: Gradient(colors: colors),
-                    startPoint: .leading,
-                    endPoint: .trailing
-                )
-                .frame(width: totalWidth, height: trackHeight)
-                .mask(alignment: .leading) {
-                    shape
-                        .frame(width: totalWidth, height: trackHeight)
-//                        .mask(alignment: .leading) {
-//                            Rectangle()
-//                                .frame(width: progress * totalWidth, height: trackHeight)
-//                        }
-                }
-                
-                Circle()
-                    .fill(.tint)
-                    .frame(width: thumbDiameter, height: thumbDiameter)
-                    .overlay(
-                        Circle().stroke(Color.white, lineWidth: 2)
-                    )
-                    .offset(x: (progress * totalWidth) - (thumbDiameter / 2))
-                    .gesture(
-                        DragGesture()
-                            .onChanged { drag in
-                                // Clamp the drag location to 0...totalWidth
-                                let clampedX = min(max(0, drag.location.x), totalWidth)
-                                // Convert to 0...1 fraction
-                                let newProgress = clampedX / totalWidth
-                                // Convert that fraction back to the slider’s domain
-                                let newValue = range.lowerBound
-                                + Double(newProgress) * (range.upperBound - range.lowerBound)
-                                
-                                // Update the bound value
-                                value = newValue
+            VStack(spacing: 0) {
+                Spacer(minLength: 0)
+                ZStack(alignment: .leading) {
+                    
+                    if mask {
+                        shape
+                            .fill(
+                                LinearGradient(
+                                    gradient: Gradient(colors: colors.map { $0.opacity(0.2) }),
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .frame(height: trackHeight)
+                    }
+                    if opacityGrid {
+                        Checkerboard(rows: 3, columns: 3 * Int(totalWidth/trackHeight))
+                            .fill(.white.opacity(0.5))
+                            .frame(width: totalWidth, height: trackHeight)
+                            .mask {
+                                shape
+                                    .frame(height: trackHeight)
                             }
+                    }
+                    
+                    LinearGradient(
+                        gradient: Gradient(colors: colors),
+                        startPoint: .leading,
+                        endPoint: .trailing
                     )
+                    .frame(width: totalWidth, height: trackHeight)
+                    .mask(alignment: .leading) {
+                        if mask {
+                            shape
+                                .frame(width: totalWidth, height: trackHeight)
+                                .mask(alignment: .leading) {
+                                    Rectangle()
+                                        .frame(width: progress * totalWidth, height: trackHeight)
+                                }
+                        } else {
+                            shape
+                                .frame(width: totalWidth, height: trackHeight)
+                        }
+                    }
+                    
+                    Circle()
+                        .fill(.tint)
+                        .frame(width: thumbDiameter, height: thumbDiameter)
+                        .overlay(
+                            Circle().stroke(Color.white, lineWidth: 2)
+                        )
+                        .offset(x: progress * (totalWidth - thumbDiameter))
+                        .gesture(
+                            DragGesture()
+                                .onChanged { drag in
+                                    // Clamp the drag location to 0...totalWidth
+                                    let clampedX = min(max(0, drag.location.x), totalWidth)
+                                    // Convert to 0...1 fraction
+                                    let newProgress = clampedX / totalWidth
+                                    // Convert that fraction back to the slider’s domain
+                                    let newValue = range.lowerBound
+                                    + Double(newProgress) * (range.upperBound - range.lowerBound)
+                                    
+                                    // Update the bound value
+                                    value = newValue
+                                }
+                        )
+                }
+                Spacer(minLength: 0)
             }
         }
         .frame(minHeight: thumbDiameter)
     }
 }
 
-struct RoundedTrapezoid: Shape {
+private struct RoundedTrapezoid: Shape {
     var cornerRadius: CGFloat = 20
     var sideInset: CGFloat = 40
     
@@ -163,16 +177,68 @@ struct RoundedTrapezoid: Shape {
     }
 }
 
+private struct Checkerboard: Shape {
+    let rows: Int
+    let columns: Int
+
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+
+        // figure out how big each row/column needs to be
+        let rowSize = rect.height / Double(rows)
+        let columnSize = rect.width / Double(columns)
+
+        // loop over all rows and columns, making alternating squares colored
+        for row in 0 ..< rows {
+            for column in 0 ..< columns {
+                if (row + column).isMultiple(of: 2) {
+                    // this square should be colored; add a rectangle here
+                    let startX = columnSize * Double(column)
+                    let startY = rowSize * Double(row)
+
+                    let rect = CGRect(x: startX, y: startY, width: columnSize, height: rowSize)
+                    path.addRect(rect)
+                }
+            }
+        }
+
+        return path
+    }
+}
+
+
+
 #Preview {
     @Previewable @State var previewValue = 50.0
     return VStack {
         CustomSlider(
             value: $previewValue,
             in: 0...100,
-            shape: .widening,
+            colors: [Color.green, Color.pink]
+        )
+        .tint(.yellow)
+        CustomSlider(
+            value: $previewValue,
+            in: 0...100,
+            mask: true,
+            colors: [Color.mint, Color.orange]
+        )
+        .tint(.blue)
+        CustomSlider(
+            value: $previewValue,
+            in: 0...100,
+            widen: true,
             colors: [Color.red, Color.cyan]
         )
         .tint(.green)
+        CustomSlider(
+            value: $previewValue,
+            in: 0...100,
+            opacityGrid: true,
+            colors: [Color.clear, Color.purple]
+        )
+        .tint(.yellow)
+        Spacer()
         Text(String(format: "Value: %.1f", previewValue))
             .foregroundColor(.white)
     }

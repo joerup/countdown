@@ -38,19 +38,24 @@ public struct CountdownCard: View {
             if !editCard {
                 Spacer(minLength: 0)
             }
-            if let card = countdown.card {
-                Button {
-                    withAnimation {
-                        self.editCard.toggle()
-                    }
-                } label: {
-                    CountdownSquare(countdown: countdown)
-                        .aspectRatio(1.0, contentMode: .fit)
-                        .frame(maxWidth: min(size.width * 0.7, 400))
-                        .clipShape(RoundedRectangle(cornerRadius: 35))
-                }
+            CountdownSquare(countdown: countdown)
+                .aspectRatio(1.0, contentMode: .fit)
+                .frame(maxWidth: min(size.width * 0.7, 400))
+                .clipShape(RoundedRectangle(cornerRadius: 35))
                 .shadow(radius: 10)
                 .padding()
+            if let card = countdown.card {
+                Button {
+                    self.editCard.toggle()
+                } label: {
+                    Text("Edit")
+                        .fontWeight(.semibold)
+                        .fontDesign(.rounded)
+                        .foregroundStyle(.white)
+                        .padding()
+                        .padding(.horizontal)
+                        .background(RoundedRectangle(cornerRadius: 30).fill(Material.ultraThin))
+                }
                 .sheet(isPresented: $editCard) {
                     CardEditor(card: card)
                 }
@@ -70,6 +75,7 @@ public struct CountdownCard: View {
 //            .clipShape(RoundedRectangle(cornerRadius: 20))
             Spacer(minLength: 0)
         }
+        .animation(.default, value: editCard)
         .environment(\.colorScheme, .light)
         .padding(.bottom, 50)
         .padding(.top, 80)
