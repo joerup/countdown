@@ -26,6 +26,9 @@ public final class Card {
     
     public var backgroundFade: Double = 0
     public var backgroundBlur: Double = 0
+    public var backgroundBrightness: Double = 0
+    public var backgroundSaturation: Double = 1.0
+    public var backgroundContrast: Double = 1.0
     
     public var layout: Layout?
     
@@ -37,6 +40,7 @@ public final class Card {
     
     public var textStyle: TextStyle = TextStyle.standard
     public var textWeight: Int = Font.Weight.medium.rawValue
+    public var textOpacity: Double = 1.0
     public var textShadow: Double = 0
     
     public init() { }
@@ -49,6 +53,9 @@ public final class Card {
         self.backgroundRGB = instance.backgroundRGB
         self.backgroundFade = instance.backgroundFade
         self.backgroundBlur = instance.backgroundBlur
+        self.backgroundBrightness = instance.backgroundBrightness
+        self.backgroundSaturation = instance.backgroundSaturation
+        self.backgroundContrast = instance.backgroundContrast
         self.backgroundData = instance.backgroundData
         self.backgroundIconData = instance.backgroundIconData
         self.backgroundID = instance.backgroundID
@@ -62,6 +69,9 @@ public final class Card {
         self.backgroundRGB = instance.backgroundRGB
         self.backgroundFade = instance.backgroundFade
         self.backgroundBlur = instance.backgroundBlur
+        self.backgroundBrightness = instance.backgroundBrightness
+        self.backgroundSaturation = instance.backgroundSaturation
+        self.backgroundContrast = instance.backgroundContrast
         self.backgroundData = instance.backgroundData
         self.backgroundIconData = instance.backgroundIconData
         self.backgroundID = instance.backgroundID

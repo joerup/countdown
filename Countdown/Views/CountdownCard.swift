@@ -21,6 +21,8 @@ public struct CountdownCard: View {
     
     private var animation: Namespace.ID
     
+    @State private var editCard: Bool = false
+    
     @State private var confettiCannonReady: Bool = true
     @State private var confettiTrigger: Int = 1
     
@@ -33,29 +35,39 @@ public struct CountdownCard: View {
     
     public var body: some View {
         VStack {
-            Spacer(minLength: 0)
-            CountdownSquare(countdown: countdown)
-                .aspectRatio(1.0, contentMode: .fit)
-                .frame(maxWidth: min(size.width * 0.7, 400))
-                .clipShape(RoundedRectangle(cornerRadius: 35))
+            if !editCard {
+                Spacer(minLength: 0)
+            }
+            if let card = countdown.card {
+                Button {
+                    withAnimation {
+                        self.editCard.toggle()
+                    }
+                } label: {
+                    CountdownSquare(countdown: countdown)
+                        .aspectRatio(1.0, contentMode: .fit)
+                        .frame(maxWidth: min(size.width * 0.7, 400))
+                        .clipShape(RoundedRectangle(cornerRadius: 35))
+                }
                 .shadow(radius: 10)
                 .padding()
-            if let card = countdown.card {
-                CardEditor(card: card)
+                .sheet(isPresented: $editCard) {
+                    CardEditor(card: card)
+                }
             }
             Spacer(minLength: 0)
-            VStack(spacing: 10) {
-                CounterDisplay(timeRemaining: countdown.timeRemaining, tintColor: countdown.currentTintColor, textStyle: countdown.currentTextStyle, textWeight: Font.Weight(rawValue: countdown.currentTextWeight), size: 37.5)
-                Text(countdown.date.fullString)
-                    .font(.title3)
-                    .fontWidth(.condensed)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.white)
-                    .opacity(0.9)
-            }
-            .padding()
-            .background(Material.ultraThin.opacity(0.5))
-            .clipShape(RoundedRectangle(cornerRadius: 20))
+//            VStack(spacing: 10) {
+//                CounterDisplay(timeRemaining: countdown.timeRemaining, tintColor: countdown.currentTintColor, textStyle: countdown.currentTextStyle, textWeight: Font.Weight(rawValue: countdown.currentTextWeight), size: 37.5)
+//                Text(countdown.date.fullString)
+//                    .font(.title3)
+//                    .fontWidth(.condensed)
+//                    .fontWeight(.semibold)
+//                    .foregroundStyle(.white)
+//                    .opacity(0.9)
+//            }
+//            .padding()
+//            .background(Material.ultraThin.opacity(0.5))
+//            .clipShape(RoundedRectangle(cornerRadius: 20))
             Spacer(minLength: 0)
         }
         .environment(\.colorScheme, .light)
@@ -64,7 +76,7 @@ public struct CountdownCard: View {
         .padding(20)
         .frame(width: size.width)
         .background {
-            BackgroundDisplay(background: countdown.currentBackground, color: countdown.currentBackgroundColor, fade: countdown.currentBackgroundFade, blur: 20, fullScreen: true)
+            BackgroundDisplay(background: countdown.currentBackground, color: countdown.currentBackgroundColor, fade: countdown.currentBackgroundFade, blur: 20, brightness: countdown.currentBackgroundBrightness, saturation: countdown.currentBackgroundSaturation, contrast: countdown.currentBackgroundContrast, fullScreen: true)
                 .overlay(Material.ultraThin)
                 .id(clock.tick)
         }

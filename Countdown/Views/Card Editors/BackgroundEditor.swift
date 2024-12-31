@@ -21,59 +21,91 @@ struct BackgroundEditor: View {
     @Binding var backgroundColor: Color
     @Binding var backgroundFade: Double
     @Binding var backgroundBlur: Double
+    @Binding var backgroundSaturation: Double
+    @Binding var backgroundBrightness: Double
+    @Binding var backgroundContrast: Double
     
     var setBackground: (Card.BackgroundData?) -> Void
     
     var body: some View {
         VStack {
-            Menu {
-                Section {
-                    Button("Photo Library") {
-                        showPhotoLibrary.toggle()
-                    }
-                    Button("Unsplash") {
-                        showUnsplashLibrary.toggle()
-                    }
-                    if background?.image != nil {
-                        Button("Remove Photo") {
-                            setBackground(nil)
+            HStack {
+                Menu {
+                    Section {
+                        Button("Photo Library") {
+                            showPhotoLibrary.toggle()
+                        }
+                        Button("Unsplash") {
+                            showUnsplashLibrary.toggle()
+                        }
+                        if background?.image != nil {
+                            Button("Remove Photo") {
+                                setBackground(nil)
+                            }
                         }
                     }
-                }
-                if background?.image != nil {
-                    Button("Reposition", systemImage: "crop") {
-                        showRepositionMenu.toggle()
+                    if background?.image != nil {
+                        Button("Reposition", systemImage: "crop") {
+                            showRepositionMenu.toggle()
+                        }
                     }
+                } label: {
+                    BackgroundDisplay(background: background, blur: backgroundBlur, brightness: backgroundBrightness, saturation: backgroundSaturation, contrast: backgroundContrast)
+                        .aspectRatio(1.0, contentMode: .fill)
+                        .frame(maxWidth: 140, maxHeight: 140)
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                        .overlay {
+                            Image(systemName: "photo")
+                                .font(.title)
+                                .foregroundStyle(.gray)
+                        }
                 }
-            } label: {
-                BackgroundDisplay(background: background)
-                    .aspectRatio(1.0, contentMode: .fill)
-                    .frame(maxWidth: 100, maxHeight: 100)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-                    .shadow(radius: 10)
-                    .overlay {
-                        Image(systemName: "photo")
-                            .font(.title)
-                            .foregroundStyle(.gray)
+                
+                if background?.allowOverlays ?? false {
+                    VStack(spacing: -25) {
+                        HStack(spacing: 0) {
+                            Slider(value: $backgroundBrightness, in: -0.5...0.5)
+                                .padding()
+                            Image(systemName: "sun.max")
+                                .foregroundStyle(.yellow)
+                                .frame(minWidth: 20)
+                        }
+                        HStack(spacing: 0) {
+                            Slider(value: $backgroundSaturation, in: 0...2)
+                                .padding()
+                            Image(systemName: "paintpalette")
+                                .renderingMode(.original)
+                                .frame(minWidth: 20)
+                        }
+                        HStack(spacing: 0) {
+                            Slider(value: $backgroundContrast, in: 0.1...1.9)
+                                .padding()
+                            Image(systemName: "circle.lefthalf.filled")
+                                .foregroundStyle(.black)
+                                .frame(minWidth: 20)
+                        }
+                        HStack(spacing: 0) {
+                            Slider(value: $backgroundBlur, in: 0...10)
+                                .padding()
+                            Image(systemName: "drop.fill")
+                                .foregroundStyle(.blue)
+                                .frame(minWidth: 20)
+                        }
                     }
-                    .padding([.horizontal, .bottom])
+                    .padding(.leading, 8)
+                }
             }
             
+            Divider()
+                .padding(.vertical)
+            
             if background?.allowOverlays ?? false {
-                HStack {
-                    Slider(value: $backgroundFade, in: 0...1).padding()
-                    ColorPicker("", selection: $backgroundColor, supportsOpacity: false).labelsHidden()
-                        .frame(minWidth: 50)
-                }
-                .tint(backgroundColor)
-                
-                HStack {
-                    Slider(value: $backgroundBlur, in: 0...10).padding()
-                        .tint(.gray)
-                    Image(systemName: "drop")
-                        .imageScale(.large)
-                        .foregroundStyle(.cyan)
-                        .frame(minWidth: 50)
+                VStack {
+                    CustomColorPicker(color: $backgroundColor, shape: RoundedRectangle(cornerRadius: 10), sliderValue: .brightness)
+                    
+                    CustomSlider(value: $backgroundFade, in: 0...0.8, colors: [.clear, backgroundColor])
+                        .tint(backgroundColor)
+                        .padding()
                 }
             }
         }

@@ -10,70 +10,81 @@ import CountdownData
 
 public struct TitleDisplay: View {
     
-    private var titleString: String
-    private var dateString: String
+    private var title: String
     
     private var tintColor: Color
     private var textStyle: Card.TextStyle
     private var textWeight: Font.Weight
+    private var textOpacity: Double
     
-    private var titleSize: CGFloat
-    private var dateSize: CGFloat
+    private var textSize: CGFloat
     
-    private var showDate: Bool
-    private var titleCapitalized: Bool
-    private var alignment: HorizontalAlignment
-
-    public init(title: String, date: String, tintColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, titleSize: CGFloat, dateSize: CGFloat, showDate: Bool, titleCapitalized: Bool, alignment: HorizontalAlignment = .center) {
-        self.titleString = title
-        self.dateString = date
+    private var capitalized: Bool 
+    private var alignment: Card.Alignment
+    
+    public init(title: String, tintColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, textOpacity: Double, textSize: CGFloat, capitalized: Bool = false, alignment: Card.Alignment = .center) {
+        self.title = title
         self.tintColor = tintColor
         self.textStyle = textStyle
         self.textWeight = textWeight
-        self.titleSize = titleSize
-        self.dateSize = dateSize
-        self.showDate = showDate
+        self.textOpacity = textOpacity
+        self.textSize = textSize
+        self.capitalized = capitalized
+        self.alignment = alignment
+    }
+    
+    public var body: some View {
+        Text(title)
+            .font(.system(size: textSize))
+            .fontWeight(textWeight.bolder())
+            .fontDesign(textStyle.design)
+            .fontWidth(textStyle.width)
+            .foregroundStyle(tintColor)
+            .opacity(textOpacity)
+            .lineLimit(2)
+            .multilineTextAlignment(alignment.textAlignment)
+            .textCase(capitalized ? .uppercase : nil)
+            .environment(\.colorScheme, .light)
+            .shadow(radius: 10)
+    }
+}
+
+public struct DateDisplay: View {
+    
+    private var dateString: String
+    
+    private var tintColor: Color
+    private var textWeight: Font.Weight
+    private var textOpacity: Double
+    
+    private var textSize: CGFloat
+    
+    private var titleCapitalized: Bool
+    private var alignment: Card.Alignment
+    
+    public init(dateString: String, tintColor: Color, textWeight: Font.Weight, textOpacity: Double, textSize: CGFloat, titleCapitalized: Bool = false, alignment: Card.Alignment = .center) {
+        self.dateString = dateString
+        self.tintColor = tintColor
+        self.textWeight = textWeight
+        self.textOpacity = textOpacity
+        self.textSize = textSize
         self.titleCapitalized = titleCapitalized
         self.alignment = alignment
     }
     
     public var body: some View {
-        VStack(alignment: alignment, spacing: titleSize*0.15) {
-            title()
-            if showDate {
-                date()
-            }
-            Spacer(minLength: 0)
-        }
-        .environment(\.colorScheme, .light)
-        .shadow(radius: 10)
-    }
-    
-    @ViewBuilder
-    private func title() -> some View {
-        Text(titleString)
-            .font(.system(size: titleSize))
-            .fontWeight(textWeight.bolder())
-            .fontDesign(textStyle.design)
-            .fontWidth(textStyle.width)
-            .foregroundStyle(tintColor)
-            .lineLimit(2)
-            .multilineTextAlignment(alignment == .leading ? .leading : alignment == .trailing ? .trailing : .center)
-            .textCase(titleCapitalized ? .uppercase : nil)
-    }
-    
-    @ViewBuilder
-    private func date() -> some View {
         Text(dateString)
             .textCase(.uppercase)
-            .font(.system(size: dateSize))
+            .font(.system(size: textSize))
             .fontWeight(textWeight)
             .fontWidth(.condensed)
             .foregroundStyle(tintColor)
+            .opacity(textOpacity)
             .lineLimit(2)
-            .multilineTextAlignment(alignment == .leading ? .leading : alignment == .trailing ? .trailing : .center)
+            .multilineTextAlignment(alignment.textAlignment)
             .fixedSize(horizontal: false, vertical: true)
-            .minimumScaleFactor(0.5)
+            .environment(\.colorScheme, .light)
+            .shadow(radius: 10)
     }
 }
 

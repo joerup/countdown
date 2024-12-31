@@ -21,10 +21,10 @@ struct CountdownWidget: Widget {
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: CountdownWidgetIntent.self, provider: CountdownTimelineProvider()) { entry in
             if let countdown = entry.countdown {
-                CountdownSquareText(countdown: countdown)
+                CountdownLayout(countdown: countdown)
                     .padding(.bottom, -10)
                     .containerBackground(for: .widget) {
-                        BackgroundDisplay(background: countdown.currentBackgroundIcon?.resized(maxSize: maxSize), color: countdown.currentBackgroundColor, fade: countdown.currentBackgroundFade, blur: countdown.currentBackgroundBlur)
+                        BackgroundDisplay(background: countdown.currentBackgroundIcon?.resized(maxSize: maxSize), color: countdown.currentBackgroundColor, fade: countdown.currentBackgroundFade, blur: countdown.currentBackgroundBlur, brightness: countdown.currentBackgroundBrightness, saturation: countdown.currentBackgroundSaturation, contrast: countdown.currentBackgroundContrast)
                             .scaleEffect(1.01)
                     }
                     .widgetURL(countdown.getURL())

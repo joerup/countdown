@@ -11,7 +11,7 @@ public extension Date {
     
     struct TimeRemaining {
         public var day, hour, minute, second: Int
-        static let none = Self(day: 0, hour: 0, minute: 0, second: 0)
+        public static let zero = Self(day: 0, hour: 0, minute: 0, second: 0)
     }
     
     func daysRemaining(relativeTo reference: Date = .now) -> Int {
@@ -22,7 +22,7 @@ public extension Date {
     
     func timeRemaining(relativeTo reference: Date = .now) -> TimeRemaining {
         let components = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: reference, to: self < reference ? reference : self.advanced(by: 1))
-        guard let day = components.day, let hour = components.hour, let minute = components.minute, let second = components.second else { return .none }
+        guard let day = components.day, let hour = components.hour, let minute = components.minute, let second = components.second else { return .zero }
         return TimeRemaining(day: day, hour: hour, minute: minute, second: second)
     }
     

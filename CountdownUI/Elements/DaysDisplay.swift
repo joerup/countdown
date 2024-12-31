@@ -11,18 +11,24 @@ import CountdownData
 public struct DaysDisplay: View {
     
     var daysRemaining: Int
-    var size: CGFloat
     
     var tintColor: Color
     var textStyle: Card.TextStyle
     var textWeight: Font.Weight
+    var textOpacity: Double
     
-    public init(daysRemaining: Int, tintColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, size: CGFloat) {
+    var textSize: CGFloat
+    
+    var showDaysText: Bool
+    
+    public init(daysRemaining: Int, tintColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, textOpacity: Double, textSize: CGFloat, showDaysText: Bool = false) {
         self.daysRemaining = daysRemaining
         self.tintColor = tintColor
         self.textStyle = textStyle
         self.textWeight = textWeight
-        self.size = size
+        self.textSize = textSize
+        self.textOpacity = textOpacity
+        self.showDaysText = showDaysText
     }
     
     public var body: some View {
@@ -30,23 +36,24 @@ public struct DaysDisplay: View {
             .foregroundStyle(.thickMaterial)
             .environment(\.colorScheme, .light)
             .shadow(radius: 10)
-            .padding(.bottom, 0.25 * (size - fit(daysRemaining)))
+            .padding(.bottom, 0.25 * (textSize - fit(daysRemaining)))
     }
     
     private func fit(_ number: Int) -> CGFloat {
-        return size * (1-CGFloat(String(number).count)/10)
+        return textSize * (1-CGFloat(String(number).count)/10)
     }
     
     @ViewBuilder
     private func number(_ value: Int?, size: CGFloat) -> some View {
         if let value {
-            Text(String(value))
+            Text("\(value)\(showDaysText ? " days" : "")")
                 .font(.system(size: size))
                 .fontWeight(textWeight)
                 .fontDesign(textStyle.design)
                 .fontWidth(textStyle.width)
                 .foregroundStyle(tintColor)
-                .lineLimit(0).minimumScaleFactor(0.5)
+                .opacity(textOpacity)
+                .lineLimit(0)
         }
     }
 }

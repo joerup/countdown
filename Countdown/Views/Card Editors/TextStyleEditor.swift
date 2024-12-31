@@ -13,6 +13,7 @@ struct TextStyleEditor: View {
     @Binding var textStyle: Card.TextStyle
     @Binding var textWeight: Int
     @Binding var tintColor: Color
+    @Binding var textOpacity: Double
     
     var body: some View {
         VStack {
@@ -45,13 +46,14 @@ struct TextStyleEditor: View {
                     .fontWeight(.light)
                     .foregroundStyle(.secondary)
                     .dynamicTypeSize(..<DynamicTypeSize.xLarge)
-                Slider(
+                CustomSlider(
                     value: Binding(
                         get: { Double(textWeight) },
-                        set: { textWeight = Int($0) }
+                        set: { textWeight = Int(round($0)) }
                     ),
                     in: Double(Font.Weight.minimum + 1)...Double(Font.Weight.maximum - 1),
-                    step: 1
+                    shape: .widening,
+                    colors: [.pink]
                 )
                 .tint(.pink)
                 Image(systemName: "textformat")
@@ -64,7 +66,11 @@ struct TextStyleEditor: View {
             Divider()
                 .padding(.vertical)
             
-            CustomColorPicker(color: $tintColor)
+            CustomColorPicker(color: $tintColor, shape: Circle(), sliderValue: .saturation)
+            
+            CustomSlider(value: $textOpacity, in: 0.15...1, colors: [tintColor.opacity(0.15), tintColor])
+                .tint(tintColor.opacity(textOpacity))
+                .padding()
         }
     }
 }

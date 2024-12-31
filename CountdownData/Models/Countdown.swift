@@ -48,7 +48,7 @@ public final class Countdown {
     }
     
     @Transient public var daysRemaining: Int = 0
-    @Transient public var timeRemaining: Date.TimeRemaining = .none
+    @Transient public var timeRemaining: Date.TimeRemaining = .zero
     
     
     // MARK: - Cards
@@ -71,6 +71,15 @@ public final class Countdown {
     public var currentBackgroundBlur: Double {
         return card?.backgroundBlur ?? 0
     }
+    public var currentBackgroundBrightness: Double {
+        return card?.backgroundBrightness ?? 0
+    }
+    public var currentBackgroundSaturation: Double {
+        return card?.backgroundSaturation ?? 1.0
+    }
+    public var currentBackgroundContrast: Double {
+        return card?.backgroundContrast ?? 1.0
+    }
     
     public var currentLayout: Card.Layout {
         return card?.layout ?? .basic
@@ -84,6 +93,9 @@ public final class Countdown {
     }
     public var currentTextWeight: Int {
         return card?.textWeight ?? Font.Weight.medium.rawValue
+    }
+    public var currentTextOpacity: Double {
+        return card?.textOpacity ?? 1.0
     }
     public var currentTextShadow: Double {
         return card?.textShadow ?? 0
@@ -134,9 +146,13 @@ public final class Countdown {
         self.occasion == countdown.occasion &&
         self.currentTintColor.rgb == countdown.currentTintColor.rgb &&
         self.currentTextStyle == countdown.currentTextStyle &&
+        self.currentTextOpacity == countdown.currentTextOpacity &&
         self.currentTextShadow == countdown.currentTextShadow &&
         self.currentBackgroundColor == countdown.currentBackgroundColor &&
         self.currentBackgroundFade == countdown.currentBackgroundFade &&
+        self.currentBackgroundBrightness == countdown.currentBackgroundBrightness &&
+        self.currentBackgroundSaturation == countdown.currentBackgroundSaturation &&
+        self.currentBackgroundContrast == countdown.currentBackgroundContrast &&
         self.card?.backgroundID == countdown.card?.backgroundID &&
         self.card?.layout == countdown.card?.layout
     }
