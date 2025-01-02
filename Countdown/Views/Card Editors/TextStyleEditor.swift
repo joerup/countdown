@@ -15,6 +15,9 @@ struct TextStyleEditor: View {
     @Binding var tintColor: Color
     @Binding var textOpacity: Double
     
+    @Binding var titleSize: Double
+    @Binding var numberSize: Double
+    
     @State private var scrollPosition: Int?
     
     var body: some View {
@@ -69,6 +72,38 @@ struct TextStyleEditor: View {
                     .fontWeight(.heavy)
                     .foregroundStyle(.secondary)
                     .dynamicTypeSize(..<DynamicTypeSize.xLarge)
+            }
+            .padding(8)
+            .background(Color.white.opacity(0.1))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            
+            Divider()
+                .padding(.vertical)
+            
+            HStack {
+                HStack {
+                    Image(systemName: "textformat.characters")
+                        .imageScale(.large)
+                        .foregroundStyle(.secondary)
+                        .dynamicTypeSize(..<DynamicTypeSize.xLarge)
+                    CustomSlider(value: $titleSize, in: 0.8...1.25, mask: true, colors: [.pink.lighter(), .pink])
+                        .padding(.leading, 3)
+                }
+                .padding(8)
+                .background(Color.white.opacity(0.1))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                
+                HStack {
+                    Image(systemName: "numbers")
+                        .imageScale(.large)
+                        .foregroundStyle(.secondary)
+                        .dynamicTypeSize(..<DynamicTypeSize.xLarge)
+                    CustomSlider(value: $numberSize, in: 0.8...1.25, mask: true, colors: [.pink.lighter(), .pink])
+                        .padding(.leading, 3)
+                }
+                .padding(8)
+                .background(Color.white.opacity(0.1))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
             }
             
             Divider()

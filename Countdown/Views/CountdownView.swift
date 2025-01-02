@@ -67,9 +67,11 @@ struct CountdownView: View {
                 clock.select(countdown)
                 editingCountdown = countdown
             }
+            .presentationBackground(Material.thin)
         }
         .sheet(isPresented: $showSettings) {
             SettingsMenu()
+                .presentationBackground(Material.thin)
         }
     }
     

@@ -11,19 +11,15 @@ import SwiftUI
 extension Card {
     
     public static let maxPhotoSize: Double = 750000
-    public static let maxIconSize: Double = 50000
     
     public enum Background {
         case photo(_ photo: UIImage)
-        case transformedPhoto(_ photo: UIImage, offset: CGSize, scale: CGFloat)
         case loading
         
         public func resized(maxSize: CGFloat) -> Background {
             switch self {
             case .photo(let image):
                 return .photo(image.resizedIfTooLarge(withSize: maxSize) ?? image)
-            case .transformedPhoto(let image, let offset, let scale):
-                return .transformedPhoto(image.resizedIfTooLarge(withSize: maxSize) ?? image, offset: offset, scale: scale)
             case .loading:
                 return .loading
             }
@@ -33,8 +29,6 @@ extension Card {
             switch self {
             case .photo(let photo):
                 return photo
-            case .transformedPhoto(let photo, _, _):
-                return photo
             default:
                 return nil
             }
@@ -42,7 +36,7 @@ extension Card {
         
         public var allowOverlays: Bool {
             switch self {
-            case .photo(_), .transformedPhoto(_, _, _):
+            case .photo(_):
                 return true
             case .loading:
                 return false
@@ -53,7 +47,6 @@ extension Card {
     public enum BackgroundData: Codable, Hashable {
         
         case photo(_ data: Data)
-        case transformedPhoto(_ data: Data, offsetX: CGFloat, offsetY: CGFloat, scale: CGFloat)
         case photoLink(_ url: URL)
         
         public func background() async -> Background? {
@@ -61,10 +54,6 @@ extension Card {
             case .photo(let data):
                 if let photo = UIImage(data: data) {
                     return .photo(photo)
-                }
-            case .transformedPhoto(let data, let offsetX, let offsetY, let scale):
-                if let photo = UIImage(data: data) {
-                    return .transformedPhoto(photo, offset: CGSize(width: offsetX, height: offsetY), scale: scale)
                 }
             case .photoLink(let url):
                 if let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
@@ -74,40 +63,16 @@ extension Card {
             return nil
         }
         
-        public var icon: Self? {
+        public func icon(transform: ImageTransform? = nil) -> Self? {
             switch self {
             case .photo(let data):
-                if let photo = UIImage(data: data), let compressed = photo.square()?.compressed(size: Card.maxIconSize) {
-                    return .photo(compressed)
-                }
-            case .transformedPhoto(let data, let offsetX, let offsetY, let scale):
-                if let photo = UIImage(data: data), let compressed = photo.square()?.compressed(size: Card.maxIconSize) {
-                    return .transformedPhoto(compressed, offsetX: offsetX, offsetY: offsetY, scale: scale)
+                if let photo = UIImage(data: data), let cropped = photo.cropped(offset: transform?.offset ?? .zero, scale: transform?.scale ?? 1), let croppedData = cropped.jpegData(compressionQuality: 0.75) {
+                    return .photo(croppedData)
                 }
             case .photoLink(_):
                 return self
             }
             return nil
-        }
-        
-        public var transforms: (offset: CGSize, scale: CGFloat) {
-            switch self {
-            case .transformedPhoto(_, let offsetX, let offsetY, let scale):
-                return (offset: CGSize(width: offsetX, height: offsetY), scale: scale)
-            default:
-                return (offset: .zero, scale: 1.0)
-            }
-        }
-        
-        public func repositioned(offset: CGSize, scale: CGFloat) -> Self {
-            switch self {
-            case .photo(let data):
-                return .transformedPhoto(data, offsetX: offset.width, offsetY: offset.height, scale: scale)
-            case .transformedPhoto(let data, _, _, _):
-                return .transformedPhoto(data, offsetX: offset.width, offsetY: offset.height, scale: scale)
-            default:
-                return self
-            }
         }
     }
     
@@ -116,6 +81,24 @@ extension Card {
         if case .photoLink(let url) = backgroundData, let data = try? Data(contentsOf: url), 
             let image = UIImage(data: data), let photoData = image.compressed(size: Card.maxPhotoSize) {
             setBackground(.photo(photoData))
+        }
+    }
+    
+    public struct ImageTransform: Codable, Equatable, Hashable {
+        var offsetX: CGFloat = 0
+        var offsetY: CGFloat = 0
+        public var offset: CGSize {
+            return .init(width: offsetX, height: offsetY)
+        }
+        
+        public var scale: CGFloat = 1.0
+        
+        public init() { }
+        
+        public init(offset: CGSize, scale: CGFloat) {
+            self.offsetX = offset.width
+            self.offsetY = offset.height
+            self.scale = scale
         }
     }
 }

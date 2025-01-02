@@ -45,7 +45,7 @@ public struct TitleDisplay: View {
             .multilineTextAlignment(alignment.textAlignment)
             .textCase(capitalized ? .uppercase : nil)
             .environment(\.colorScheme, .light)
-            .shadow(radius: 10)
+//            .shadow(radius: 10)
     }
 }
 
@@ -84,7 +84,7 @@ public struct DateDisplay: View {
             .multilineTextAlignment(alignment.textAlignment)
             .fixedSize(horizontal: false, vertical: true)
             .environment(\.colorScheme, .light)
-            .shadow(radius: 10)
+//            .shadow(radius: 10)
     }
 }
 

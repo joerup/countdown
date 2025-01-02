@@ -1,5 +1,5 @@
 //
-//  ImageRepositionView.swift
+//  ImageTransformer.swift
 //  Countdown
 //
 //  Created by Joe Rupertus on 12/23/24.
@@ -10,12 +10,15 @@ import CountdownData
 
 typealias ImageCompletion = (_ offset: CGSize, _ scale: CGFloat) -> Void
 
-struct ImageRepositionView: View {
+struct ImageTransformer<SelectorShape: Shape>: View {
     
     var image: UIImage
     
     var initialOffset: CGSize
     var initialScale: CGFloat
+    
+    var selectorShape: SelectorShape
+    var aspectRatio: CGFloat
     
     var onConfirm: ImageCompletion
     var onCancel: () -> Void
@@ -27,20 +30,14 @@ struct ImageRepositionView: View {
     
     let padding: CGFloat = 50
     
-    private var selectorShape: some Shape {
-        RoundedRectangle(cornerRadius: 30)
-    }
-    
-    init(image: UIImage, initialOffset: CGSize = .zero, initialScale: CGFloat = 1.0, onConfirm: @escaping ImageCompletion, onCancel: @escaping () -> Void) {
+    init(image: UIImage, initialOffset: CGSize = .zero, initialScale: CGFloat = 1.0, selectorShape: SelectorShape = Rectangle(), aspectRatio: CGFloat = 1.0, onConfirm: @escaping ImageCompletion, onCancel: @escaping () -> Void) {
         self.image = image
         self.initialOffset = initialOffset
         self.initialScale = initialScale
+        self.selectorShape = selectorShape
+        self.aspectRatio = aspectRatio
         self.onConfirm = onConfirm
         self.onCancel = onCancel
-        self.dragOffset = dragOffset
-        self.lastDragOffset = lastDragOffset
-        self.currentScale = currentScale
-        self.lastScale = lastScale
     }
     
     var body: some View {
@@ -50,25 +47,28 @@ struct ImageRepositionView: View {
                     .offset(dragOffset)
                     .scaleEffect(geometry.size.minimum / image.size.minimum)
                     .scaleEffect(currentScale)
-                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .frame(width: geometry.size.width, height: geometry.size.height * aspectRatio)
                     .overlay {
-                        let origin = CGPoint(x: max((geometry.size.width - geometry.size.height) / 2, 0), y: max((geometry.size.height - geometry.size.width) / 2, 0))
+                        let origin = CGPoint(
+                            x: max((geometry.size.width - geometry.size.height * aspectRatio) / 2, 0),
+                            y: max((geometry.size.height * aspectRatio - geometry.size.width) / 2, 0) + (aspectRatio * geometry.size.minimum - geometry.size.minimum / aspectRatio) / 2
+                        )
                         Rectangle()
                             .subtracting(
                                 selectorShape
-                                    .path(in: .init(x: origin.x + padding, y: origin.y + padding, width: geometry.size.minimum, height: geometry.size.minimum))
+                                    .path(in: .init(x: origin.x + padding, y: origin.y + padding, width: geometry.size.minimum, height: geometry.size.minimum / aspectRatio))
                             )
                             .fill(Color(UIColor.systemBackground).opacity(0.5))
                             .padding(-padding)
                         selectorShape
                             .stroke(Color.gray, lineWidth: 5)
-                            .frame(width: geometry.size.minimum, height: geometry.size.minimum)
+                            .frame(width: geometry.size.minimum, height: geometry.size.minimum / aspectRatio)
                     }
                     .gesture(
                         DragGesture()
                             .onChanged { value in
                                 dragOffset = lastDragOffset + value.translation * image.size.minimum / geometry.size.minimum / currentScale
-                                clamp(size: geometry.size)
+                                clamp()
                             }
                             .onEnded { _ in
                                 lastDragOffset = dragOffset
@@ -78,7 +78,7 @@ struct ImageRepositionView: View {
                         MagnificationGesture()
                             .onChanged { scale in
                                 currentScale = lastScale * scale
-                                clamp(size: geometry.size)
+                                clamp()
                             }
                             .onEnded { _ in
                                 lastScale = currentScale
@@ -87,18 +87,20 @@ struct ImageRepositionView: View {
             }
             .padding(padding)
             .onAppear {
-                self.dragOffset = initialOffset
-                self.currentScale = initialScale
+                self.dragOffset = initialOffset * image.size.minimum
+                self.currentScale = initialScale == 0 ? 1.0 : initialScale
                 self.lastDragOffset = dragOffset
                 self.lastScale = currentScale
             }
             .clipped()
             .navigationBarItems(
-                leading: Button("Cancel") {
+                leading: Button {
                     onCancel()
+                } label: {
+                    Text("Cancel")
                 },
                 trailing: Button {
-                    onConfirm(dragOffset, currentScale)
+                    onConfirm(dragOffset / image.size.minimum, currentScale)
                 } label: {
                     Text("Apply")
                         .fontWeight(.semibold)
@@ -107,8 +109,8 @@ struct ImageRepositionView: View {
         }
     }
     
-    private func clamp(size: CGSize) {
-        let size = image.size / 2
+    private func clamp() {
+        let size = image.size / 2.0
         
         // Define minimum and maximum scale factors
         let minScale: CGFloat = 1.0
@@ -125,7 +127,7 @@ struct ImageRepositionView: View {
         
         // Determine the maximum allowable offset in each direction
         let maxOffsetX = size.width - size.minimum / currentScale
-        let maxOffsetY = size.height - size.minimum / currentScale
+        let maxOffsetY = size.height - size.minimum / aspectRatio / currentScale
         
         // Clamp the dragOffset to ensure the image stays within bounds
         dragOffset.width = min(max(dragOffset.width, -maxOffsetX), maxOffsetX)

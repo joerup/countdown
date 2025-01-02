@@ -22,7 +22,7 @@
 		015DD4212A79BBBA000EB3C0 /* DateEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015DD4202A79BBBA000EB3C0 /* DateEditor.swift */; };
 		0163E5E22D188D68004D60C9 /* CountdownCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163E5E12D188D68004D60C9 /* CountdownCard.swift */; };
 		0163E5E42D18C4C6004D60C9 /* OccasionCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163E5E32D18C4BB004D60C9 /* OccasionCreator.swift */; };
-		0163E5E62D19FF3B004D60C9 /* ImageRepositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163E5E52D19FF38004D60C9 /* ImageRepositionView.swift */; };
+		0163E5E62D19FF3B004D60C9 /* ImageTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163E5E52D19FF38004D60C9 /* ImageTransformer.swift */; };
 		0163E5E82D1A0D07004D60C9 /* RepositionMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163E5E72D1A0CFE004D60C9 /* RepositionMenu.swift */; };
 		0176DCF22D211875007FEA03 /* LayoutEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0176DCF12D211872007FEA03 /* LayoutEditor.swift */; };
 		017846AB2D2099E20048055A /* CustomColorPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 017846AA2D2099DF0048055A /* CustomColorPicker.swift */; };
@@ -121,7 +121,7 @@
 		015DD4202A79BBBA000EB3C0 /* DateEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateEditor.swift; sourceTree = "<group>"; };
 		0163E5E12D188D68004D60C9 /* CountdownCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownCard.swift; sourceTree = "<group>"; };
 		0163E5E32D18C4BB004D60C9 /* OccasionCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OccasionCreator.swift; sourceTree = "<group>"; };
-		0163E5E52D19FF38004D60C9 /* ImageRepositionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRepositionView.swift; sourceTree = "<group>"; };
+		0163E5E52D19FF38004D60C9 /* ImageTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTransformer.swift; sourceTree = "<group>"; };
 		0163E5E72D1A0CFE004D60C9 /* RepositionMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositionMenu.swift; sourceTree = "<group>"; };
 		0176DCF12D211872007FEA03 /* LayoutEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutEditor.swift; sourceTree = "<group>"; };
 		017846AA2D2099DF0048055A /* CustomColorPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColorPicker.swift; sourceTree = "<group>"; };
@@ -276,7 +276,7 @@
 				015DD3D72A77483A000EB3C0 /* PhotoMenu.swift */,
 				01FA61952A8312EA003BDA2B /* UnsplashMenu.swift */,
 				0163E5E72D1A0CFE004D60C9 /* RepositionMenu.swift */,
-				0163E5E52D19FF38004D60C9 /* ImageRepositionView.swift */,
+				0163E5E52D19FF38004D60C9 /* ImageTransformer.swift */,
 				017846AA2D2099DF0048055A /* CustomColorPicker.swift */,
 				01AAA51D2D23805600F97470 /* CustomSlider.swift */,
 			);
@@ -487,7 +487,7 @@
 			files = (
 				01AAA51E2D23805D00F97470 /* CustomSlider.swift in Sources */,
 				0163E5E82D1A0D07004D60C9 /* RepositionMenu.swift in Sources */,
-				0163E5E62D19FF3B004D60C9 /* ImageRepositionView.swift in Sources */,
+				0163E5E62D19FF3B004D60C9 /* ImageTransformer.swift in Sources */,
 				01AAA51A2D2254A300F97470 /* BackgroundEditor.swift in Sources */,
 				01CE90AD2ADC5959000537C5 /* SettingsMenu.swift in Sources */,
 				015DD4212A79BBBA000EB3C0 /* DateEditor.swift in Sources */,

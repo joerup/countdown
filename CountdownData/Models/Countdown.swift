@@ -81,10 +81,6 @@ public final class Countdown {
         return card?.backgroundContrast ?? 1.0
     }
     
-    public var currentLayout: Card.Layout {
-        return card?.layout ?? .basic
-    }
-    
     public var currentTintColor: Color {
         return card?.tintColor ?? .white
     }
@@ -99,6 +95,12 @@ public final class Countdown {
     }
     public var currentTextShadow: Double {
         return card?.textShadow ?? 0
+    }
+    public var currentTitleSize: Double {
+        return card?.titleSize ?? 1.0
+    }
+    public var currentNumberSize: Double {
+        return card?.numberSize ?? 1.0
     }
     
     // MARK: - Configuration
@@ -153,8 +155,7 @@ public final class Countdown {
         self.currentBackgroundBrightness == countdown.currentBackgroundBrightness &&
         self.currentBackgroundSaturation == countdown.currentBackgroundSaturation &&
         self.currentBackgroundContrast == countdown.currentBackgroundContrast &&
-        self.card?.backgroundID == countdown.card?.backgroundID &&
-        self.card?.layout == countdown.card?.layout
+        self.card?.backgroundID == countdown.card?.backgroundID 
     }
     
     public func loadCards() async {

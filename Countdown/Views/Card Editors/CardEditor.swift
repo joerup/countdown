@@ -16,12 +16,14 @@ struct CardEditor: View {
     
     var card: Card
     
+    var edgeInsets: EdgeInsets
+    
     var dismiss: () -> Void
     
     @State private var section: CardEditorSection = .background
     
     private enum CardEditorSection: String, CaseIterable, Hashable {
-        case background, layout, text
+        case background, text
     }
     
     @State private var savedInstance: CountdownInstance?
@@ -32,15 +34,16 @@ struct CardEditor: View {
     @State private var textWeight: Int = Font.Weight.medium.rawValue
     @State private var textOpacity: Double = 1.0
     @State private var textShadow: Double = 0
+    @State private var titleSize: Double = 1.0
+    @State private var numberSize: Double = 1.0
     
+    @State private var backgroundTransform: Card.ImageTransform?
     @State private var backgroundColor: Color?
     @State private var backgroundFade: Double = 0
     @State private var backgroundBlur: Double = 0
     @State private var backgroundSaturation: Double = 0
     @State private var backgroundBrightness: Double = 0
     @State private var backgroundContrast: Double = 0
-    
-    @State private var layout: Card.Layout = .basic
     
     @State private var forceUpdate: Bool = false
     
@@ -59,6 +62,9 @@ struct CardEditor: View {
     private var background: Card.Background? {
         card.countdown?.currentBackground
     }
+    private var backgroundIcon: Card.Background? {
+        card.countdown?.currentBackgroundIcon
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -67,7 +73,7 @@ struct CardEditor: View {
                     if let instance = savedInstance {
                         card.countdown?.match(instance)
                         setStates()
-                        setBackground(savedBackgroundData, resetStates: false)
+                        setBackground(savedBackgroundData, transform: backgroundTransform, resetStates: false)
                     }
                 } label: {
                     Image(systemName: "arrowshape.turn.up.backward.circle")
@@ -100,17 +106,16 @@ struct CardEditor: View {
             ScrollView {
                 Group {
                     switch section {
-                    case .layout:
-                        LayoutEditor(layout: $layout, title: title, dateString: dateString, daysRemaining: daysRemaining, timeRemaining: timeRemaining, tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity)
                     case .background:
-                        BackgroundEditor(background: background, backgroundData: card.backgroundData, backgroundColor: $backgroundColor, backgroundFade: $backgroundFade, backgroundBlur: $backgroundBlur, backgroundSaturation: $backgroundSaturation, backgroundBrightness: $backgroundBrightness, backgroundContrast: $backgroundContrast) { background, resetStates in
-                            setBackground(background, resetStates: resetStates)
+                        BackgroundEditor(background: background, backgroundData: card.backgroundData, backgroundIcon: backgroundIcon, backgroundIconData: card.backgroundIconData, backgroundTransform: backgroundTransform, backgroundColor: $backgroundColor, backgroundFade: $backgroundFade, backgroundBlur: $backgroundBlur, backgroundSaturation: $backgroundSaturation, backgroundBrightness: $backgroundBrightness, backgroundContrast: $backgroundContrast) { background, transform, resetStates in
+                            setBackground(background, transform: transform, resetStates: resetStates)
                         }
                         .id(forceUpdate)
                     case .text:
-                        TextStyleEditor(textStyle: $textStyle, textWeight: $textWeight, tintColor: $tintColor, textOpacity: $textOpacity)
+                        TextStyleEditor(textStyle: $textStyle, textWeight: $textWeight, tintColor: $tintColor, textOpacity: $textOpacity, titleSize: $titleSize, numberSize: $numberSize)
                     }
                 }
+                .safeAreaPadding(.bottom, edgeInsets.bottom)
                 .safeAreaPadding()
             }
         }
@@ -141,6 +146,14 @@ struct CardEditor: View {
             card.textShadow = shadow
             saveCard()
         }
+        .onChange(of: titleSize) { _, size in
+            card.titleSize = size
+            saveCard()
+        }
+        .onChange(of: numberSize) { _, size in
+            card.numberSize = size
+            saveCard()
+        }
         .onChange(of: backgroundColor) { _, color in
             card.backgroundColor = color
             saveCard()
@@ -165,28 +178,28 @@ struct CardEditor: View {
             card.backgroundContrast = contrast
             saveCard()
         }
-        .onChange(of: layout) { _, layout in
-            card.layout = layout
-            saveCard()
-        }
     }
     
     private func setStates() {
+        backgroundTransform = card.backgroundTransformSquare
         tintColor = card.tintColor
         textStyle = card.textStyle
         textWeight = card.textWeight
         textOpacity = card.textOpacity
         textShadow = card.textShadow
+        titleSize = card.titleSize
+        numberSize = card.numberSize
         backgroundColor = card.backgroundColor
         backgroundFade = card.backgroundFade
         backgroundBlur = card.backgroundBlur
         backgroundContrast = card.backgroundContrast
         backgroundSaturation = card.backgroundSaturation
         backgroundBrightness = card.backgroundBrightness
-        layout = card.layout ?? .basic
     }
     
-    private func setBackground(_ data: Card.BackgroundData?, resetStates: Bool) {
+    private func setBackground(_ data: Card.BackgroundData?, transform: Card.ImageTransform?, resetStates: Bool) {
+        card.backgroundTransformSquare = transform
+        backgroundTransform = transform
         card.setBackground(data)
         UIImpactFeedbackGenerator().impactOccurred()
         saveCard(reload: true)

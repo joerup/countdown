@@ -35,7 +35,6 @@ public struct DaysDisplay: View {
         number(daysRemaining, size: fit(daysRemaining))
             .foregroundStyle(.thickMaterial)
             .environment(\.colorScheme, .light)
-            .shadow(radius: 10)
             .padding(.bottom, 0.25 * (textSize - fit(daysRemaining)))
     }
     

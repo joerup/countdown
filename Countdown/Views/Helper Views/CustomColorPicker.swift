@@ -25,17 +25,19 @@ struct CustomColorPicker<ColorShape: Shape>: View {
     @State private var brightness: Double
     
     private let allowNoColor: Bool
+    private let allowWhite: Bool
     private let hueCount: Int
     private let opacityRange: ClosedRange<Double>
     
     @State private var scrollPosition: Int?
     
-    init(color: Binding<Color?>, opacity: Binding<Double>, shape: ColorShape, sliderValue: SliderValue? = nil, allowNoColor: Bool = false, hueCount: Int = 12, opacityRange: ClosedRange<Double> = 0...1) {
+    init(color: Binding<Color?>, opacity: Binding<Double>, shape: ColorShape, sliderValue: SliderValue? = nil, allowNoColor: Bool = false, allowWhite: Bool = true, hueCount: Int = 12, opacityRange: ClosedRange<Double> = 0...1) {
         self._color = color
         self._opacity = opacity
         self.shape = shape
         self.sliderValue = sliderValue
         self.allowNoColor = allowNoColor
+        self.allowWhite = allowWhite
         self.hueCount = hueCount
         self.opacityRange = opacityRange
         
@@ -70,12 +72,14 @@ struct CustomColorPicker<ColorShape: Shape>: View {
                         }
                         .id(0)
                     }
-                    Button {
-                        self.color = .white
-                    } label: {
-                        colorIcon(.white, isSelected: isWhite)
+                    if allowWhite {
+                        Button {
+                            self.color = .white
+                        } label: {
+                            colorIcon(.white, isSelected: isWhite)
+                        }
+                        .id(1)
                     }
-                    .id(1)
                     ForEach(0..<hueCount, id: \.self) { i in
                         let hue = Double(i)/Double(hueCount)
                         let color = Color(hue: hue, saturation: saturation, brightness: brightness)

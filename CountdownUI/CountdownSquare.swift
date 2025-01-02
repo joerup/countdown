@@ -17,12 +17,13 @@ public struct CountdownSquare: View {
     private var daysRemaining: Int
     private var timeRemaining: Date.TimeRemaining
     
-    private var layout: Card.Layout
-    
     private var tintColor: Color
     private var textStyle: Card.TextStyle
     private var textWeight: Int
     private var textOpacity: Double
+    
+    private var titleSize: Double
+    private var numberSize: Double
     
     private var background: Card.Background?
     private var backgroundColor: Color?
@@ -38,12 +39,13 @@ public struct CountdownSquare: View {
         self.dateString = countdown.dateString
         self.daysRemaining = countdown.daysRemaining
         self.timeRemaining = countdown.timeRemaining
-        self.layout = countdown.currentLayout
         self.tintColor = countdown.currentTintColor
         self.textStyle = countdown.currentTextStyle
         self.textWeight = countdown.currentTextWeight
         self.textOpacity = countdown.currentTextOpacity
-        self.background = countdown.currentBackground
+        self.titleSize = countdown.currentTitleSize
+        self.numberSize = countdown.currentNumberSize
+        self.background = countdown.currentBackgroundIcon
         self.backgroundColor = countdown.currentBackgroundColor
         self.backgroundFade = countdown.currentBackgroundFade
         self.backgroundBlur = countdown.currentBackgroundBlur
@@ -54,7 +56,7 @@ public struct CountdownSquare: View {
     
     public var body: some View {
         GeometryReader { geometry in
-            CountdownLayout(title: title, dateString: dateString, daysRemaining: daysRemaining, timeRemaining: timeRemaining, layout: layout, tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity)
+            CountdownLayout(title: title, dateString: dateString, daysRemaining: daysRemaining, timeRemaining: timeRemaining, tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity, titleSize: titleSize, numberSize: numberSize)
                 .padding([.horizontal, .top], geometry.size.width*0.1)
                 .padding(.bottom, geometry.size.width*0.04)
                 .background {

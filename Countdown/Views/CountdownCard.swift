@@ -41,15 +41,16 @@ public struct CountdownCard: View {
     public var body: some View {
         let squareSize = min(size.width * 0.65, 400)
         VStack {
-            if !editCard {
+            if editCard {
+                CountdownSquare(countdown: countdown)
+                    .aspectRatio(1.0, contentMode: .fit)
+                    .frame(maxWidth: squareSize)
+                    .clipShape(RoundedRectangle(cornerRadius: 35))
                 Spacer(minLength: 0)
+            } else {
+                CountdownFullLayout(countdown: countdown)
+                    .padding([.horizontal, .bottom])
             }
-            CountdownSquare(countdown: countdown)
-                .aspectRatio(1.0, contentMode: .fit)
-                .frame(maxWidth: squareSize)
-                .clipShape(RoundedRectangle(cornerRadius: 35))
-                .shadow(radius: 10)
-            Spacer(minLength: 0)
             Button {
                 withAnimation {
                     self.editCard.toggle()
@@ -78,7 +79,7 @@ public struct CountdownCard: View {
 //            Spacer(minLength: 0)
         }
         .padding(.bottom, 50)
-        .padding(.top, (editCard ? 10 : 80) + topPadding)
+        .padding(.top, (editCard ? 10 : 50) + topPadding)
         .padding(20)
         .frame(width: size.width, height: size.height)
         .overlay {
@@ -91,7 +92,7 @@ public struct CountdownCard: View {
                                 editCard = false
                             }
                         }
-                    CardEditor(card: card) {
+                    CardEditor(card: card, edgeInsets: fullScreen ? edgeInsets : .init()) {
                         withAnimation {
                             editCard = false
                         }
@@ -105,8 +106,8 @@ public struct CountdownCard: View {
             }
         }
         .background {
-            BackgroundDisplay(background: countdown.currentBackground, color: countdown.currentBackgroundColor, fade: countdown.currentBackgroundFade, blur: max(5, countdown.currentBackgroundBlur), brightness: countdown.currentBackgroundBrightness, saturation: countdown.currentBackgroundSaturation, contrast: countdown.currentBackgroundContrast, fullScreen: true)
-                .overlay(Material.ultraThin)
+            BackgroundDisplay(background: countdown.currentBackground, color: countdown.currentBackgroundColor, fade: countdown.currentBackgroundFade, blur: countdown.currentBackgroundBlur, brightness: countdown.currentBackgroundBrightness, saturation: countdown.currentBackgroundSaturation, contrast: countdown.currentBackgroundContrast, fullScreen: true)
+                .overlay(Material.ultraThin.opacity(editCard ? 1 : 0))
                 .frame(width: totalWidth, height: totalHeight)
                 .clipShape(RoundedRectangle(cornerRadius: fullScreen ? 0 : 40))
                 .clipped()
@@ -122,11 +123,13 @@ public struct CountdownCard: View {
         .sheet(isPresented: $editDestination) {
             if let countdown = clock.selectedCountdown {
                 OccasionEditor(countdown: countdown)
+                    .presentationBackground(Material.thin)
             }
         }
         .sheet(isPresented: $shareCountdown) {
             if let countdown = clock.selectedCountdown {
                 ShareMenu(countdown: countdown)
+                    .presentationBackground(Material.thin)
             }
         }
         .alert("Delete Countdown", isPresented: $deleteCountdown) {
@@ -178,12 +181,12 @@ public struct CountdownCard: View {
             }
             .tint(.white)
         }
-        .overlay {
-            Text(countdown.displayName)
-                .fontWeight(.bold)
-                .foregroundStyle(.white)
-                .opacity(0.8)
-        }
+//        .overlay {
+//            Text(countdown.displayName)
+//                .fontWeight(.bold)
+//                .foregroundStyle(.white)
+//                .opacity(0.8)
+//        }
         .padding(.horizontal)
     }
 }

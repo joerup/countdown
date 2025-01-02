@@ -18,6 +18,11 @@ struct BackgroundEditor: View {
     var background: Card.Background?
     var backgroundData: Card.BackgroundData?
     
+    var backgroundIcon: Card.Background?
+    var backgroundIconData: Card.BackgroundData?
+    
+    var backgroundTransform: Card.ImageTransform?
+    
     @Binding var backgroundColor: Color?
     @Binding var backgroundFade: Double
     @Binding var backgroundBlur: Double
@@ -25,7 +30,7 @@ struct BackgroundEditor: View {
     @Binding var backgroundBrightness: Double
     @Binding var backgroundContrast: Double
     
-    var setBackground: (Card.BackgroundData?, Bool) -> Void
+    var setBackground: (Card.BackgroundData?, Card.ImageTransform?, Bool) -> Void
     
     var body: some View {
         VStack {
@@ -40,7 +45,7 @@ struct BackgroundEditor: View {
                         }
                         if background?.image != nil {
                             Button("Remove Photo") {
-                                setBackground(nil, true)
+                                setBackground(nil, nil, true)
                             }
                         }
                     }
@@ -50,7 +55,7 @@ struct BackgroundEditor: View {
                         }
                     }
                 } label: {
-                    BackgroundDisplay(background: background, blur: backgroundBlur, brightness: backgroundBrightness, saturation: backgroundSaturation, contrast: backgroundContrast)
+                    BackgroundDisplay(background: backgroundIcon, color: backgroundColor, fade: backgroundFade, blur: backgroundBlur, brightness: backgroundBrightness, saturation: backgroundSaturation, contrast: backgroundContrast)
                         .aspectRatio(1.0, contentMode: .fill)
                         .frame(maxWidth: 140, maxHeight: 140)
                         .clipShape(RoundedRectangle(cornerRadius: 20))
@@ -60,57 +65,54 @@ struct BackgroundEditor: View {
                                 .foregroundStyle(.gray)
                         }
                 }
-                
-                if background?.allowOverlays ?? false {
-                    VStack(spacing: -25) {
-                        HStack(spacing: 0) {
-                            Slider(value: $backgroundBrightness, in: -0.5...0.5)
-                                .padding()
-                            Image(systemName: "sun.max")
-                                .foregroundStyle(.yellow)
-                                .frame(minWidth: 25)
-                        }
-                        HStack(spacing: 0) {
-                            Slider(value: $backgroundSaturation, in: 0...2)
-                                .padding()
-                            Image(systemName: "paintpalette")
-                                .renderingMode(.original)
-                                .frame(minWidth: 25)
-                        }
-                        HStack(spacing: 0) {
-                            Slider(value: $backgroundContrast, in: 0.1...1.9)
-                                .padding()
-                            Image(systemName: "circle.lefthalf.filled")
-                                .foregroundStyle(.black)
-                                .frame(minWidth: 25)
-                        }
-                        HStack(spacing: 0) {
-                            Slider(value: $backgroundBlur, in: 0...10)
-                                .padding()
-                            Image(systemName: "drop.fill")
-                                .foregroundStyle(.blue)
-                                .frame(minWidth: 25)
-                        }
-                    }
-                    .padding(.vertical, -25)
-                }
             }
             
             Divider()
                 .padding(.vertical)
             
             if background?.allowOverlays ?? false {
-                CustomColorPicker(color: $backgroundColor, opacity: $backgroundFade, shape: RoundedRectangle(cornerRadius: 15), sliderValue: .brightness, allowNoColor: true, opacityRange: 0...0.8)
+                VStack {
+                    HStack(spacing: 0) {
+                        CustomSlider(value: $backgroundBrightness, in: -0.8...0.8, colors: [.black, .white])
+                        Image(systemName: "sun.max")
+                            .foregroundStyle(.yellow)
+                            .frame(minWidth: 25)
+                    }
+                    HStack(spacing: 0) {
+                        CustomSlider(value: $backgroundSaturation, in: 0...2, colors: [.gray, .pink])
+                        Image(systemName: "paintpalette")
+                            .renderingMode(.original)
+                            .frame(minWidth: 25)
+                    }
+                    HStack(spacing: 0) {
+                        CustomSlider(value: $backgroundContrast, in: 0.1...1.9, mask: true, colors: [.white, .black])
+                        Image(systemName: "circle.lefthalf.filled")
+                            .foregroundStyle(.black)
+                            .frame(minWidth: 25)
+                    }
+                    HStack(spacing: 0) {
+                        CustomSlider(value: $backgroundBlur, in: 0...10, mask: true, colors: [.white, .cyan])
+                        Image(systemName: "drop.fill")
+                            .foregroundStyle(.blue)
+                            .frame(minWidth: 25)
+                    }
+                }
+                
+                Divider()
+                    .padding(.top)
+                    
+                CustomColorPicker(color: $backgroundColor, opacity: $backgroundFade, shape: RoundedRectangle(cornerRadius: 15), sliderValue: .brightness, allowNoColor: true, allowWhite: false, opacityRange: 0...0.8)
+                    .padding(.vertical)
             }
         }
-        .photoMenu(isPresented: $showPhotoLibrary) { background in
-            setBackground(background, true)
+        .photoMenu(isPresented: $showPhotoLibrary) { background, transform in
+            setBackground(background, transform, true)
         }
-        .unsplashMenu(isPresented: $showUnsplashLibrary) { background in
-            setBackground(background, true)
+        .unsplashMenu(isPresented: $showUnsplashLibrary) { background, transform in
+            setBackground(background, transform, true)
         }
-        .repositionMenu(isPresented: $showRepositionMenu, image: background?.image, data: backgroundData) { background in
-            setBackground(background, false)
+        .repositionMenu(isPresented: $showRepositionMenu, image: background?.image, data: backgroundData, transform: backgroundTransform) { background, transform in
+            setBackground(background, transform, false)
         }
     }
 }

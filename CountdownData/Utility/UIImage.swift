@@ -45,7 +45,7 @@ public extension UIImage {
     }
 
     func compressed(size: Double) -> Data? {
-        guard let minimum = jpegData(compressionQuality: 0) else { return nil }
+        guard let minimum = jpegData(compressionQuality: 0.9) else { return nil }
         var image: UIImage?
         var data: Data?
         
@@ -54,7 +54,7 @@ public extension UIImage {
             image = UIImage(data: minimum)
             while Double(data?.count ?? 0) > size {
                 image = image?.resized(withPercentage: 0.9)
-                data = image?.jpegData(compressionQuality: 0)
+                data = image?.jpegData(compressionQuality: 0.9)
             }
             return data
         }
@@ -64,17 +64,27 @@ public extension UIImage {
     }
     
     func cropped(offset: CGSize, scale: CGFloat) -> UIImage? {
-        let imageSize = self.size
-        let size = min(imageSize.width, imageSize.height) / scale
-        let x = imageSize.width / 2 - offset.width - size / 2
-        let y = imageSize.height / 2 - offset.height - size / 2
+        let normalizedImage: UIImage = {
+            guard self.imageOrientation != .up else { return self }
+            let format = UIGraphicsImageRendererFormat()
+            format.scale = 1.0
+            let renderer = UIGraphicsImageRenderer(size: self.size, format: format)
+            return renderer.image { _ in
+                self.draw(in: CGRect(origin: .zero, size: self.size))
+            }
+        }()
+
+        let imageSize = normalizedImage.size
+        let size = imageSize.minimum / scale
+        let x = imageSize.width / 2 - imageSize.minimum * offset.width - size / 2
+        let y = imageSize.height / 2 - imageSize.minimum * offset.height - size / 2
         let cropRect = CGRect(x: x, y: y, width: size, height: size)
 
-        guard let cgImage = self.cgImage, let croppedCGImage = cgImage.cropping(to: cropRect) else {
+        guard let cgImage = normalizedImage.cgImage?.cropping(to: cropRect) else {
             return nil
         }
 
-        return UIImage(cgImage: croppedCGImage)
+        return UIImage(cgImage: cgImage, scale: self.scale, orientation: .up)
     }
     
     func withTextOverlay(text: String, textColor: UIColor = .black, font: UIFont = UIFont.systemFont(ofSize: 200), atPoint point: CGPoint) -> UIImage {

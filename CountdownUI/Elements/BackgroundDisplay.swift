@@ -35,12 +35,6 @@ public struct BackgroundDisplay: View {
             switch background {
             case .photo(let photo):
                 modifiedImage(photo)
-            case .transformedPhoto(let photo, let offset, let scale):
-                if fullScreen {
-                    modifiedImage(photo)
-                } else if let croppedPhoto = photo.cropped(offset: offset, scale: scale) {
-                    modifiedImage(croppedPhoto)
-                }
             case .loading, nil:
                 Color.defaultColor
             }
@@ -57,10 +51,14 @@ public struct BackgroundDisplay: View {
         Image(uiImage: uiImage)
             .resizable()
             .aspectRatio(contentMode: .fill)
+            .scaleEffect(1.01)
             .saturation(saturation)
-            .brightness(brightness)
             .contrast(contrast)
             .blur(radius: blur)
+            .overlay {
+                Color.black.opacity(max(-brightness, 0))
+                Color.white.opacity(max(brightness, 0))
+            }
     }
 }
 

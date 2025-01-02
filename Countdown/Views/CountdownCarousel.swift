@@ -59,7 +59,7 @@ struct CountdownCarousel: View {
     private let idealCardAspectRatio: CGFloat = 19.5/9
     
     private var carouselGapWidth: CGFloat {
-        showMultipleCards ? 15 : 0
+        showMultipleCards ? 15 : 10
     }
     private var cardPadding: CGFloat {
         showMultipleCards ? 20 : 0
@@ -160,13 +160,16 @@ struct CountdownCarousel: View {
     
     private var footer: some View {
         HStack {
-//            ForEach(countdowns, id: \.self) { countdown in
-//                Group {
-//                    Circle().fill(.white)
-//                }
-//                .opacity(countdown == clock.selectedCountdown ? 0.7 : 0.4)
-//                .frame(width: 10)
-//            }
+            ForEach(countdowns, id: \.self) { countdown in
+                Group {
+                    Circle().fill(.white)
+                }
+                .opacity(countdown == clock.selectedCountdown ? 0.7 : 0.4)
+                .frame(width: 10)
+                .onTapGesture {
+                    clock.select(countdown)
+                }
+            }
         }
         .padding(.bottom, 5)
     }

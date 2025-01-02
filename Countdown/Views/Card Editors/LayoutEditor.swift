@@ -40,11 +40,11 @@ struct LayoutEditor: View {
                                 self.layoutType = type
                                 setLayout()
                             } label: {
-                                CountdownLayout(title: title, dateString: dateString, daysRemaining: daysRemaining, timeRemaining: timeRemaining, layout: layout(for: type), tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity)
-                                    .padding(16)
-                                    .frame(width: 120, height: 120)
-                                    .background(Material.ultraThin.opacity(layoutType == type ? 1.0 : 0.25))
-                                    .clipShape(RoundedRectangle(cornerRadius: 20))
+//                                CountdownLayout(title: title, dateString: dateString, daysRemaining: daysRemaining, timeRemaining: timeRemaining, tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity)
+//                                    .padding(16)
+//                                    .frame(width: 120, height: 120)
+//                                    .background(Material.ultraThin.opacity(layoutType == type ? 1.0 : 0.25))
+//                                    .clipShape(RoundedRectangle(cornerRadius: 20))
                             }
                         }
                     }

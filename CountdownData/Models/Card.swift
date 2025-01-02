@@ -18,6 +18,9 @@ public final class Card {
     @Attribute(.externalStorage) public private(set) var backgroundData: BackgroundData?
     @Attribute(.externalStorage) public private(set) var backgroundIconData: BackgroundData?
     
+    public var backgroundTransformSquare: ImageTransform?
+    public var backgroundTransformFull: ImageTransform?
+    
     private var backgroundRGB: RGBColor?
     public var backgroundColor: Color? {
         get { if let backgroundRGB { Color(rgb: backgroundRGB) } else { nil } }
@@ -30,8 +33,6 @@ public final class Card {
     public var backgroundSaturation: Double = 1.0
     public var backgroundContrast: Double = 1.0
     
-    public var layout: Layout?
-    
     private var tint: RGBColor = Color.white.rgb
     public var tintColor: Color {
         get { Color(rgb: tint) }
@@ -43,13 +44,19 @@ public final class Card {
     public var textOpacity: Double = 1.0
     public var textShadow: Double = 0
     
+    public var titleSize: Double = 1.0
+    public var numberSize: Double = 1.0
+    
     public init() { }
     
     public init(from instance: CountdownInstance) {
         self.tint = instance.tint
         self.textStyle = instance.textStyle
         self.textWeight = instance.textWeight
+        self.textOpacity = instance.textOpacity
         self.textShadow = instance.textShadow
+        self.titleSize = instance.titleSize
+        self.numberSize = instance.numberSize
         self.backgroundRGB = instance.backgroundRGB
         self.backgroundFade = instance.backgroundFade
         self.backgroundBlur = instance.backgroundBlur
@@ -59,13 +66,17 @@ public final class Card {
         self.backgroundData = instance.backgroundData
         self.backgroundIconData = instance.backgroundIconData
         self.backgroundID = instance.backgroundID
-        self.layout = instance.layout
+        self.backgroundTransformFull = instance.backgroundTransformFull
+        self.backgroundTransformSquare = instance.backgroundTransformSquare
     }
     public func match(_ instance: CountdownInstance) {
         self.tint = instance.tint
         self.textStyle = instance.textStyle
         self.textWeight = instance.textWeight
+        self.textOpacity = instance.textOpacity
         self.textShadow = instance.textShadow
+        self.titleSize = instance.titleSize
+        self.numberSize = instance.numberSize
         self.backgroundRGB = instance.backgroundRGB
         self.backgroundFade = instance.backgroundFade
         self.backgroundBlur = instance.backgroundBlur
@@ -75,7 +86,8 @@ public final class Card {
         self.backgroundData = instance.backgroundData
         self.backgroundIconData = instance.backgroundIconData
         self.backgroundID = instance.backgroundID
-        self.layout = instance.layout
+        self.backgroundTransformFull = instance.backgroundTransformFull
+        self.backgroundTransformSquare = instance.backgroundTransformSquare
     }
     
     public func loadingBackground() {
@@ -83,7 +95,7 @@ public final class Card {
     }
     public func setBackground(_ data: BackgroundData?) {
         self.backgroundData = data
-        self.backgroundIconData = data?.icon
+        self.backgroundIconData = data?.icon(transform: backgroundTransformSquare)
         self.backgroundID = UUID()
     }
     public func getBackground() async -> Background? {

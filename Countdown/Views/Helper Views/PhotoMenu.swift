@@ -13,7 +13,7 @@ struct PhotoMenu: ViewModifier {
     
     @Binding var isPresented: Bool
     
-    var onReturn: (Card.BackgroundData) -> Void
+    var onReturn: (Card.BackgroundData, Card.ImageTransform) -> Void
     
     @State private var photoItem: PhotosPickerItem?
     @State private var selectedImage: ImageData?
@@ -29,10 +29,11 @@ struct PhotoMenu: ViewModifier {
                 }
             }
             .sheet(item: $selectedImage) { image in
-                ImageRepositionView(
+                ImageTransformer(
                     image: image.image,
+                    selectorShape: RoundedRectangle(cornerRadius: 20),
                     onConfirm: { offset, scale in
-                        onReturn(.transformedPhoto(image.data, offsetX: offset.width, offsetY: offset.height, scale: scale))
+                        onReturn(.photo(image.data), Card.ImageTransform(offset: offset, scale: scale))
                         selectedImage = nil
                     },
                     onCancel: {
@@ -44,7 +45,7 @@ struct PhotoMenu: ViewModifier {
 }
 
 extension View {
-    func photoMenu(isPresented: Binding<Bool>, onReturn: @escaping (Card.BackgroundData) -> Void) -> some View {
+    func photoMenu(isPresented: Binding<Bool>, onReturn: @escaping (Card.BackgroundData, Card.ImageTransform) -> Void) -> some View {
         modifier(PhotoMenu(isPresented: isPresented, onReturn: onReturn))
     }
 }
