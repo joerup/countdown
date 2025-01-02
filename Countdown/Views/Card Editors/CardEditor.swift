@@ -13,9 +13,10 @@ struct CardEditor: View {
     
     @Environment(\.modelContext) var modelContext
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
-    @Environment(\.dismiss) var dismiss
     
     var card: Card
+    
+    var dismiss: () -> Void
     
     @State private var section: CardEditorSection = .background
     
@@ -113,9 +114,6 @@ struct CardEditor: View {
                 .safeAreaPadding()
             }
         }
-        .presentationBackground(Material.ultraThin)
-        .presentationDetents([.height(450)])
-        .presentationCornerRadius(20)
         .onAppear {
             setStates()
             if let countdown = card.countdown {

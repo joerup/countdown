@@ -34,6 +34,7 @@ struct CountdownView: View {
     @State private var searchText: String = ""
     
     @State private var newCountdown: Bool = false
+    @State private var editingCountdown: Countdown?
     
     @Namespace private var animation
     
@@ -56,14 +57,15 @@ struct CountdownView: View {
         .searchable(text: $searchText, isPresented: $showSearch, placement: .navigationBarDrawer)
         .opacity(clock.selectedCountdown == nil ? 1 : 0)
         .overlay {
-            if let _ = clock.selectedCountdown {
-                CountdownCarousel(countdowns: sortedCountdowns, animation: animation)
+            if clock.selectedCountdown != nil {
+                CountdownCarousel(countdowns: sortedCountdowns, editingCountdown: $editingCountdown, animation: animation)
             }
         }
         .tint(.pink)
         .sheet(isPresented: $newCountdown) {
             OccasionCreator { countdown in
                 clock.select(countdown)
+                editingCountdown = countdown
             }
         }
         .sheet(isPresented: $showSettings) {

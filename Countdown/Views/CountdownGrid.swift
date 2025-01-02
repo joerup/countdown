@@ -47,12 +47,12 @@ struct CountdownGrid: View {
                         .shadow(radius: 5)
                         .id(clock.tick)
                         .contextMenu {
-                            Button {
-                                self.editDestinationValue = countdown
-                                self.editDestination.toggle()
-                            } label: {
-                                Label("Edit Date", systemImage: "calendar")
-                            }
+//                            Button {
+//                                self.editDestinationValue = countdown
+//                                self.editDestination.toggle()
+//                            } label: {
+//                                Label("Edit Date", systemImage: "calendar")
+//                            }
 //                            Button {
 //                                self.shareCountdownValue = countdown
 //                                self.shareCountdown.toggle()
