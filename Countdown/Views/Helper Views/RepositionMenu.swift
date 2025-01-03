@@ -13,24 +13,28 @@ struct RepositionMenu: ViewModifier {
     @Binding var isPresented: Bool
     
     var image: UIImage?
-    var data: Card.BackgroundData?
-    var transform: Card.ImageTransform?
+    var transform: ImageTransform
     
-    var onReturn: (Card.BackgroundData, Card.ImageTransform) -> Void
+    var onReturn: (ImageTransform) -> Void
+    
+    init(isPresented: Binding<Bool>, image: UIImage? = nil, transform: ImageTransform?, onReturn: @escaping (ImageTransform) -> Void) {
+        self._isPresented = isPresented
+        self.image = image
+        self.transform = transform ?? .init()
+        self.onReturn = onReturn
+    }
     
     func body(content: Content) -> some View {
         content
             .sheet(isPresented: $isPresented) {
-                if let image, let transform {
+                if let image {
                     ImageTransformer(
                         image: image,
                         initialOffset: transform.offset,
                         initialScale: transform.scale,
-                        selectorShape: RoundedRectangle(cornerRadius: 20),
+                        selectorShape: RoundedRectangle(cornerRadius: 35),
                         onConfirm: { offset, scale in
-                            guard let data else { return }
-                            let transform = Card.ImageTransform(offset: offset, scale: scale)
-                            onReturn(data, transform)
+                            onReturn(ImageTransform(offset: offset, scale: scale))
                             isPresented = false
                         },
                         onCancel: {
@@ -43,7 +47,7 @@ struct RepositionMenu: ViewModifier {
 }
 
 extension View {
-    func repositionMenu(isPresented: Binding<Bool>, image: UIImage?, data: Card.BackgroundData?, transform: Card.ImageTransform?, onReturn: @escaping (Card.BackgroundData, Card.ImageTransform) -> Void) -> some View {
-        self.modifier(RepositionMenu(isPresented: isPresented, image: image, data: data, transform: transform, onReturn: onReturn))
+    func repositionMenu(isPresented: Binding<Bool>, image: UIImage?, transform: ImageTransform?, onReturn: @escaping (ImageTransform) -> Void) -> some View {
+        self.modifier(RepositionMenu(isPresented: isPresented, image: image, transform: transform, onReturn: onReturn))
     }
 }

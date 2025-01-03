@@ -10,7 +10,7 @@ import CountdownData
 
 public struct BackgroundDisplay: View {
         
-    private var background: Card.Background?
+    private var image: UIImage?
     private var color: Color?
     private var fade: Double
     private var blur: Double
@@ -19,8 +19,8 @@ public struct BackgroundDisplay: View {
     private var contrast: Double
     private var fullScreen: Bool
     
-    public init(background: Card.Background?, color: Color? = nil, fade: Double = 0, blur: Double = 0, brightness: Double = 0, saturation: Double = 1.0, contrast: Double = 1.0, fullScreen: Bool = false) {
-        self.background = background
+    public init(background: UIImage?, color: Color? = nil, fade: Double = 0, blur: Double = 0, brightness: Double = 0, saturation: Double = 1.0, contrast: Double = 1.0, fullScreen: Bool = false) {
+        self.image = background
         self.color = color
         self.fade = fade
         self.blur = blur
@@ -32,33 +32,27 @@ public struct BackgroundDisplay: View {
     
     public var body: some View {
         ZStack {
-            switch background {
-            case .photo(let photo):
-                modifiedImage(photo)
-            case .loading, nil:
+            if let image {
+                Image(uiImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .scaleEffect(1.01)
+                    .saturation(saturation)
+                    .contrast(contrast)
+                    .blur(radius: blur)
+                    .overlay {
+                        Color.black.opacity(max(-brightness, 0))
+                        Color.white.opacity(max(brightness, 0))
+                    }
+                if let color {
+                    Rectangle()
+                        .fill(color)
+                        .opacity(fade)
+                }
+            } else {
                 Color.defaultColor
             }
-            
-            if let color, background?.allowOverlays ?? false {
-                Rectangle()
-                    .fill(color)
-                    .opacity(fade)
-            }
         }
-    }
-    
-    private func modifiedImage(_ uiImage: UIImage) -> some View {
-        Image(uiImage: uiImage)
-            .resizable()
-            .aspectRatio(contentMode: .fill)
-            .scaleEffect(1.01)
-            .saturation(saturation)
-            .contrast(contrast)
-            .blur(radius: blur)
-            .overlay {
-                Color.black.opacity(max(-brightness, 0))
-                Color.white.opacity(max(brightness, 0))
-            }
     }
 }
 

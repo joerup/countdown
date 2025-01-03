@@ -18,15 +18,17 @@ public final class Countdown {
     public var type: EventType = EventType.custom
     public var occasion: Occasion = Occasion.now
     
-    
-    // MARK: - Counter
-    
     public var date: Date {
         occasion.date
     }
     public var dateString: String {
         date.dateString
     }
+    
+    // MARK: - Counter
+    
+    @Transient public var daysRemaining: Int = 0
+    @Transient public var timeRemaining: Date.TimeRemaining = .zero
     
     public var isActive: Bool {
         return date > .now
@@ -47,9 +49,6 @@ public final class Countdown {
         return Calendar.current.date(byAdding: .day, value: 1, to: .now) ?? .now >= date
     }
     
-    @Transient public var daysRemaining: Int = 0
-    @Transient public var timeRemaining: Date.TimeRemaining = .zero
-    
     
     // MARK: - Cards
     
@@ -59,8 +58,6 @@ public final class Countdown {
     }
     
     @Transient public var currentBackground: Card.Background?
-    @Transient public var currentBackgroundIcon: Card.Background?
-    @Transient public var currentBackgroundID: UUID = UUID()
     
     public var currentBackgroundColor: Color? {
         return card?.backgroundColor
@@ -128,7 +125,6 @@ public final class Countdown {
         self.displayName = instance.displayName
         self.type = instance.type
         self.occasion = instance.occasion
-        self.currentBackgroundID = instance.backgroundID
         self.cards = [Card(from: instance)]
     }
     public func match(_ instance: CountdownInstance) {
@@ -137,7 +133,6 @@ public final class Countdown {
         self.displayName = instance.displayName
         self.type = instance.type
         self.occasion = instance.occasion
-        self.currentBackgroundID = instance.backgroundID
         self.card?.match(instance)
     }
     public func compareTo(countdown: Countdown) -> Bool {
@@ -160,23 +155,19 @@ public final class Countdown {
     
     public func loadCards() async {
         
-        // Change photo URL to image data
-        await card?.updateLink()
+        // Update old backgrounds if they still exist
+        await card?.updateOldBackgrounds()
         
         // Match backgrounds and background icons
-        for card in (cards ?? []) {
-            if card.backgroundData != nil && card.backgroundIconData == nil {
-                card.setBackground(card.backgroundData)
-            }
-        }
+//        for card in (cards ?? []) {
+//            if let background = card.background {
+//                card.setBackground(background)
+//            }
+//        }
         
-        // Fetch countdown backgrounds
-        if let card, currentBackgroundID != card.backgroundID {
-            currentBackground = .loading
-            currentBackgroundIcon = .loading
+        // Fetch current background
+        if let card, currentBackground?.id != card.backgroundID {
             currentBackground = await card.getBackground()
-            currentBackgroundIcon = await card.getBackgroundIcon()
-            currentBackgroundID = card.backgroundID
         }
         
         // Add cards to empty countdowns

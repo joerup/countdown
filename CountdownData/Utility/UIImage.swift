@@ -139,8 +139,7 @@ public struct ImageData: Identifiable {
     
     public init?(image: UIImage) {
         self.id = UUID()
-        guard let data = image.compressed(size: Card.maxPhotoSize),
-              let image = UIImage(data: data) else {
+        guard let data = image.jpegData(compressionQuality: 0.8) else {
             return nil
         }
         self.data = data

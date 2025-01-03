@@ -27,7 +27,14 @@ struct CardEditor: View {
     }
     
     @State private var savedInstance: CountdownInstance?
-    @State private var savedBackgroundData: Card.BackgroundData?
+    @State private var savedBackgroundData: Data?
+    
+    @State private var backgroundColor: Color?
+    @State private var backgroundFade: Double = 0
+    @State private var backgroundBlur: Double = 0
+    @State private var backgroundSaturation: Double = 0
+    @State private var backgroundBrightness: Double = 0
+    @State private var backgroundContrast: Double = 0
     
     @State private var textColor: Color = .white
     @State private var textStyle: Card.TextStyle = .standard
@@ -36,14 +43,6 @@ struct CardEditor: View {
     @State private var textShadow: Double = 0
     @State private var titleSize: Double = 1.0
     @State private var numberSize: Double = 1.0
-    
-    @State private var backgroundTransform: Card.ImageTransform?
-    @State private var backgroundColor: Color?
-    @State private var backgroundFade: Double = 0
-    @State private var backgroundBlur: Double = 0
-    @State private var backgroundSaturation: Double = 0
-    @State private var backgroundBrightness: Double = 0
-    @State private var backgroundContrast: Double = 0
     
     @State private var forceUpdate: Bool = false
     
@@ -62,9 +61,6 @@ struct CardEditor: View {
     private var background: Card.Background? {
         card.countdown?.currentBackground
     }
-    private var backgroundIcon: Card.Background? {
-        card.countdown?.currentBackgroundIcon
-    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -73,7 +69,7 @@ struct CardEditor: View {
                     if let instance = savedInstance {
                         card.countdown?.match(instance)
                         setStates()
-                        setBackground(savedBackgroundData, transform: backgroundTransform, resetStates: false)
+                        setBackground(savedBackgroundData, transforms: card.backgroundTransforms, resetStates: false)
                     }
                 } label: {
                     Image(systemName: "arrowshape.turn.up.backward.circle")
@@ -106,8 +102,8 @@ struct CardEditor: View {
             switch section {
             case .background:
                 ScrollView {
-                    BackgroundEditor(background: background, backgroundData: card.backgroundData, backgroundIcon: backgroundIcon, backgroundIconData: card.backgroundIconData, backgroundTransform: backgroundTransform, backgroundColor: $backgroundColor, backgroundFade: $backgroundFade, backgroundBlur: $backgroundBlur, backgroundSaturation: $backgroundSaturation, backgroundBrightness: $backgroundBrightness, backgroundContrast: $backgroundContrast) { background, transform, resetStates in
-                        setBackground(background, transform: transform, resetStates: resetStates)
+                    BackgroundEditor(background: background, backgroundTransforms: card.backgroundTransforms, backgroundColor: $backgroundColor, backgroundFade: $backgroundFade, backgroundBlur: $backgroundBlur, backgroundSaturation: $backgroundSaturation, backgroundBrightness: $backgroundBrightness, backgroundContrast: $backgroundContrast) { background, transforms, resetStates in
+                        setBackground(background, transforms: transforms, resetStates: resetStates)
                     }
                     .id(forceUpdate)
                 }
@@ -125,7 +121,7 @@ struct CardEditor: View {
             setStates()
             if let countdown = card.countdown {
                 savedInstance = CountdownInstance(from: countdown)
-                savedBackgroundData = card.backgroundData
+                savedBackgroundData = card.background
             }
         }
         .onChange(of: textColor) { _, color in
@@ -183,7 +179,6 @@ struct CardEditor: View {
     }
     
     private func setStates() {
-        backgroundTransform = card.backgroundTransformSquare
         textColor = card.textColor
         textStyle = card.textStyle
         textWeight = card.textWeight
@@ -199,10 +194,8 @@ struct CardEditor: View {
         backgroundBrightness = card.backgroundBrightness
     }
     
-    private func setBackground(_ data: Card.BackgroundData?, transform: Card.ImageTransform?, resetStates: Bool) {
-        card.backgroundTransformSquare = transform
-        backgroundTransform = transform
-        card.setBackground(data)
+    private func setBackground(_ data: Data?, transforms: Card.BackgroundTransforms?, resetStates: Bool) {
+        card.setBackground(data, transforms: transforms)
         UIImpactFeedbackGenerator().impactOccurred()
         saveCard(reload: true)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {

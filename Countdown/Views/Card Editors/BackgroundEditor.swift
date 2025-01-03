@@ -16,12 +16,7 @@ struct BackgroundEditor: View {
     @State private var showRepositionMenu = false
     
     var background: Card.Background?
-    var backgroundData: Card.BackgroundData?
-    
-    var backgroundIcon: Card.Background?
-    var backgroundIconData: Card.BackgroundData?
-    
-    var backgroundTransform: Card.ImageTransform?
+    var backgroundTransforms: Card.BackgroundTransforms?
     
     @Binding var backgroundColor: Color?
     @Binding var backgroundFade: Double
@@ -30,7 +25,7 @@ struct BackgroundEditor: View {
     @Binding var backgroundBrightness: Double
     @Binding var backgroundContrast: Double
     
-    var setBackground: (Card.BackgroundData?, Card.ImageTransform?, Bool) -> Void
+    var setBackground: (Data?, Card.BackgroundTransforms?, Bool) -> Void
     
     var body: some View {
         VStack {
@@ -43,19 +38,19 @@ struct BackgroundEditor: View {
                         Button("Unsplash") {
                             showUnsplashLibrary.toggle()
                         }
-                        if background?.image != nil {
+                        if background != nil {
                             Button("Remove Photo") {
                                 setBackground(nil, nil, true)
                             }
                         }
                     }
-                    if background?.image != nil {
+                    if background != nil {
                         Button("Reposition", systemImage: "crop") {
                             showRepositionMenu.toggle()
                         }
                     }
                 } label: {
-                    BackgroundDisplay(background: backgroundIcon, color: backgroundColor, fade: backgroundFade, blur: backgroundBlur, brightness: backgroundBrightness, saturation: backgroundSaturation, contrast: backgroundContrast)
+                    BackgroundDisplay(background: background?.square, color: backgroundColor, fade: backgroundFade, blur: backgroundBlur, brightness: backgroundBrightness, saturation: backgroundSaturation, contrast: backgroundContrast)
                         .aspectRatio(1.0, contentMode: .fill)
                         .frame(maxWidth: 140, maxHeight: 140)
                         .clipShape(RoundedRectangle(cornerRadius: 20))
@@ -70,7 +65,7 @@ struct BackgroundEditor: View {
             Divider()
                 .padding(.vertical)
             
-            if background?.allowOverlays ?? false {
+            if background != nil {
                 VStack {
                     HStack(spacing: 0) {
                         CustomSlider(value: $backgroundBrightness, in: -0.8...0.8, colors: [.black, .white])
@@ -106,13 +101,13 @@ struct BackgroundEditor: View {
             }
         }
         .photoMenu(isPresented: $showPhotoLibrary) { background, transform in
-            setBackground(background, transform, true)
+            setBackground(background, .init(square: transform), true)
         }
         .unsplashMenu(isPresented: $showUnsplashLibrary) { background, transform in
-            setBackground(background, transform, true)
+            setBackground(background, .init(square: transform), true)
         }
-        .repositionMenu(isPresented: $showRepositionMenu, image: background?.image, data: backgroundData, transform: backgroundTransform) { background, transform in
-            setBackground(background, transform, false)
+        .repositionMenu(isPresented: $showRepositionMenu, image: background?.full, transform: backgroundTransforms?.square) { transform in
+            setBackground(background?.data, .init(square: transform), true)
         }
     }
 }

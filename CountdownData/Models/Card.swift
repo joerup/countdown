@@ -15,16 +15,8 @@ public final class Card {
     public var countdown: Countdown?
     public private(set) var backgroundID: UUID = UUID()
     
-//    @Attribute(.externalStorage) public private(set) var imageData: Data?
-//    @Attribute(.externalStorage) public private(set) var imageDataSquare: Data?
-    
-    /* DEPRECATED */
-    @Attribute(.externalStorage) public private(set) var backgroundData: BackgroundData?
-    @Attribute(.externalStorage) public private(set) var backgroundIconData: BackgroundData?
-    /* ---------- */
-    
-    public var backgroundTransformSquare: ImageTransform?
-    public var backgroundTransformFull: ImageTransform?
+    @Attribute(.externalStorage) public private(set) var background: Data?
+    public var backgroundTransforms: BackgroundTransforms?
     
     private var backgroundRGB: RGBColor?
     public var backgroundColor: Color? {
@@ -62,6 +54,9 @@ public final class Card {
         self.textShadow = instance.textShadow
         self.titleSize = instance.titleSize
         self.numberSize = instance.numberSize
+        self.background = instance.background
+        self.backgroundTransforms = instance.backgroundTransforms
+        self.backgroundID = instance.backgroundID
         self.backgroundRGB = instance.backgroundRGB
         self.backgroundFade = instance.backgroundFade
         self.backgroundBlur = instance.backgroundBlur
@@ -70,9 +65,6 @@ public final class Card {
         self.backgroundContrast = instance.backgroundContrast
         self.backgroundData = instance.backgroundData
         self.backgroundIconData = instance.backgroundIconData
-        self.backgroundID = instance.backgroundID
-        self.backgroundTransformFull = instance.backgroundTransformFull
-        self.backgroundTransformSquare = instance.backgroundTransformSquare
     }
     public func match(_ instance: CountdownInstance) {
         self.tint = instance.tint
@@ -82,6 +74,9 @@ public final class Card {
         self.textShadow = instance.textShadow
         self.titleSize = instance.titleSize
         self.numberSize = instance.numberSize
+        self.background = instance.background
+        self.backgroundTransforms = instance.backgroundTransforms
+        self.backgroundID = instance.backgroundID
         self.backgroundRGB = instance.backgroundRGB
         self.backgroundFade = instance.backgroundFade
         self.backgroundBlur = instance.backgroundBlur
@@ -90,25 +85,25 @@ public final class Card {
         self.backgroundContrast = instance.backgroundContrast
         self.backgroundData = instance.backgroundData
         self.backgroundIconData = instance.backgroundIconData
-        self.backgroundID = instance.backgroundID
-        self.backgroundTransformFull = instance.backgroundTransformFull
-        self.backgroundTransformSquare = instance.backgroundTransformSquare
     }
     
-    public func loadingBackground() {
-        countdown?.currentBackground = .loading
-    }
-    public func setBackground(_ data: BackgroundData?) {
-        self.backgroundData = data
-        self.backgroundIconData = data?.icon(transform: backgroundTransformSquare)
+    public func setBackground(_ data: Data?, transforms: Card.BackgroundTransforms? = nil) {
+        self.background = data
+        self.backgroundTransforms = transforms
         self.backgroundID = UUID()
     }
     public func getBackground() async -> Background? {
-        return await backgroundData?.background()
+        return await Background(id: backgroundID, imageData: background, transforms: backgroundTransforms)
     }
-    public func getBackgroundIcon() async -> Background? {
-        return await backgroundIconData?.background()
+    
+    /* DEPRECATED */
+    @Attribute(.externalStorage) public private(set) var backgroundData: BackgroundData?
+    @Attribute(.externalStorage) public private(set) var backgroundIconData: BackgroundData?
+    func removeOldBackgrounds() {
+        backgroundData = nil
+        backgroundIconData = nil
     }
+    /* ---------- */
 }
 
 extension Card: Equatable, Hashable {

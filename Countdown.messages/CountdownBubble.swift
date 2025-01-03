@@ -46,7 +46,7 @@ struct CountdownBubble: View {
     }
     
     private var background: some View {
-        BackgroundDisplay(background: instance.currentBackgroundIcon, color: instance.backgroundColor, fade: instance.backgroundFade, blur: instance.backgroundBlur, brightness: instance.backgroundBrightness, saturation: instance.backgroundSaturation, contrast: instance.backgroundContrast)
+        BackgroundDisplay(background: instance.currentBackground?.square, color: instance.backgroundColor, fade: instance.backgroundFade, blur: instance.backgroundBlur, brightness: instance.backgroundBrightness, saturation: instance.backgroundSaturation, contrast: instance.backgroundContrast)
     }
     
     private var saveButton: some View {

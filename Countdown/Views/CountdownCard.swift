@@ -51,19 +51,19 @@ public struct CountdownCard: View {
                 CountdownFullLayout(countdown: countdown)
                     .padding([.horizontal, .bottom])
             }
-//            Button {
-//                withAnimation {
-//                    self.editCard.toggle()
-//                }
-//            } label: {
-//                Text("Edit")
-//                    .fontWeight(.semibold)
-//                    .fontDesign(.rounded)
-//                    .foregroundStyle(.white)
-//                    .padding()
-//                    .padding(.horizontal)
-//                    .background(RoundedRectangle(cornerRadius: 30).fill(Material.ultraThin))
-//            }
+            Button {
+                withAnimation {
+                    self.editCard.toggle()
+                }
+            } label: {
+                Text("Edit")
+                    .fontWeight(.semibold)
+                    .fontDesign(.rounded)
+                    .foregroundStyle(.white)
+                    .padding()
+                    .padding(.horizontal)
+                    .background(RoundedRectangle(cornerRadius: 30).fill(Material.ultraThin))
+            }
 //            VStack(spacing: 10) {
 //                TimeDisplay(timeRemaining: countdown.timeRemaining, textColor: countdown.currentTintColor, textStyle: countdown.currentTextStyle, textWeight: Font.Weight(rawValue: countdown.currentTextWeight), textOpacity: 1.0, textSize: 37.5)
 //                Text(countdown.date.fullString)
@@ -106,7 +106,7 @@ public struct CountdownCard: View {
             }
         }
         .background {
-            BackgroundDisplay(background: countdown.currentBackground, color: countdown.currentBackgroundColor, fade: countdown.currentBackgroundFade, blur: countdown.currentBackgroundBlur, brightness: countdown.currentBackgroundBrightness, saturation: countdown.currentBackgroundSaturation, contrast: countdown.currentBackgroundContrast, fullScreen: true)
+            BackgroundDisplay(background: countdown.currentBackground?.full, color: countdown.currentBackgroundColor, fade: countdown.currentBackgroundFade, blur: countdown.currentBackgroundBlur, brightness: countdown.currentBackgroundBrightness, saturation: countdown.currentBackgroundSaturation, contrast: countdown.currentBackgroundContrast, fullScreen: true)
                 .overlay(Material.ultraThin.opacity(editCard ? 1 : 0))
                 .frame(width: totalWidth, height: totalHeight)
                 .clipShape(RoundedRectangle(cornerRadius: fullScreen ? 0 : 40))

@@ -45,7 +45,7 @@ struct CountdownGrid: View {
                                 .frame(maxWidth: 200)
                                 .background(Color.blue.opacity(0.2))
                                 .overlay {
-                                    if let bgData = countdown.card?.backgroundData, case .photo(let data) = bgData {
+                                    if let data = countdown.card?.background {
                                         Text(String(data.count))
                                     }
                                 }

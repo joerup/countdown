@@ -29,6 +29,9 @@ public final class CountdownInstance: Codable {
     public private(set) var titleSize: Double
     public private(set) var numberSize: Double
     
+    public private(set) var background: Data?
+    public private(set) var backgroundTransforms: Card.BackgroundTransforms
+    public private(set) var backgroundID: UUID
     private(set) var backgroundRGB: RGBColor?
     public var backgroundColor: Color? { if let backgroundRGB { Color(rgb: backgroundRGB) } else { nil } }
     public private(set) var backgroundFade: Double
@@ -37,13 +40,7 @@ public final class CountdownInstance: Codable {
     public private(set) var backgroundSaturation: Double
     public private(set) var backgroundContrast: Double
     
-    public private(set) var backgroundData: Card.BackgroundData?
-    public private(set) var backgroundIconData: Card.BackgroundData?
-    public private(set) var backgroundID: UUID
-    public private(set) var currentBackgroundIcon: Card.Background?
-    
-    public private(set) var backgroundTransformSquare: Card.ImageTransform?
-    public private(set) var backgroundTransformFull: Card.ImageTransform?
+    public private(set) var currentBackground: Card.Background?
     
     public var date: Date {
         occasion.date
@@ -72,6 +69,8 @@ public final class CountdownInstance: Codable {
         self.textShadow = countdown.currentTextShadow
         self.titleSize = countdown.currentTitleSize
         self.numberSize = countdown.currentNumberSize
+        self.background = countdown.card?.background
+        self.backgroundTransforms = countdown.card?.backgroundTransforms ?? .init()
         self.backgroundRGB = countdown.currentBackgroundColor?.rgb
         self.backgroundFade = countdown.currentBackgroundFade
         self.backgroundBlur = countdown.currentBackgroundBlur
@@ -81,23 +80,20 @@ public final class CountdownInstance: Codable {
         self.backgroundData = countdown.card?.backgroundData
         self.backgroundIconData = countdown.card?.backgroundIconData
         self.backgroundID = countdown.card?.backgroundID ?? UUID()
-        self.backgroundTransformSquare = countdown.card?.backgroundTransformSquare
-        self.backgroundTransformFull = countdown.card?.backgroundTransformFull
     }
-    public func setBackground(_ data: Card.BackgroundData?) {
-        self.backgroundData = data
-        self.backgroundIconData = data?.icon(transform: backgroundTransformSquare)
+    public func setBackground(_ data: Data?) {
+        self.background = data
     }
     public func loadCard() async {
-        currentBackgroundIcon = .loading
-        currentBackgroundIcon = await backgroundIconData?.background()
+        currentBackground = await Card.Background(id: backgroundID, imageData: background, transforms: backgroundTransforms)
     }
     
     enum CodingKeys: CodingKey {
         case timestamp, countdownID, name, displayName, type, occasion,
              tint, textStyle, textWeight, textOpacity, textShadow, titleSize, numberSize,
+             background, backgroundTransforms, backgroundID,
              backgroundColor, backgroundFade, backgroundBlur, backgroundSaturation, backgroundBrightness, backgroundContrast,
-             backgroundData, backgroundIconData, backgroundID, backgroundTransformSquare, backgroundTransformFull
+             backgroundData, backgroundIconData
     }
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -114,6 +110,9 @@ public final class CountdownInstance: Codable {
         textShadow = (try? container.decode(Double.self, forKey: .textShadow)) ?? 0
         titleSize = (try? container.decode(Double.self, forKey: .titleSize)) ?? 1.0
         numberSize = (try? container.decode(Double.self, forKey: .numberSize)) ?? 1.0
+        background = try? container.decode(Data?.self, forKey: .background)
+        backgroundTransforms = (try? container.decode(Card.BackgroundTransforms.self, forKey: .backgroundTransforms)) ?? .init()
+        backgroundID = (try? container.decode(UUID.self, forKey: .backgroundID)) ?? UUID()
         backgroundRGB = try? container.decode(RGBColor.self, forKey: .backgroundColor)
         backgroundFade = (try? container.decode(Double.self, forKey: .backgroundFade)) ?? 0.4
         backgroundBlur = (try? container.decode(Double.self, forKey: .backgroundBlur)) ?? 0
@@ -122,9 +121,6 @@ public final class CountdownInstance: Codable {
         backgroundContrast = (try? container.decode(Double.self, forKey: .backgroundContrast)) ?? 1.0
         backgroundData = try? container.decode(Card.BackgroundData.self, forKey: .backgroundData)
         backgroundIconData = try? container.decode(Card.BackgroundData.self, forKey: .backgroundIconData)
-        backgroundID = (try? container.decode(UUID.self, forKey: .backgroundID)) ?? UUID()
-        backgroundTransformSquare = try? container.decode(Card.ImageTransform.self, forKey: .backgroundTransformSquare)
-        backgroundTransformFull = try? container.decode(Card.ImageTransform.self, forKey: .backgroundTransformFull)
     }
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -141,19 +137,15 @@ public final class CountdownInstance: Codable {
         try container.encode(textShadow, forKey: .textShadow)
         try container.encode(titleSize, forKey: .titleSize)
         try container.encode(numberSize, forKey: .numberSize)
+//        try container.encode(background, forKey: .background) // can't do it
+        try container.encode(backgroundTransforms, forKey: .backgroundTransforms)
+        try container.encode(backgroundID, forKey: .backgroundID)
         try container.encode(backgroundRGB, forKey: .backgroundColor)
         try container.encode(backgroundFade, forKey: .backgroundFade)
         try container.encode(backgroundBlur, forKey: .backgroundBlur)
         try container.encode(backgroundSaturation, forKey: .backgroundSaturation)
         try container.encode(backgroundBrightness, forKey: .backgroundBrightness)
         try container.encode(backgroundContrast, forKey: .backgroundContrast)
-        if case .photoLink(_) = backgroundData {
-            try container.encode(backgroundData, forKey: .backgroundData)
-            try container.encode(backgroundIconData, forKey: .backgroundIconData)
-        }
-        try container.encode(backgroundID, forKey: .backgroundID)
-        try container.encode(backgroundTransformFull, forKey: .backgroundTransformFull)
-        try container.encode(backgroundTransformSquare, forKey: .backgroundTransformSquare)
     }
     
     // Compare all states of this instance to a given countdown
@@ -169,15 +161,14 @@ public final class CountdownInstance: Codable {
         self.textShadow == countdown.currentTextShadow &&
         self.titleSize == countdown.card?.titleSize &&
         self.numberSize == countdown.card?.numberSize &&
+        self.backgroundTransforms == countdown.card?.backgroundTransforms &&
+        self.backgroundID == countdown.card?.backgroundID &&
         self.backgroundRGB == countdown.currentBackgroundColor?.rgb &&
         self.backgroundFade == countdown.currentBackgroundFade &&
         self.backgroundBlur == countdown.currentBackgroundBlur &&
         self.backgroundSaturation == countdown.currentBackgroundSaturation &&
         self.backgroundBrightness == countdown.currentBackgroundBrightness &&
-        self.backgroundContrast == countdown.currentBackgroundContrast &&
-        self.backgroundID == countdown.card?.backgroundID &&
-        self.backgroundTransformFull == countdown.card?.backgroundTransformFull &&
-        self.backgroundTransformSquare == countdown.card?.backgroundTransformSquare
+        self.backgroundContrast == countdown.currentBackgroundContrast
     }
     
     // Create an encoding for this instance
@@ -204,4 +195,9 @@ public final class CountdownInstance: Codable {
         
         return instance
     }
+    
+    /* DEPRECATED */
+    public private(set) var backgroundData: Card.BackgroundData?
+    public private(set) var backgroundIconData: Card.BackgroundData?
+    /* ---------- */
 }

@@ -58,7 +58,7 @@ class MessageController: MSMessagesAppViewController {
         alternateLayout.caption = countdown.displayName
         alternateLayout.trailingCaption = "\(countdown.date.daysRemaining()) days"
         alternateLayout.subcaption = countdown.dateString
-        if case .photo(let photo) = countdown.currentBackground, let image = photo.square() {
+        if let image = countdown.currentBackground?.full {
             // this is a hacky way to send the image without encoding it in a URL
             alternateLayout.image = image
         }
@@ -98,8 +98,8 @@ class MessageController: MSMessagesAppViewController {
         } else {
             nil
         }
-        if let image, let photoData = image.compressed(size: Card.maxPhotoSize) {
-            instance.setBackground(.photo(photoData))
+        if let image, let photoData = image.jpegData(compressionQuality: 0.8) {
+            instance.setBackground(photoData)
         }
         
         // Update the message bubble

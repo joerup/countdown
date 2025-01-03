@@ -47,7 +47,7 @@ public struct CountdownSquare: View {
         self.textShadow = countdown.currentTextShadow
         self.titleSize = countdown.currentTitleSize
         self.numberSize = countdown.currentNumberSize
-        self.background = countdown.currentBackgroundIcon
+        self.background = countdown.currentBackground
         self.backgroundColor = countdown.currentBackgroundColor
         self.backgroundFade = countdown.currentBackgroundFade
         self.backgroundBlur = countdown.currentBackgroundBlur
@@ -62,7 +62,7 @@ public struct CountdownSquare: View {
                 .padding([.horizontal, .top], geometry.size.width*0.1)
                 .padding(.bottom, geometry.size.width*0.04)
                 .background {
-                    BackgroundDisplay(background: background, color: backgroundColor, fade: backgroundFade, blur: backgroundBlur, brightness: backgroundBrightness, saturation: backgroundSaturation, contrast: backgroundContrast)
+                    BackgroundDisplay(background: background?.square, color: backgroundColor, fade: backgroundFade, blur: backgroundBlur, brightness: backgroundBrightness, saturation: backgroundSaturation, contrast: backgroundContrast)
                         .padding(.bottom, -geometry.size.width*0.01)
                 }
         }
