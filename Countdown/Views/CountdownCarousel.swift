@@ -14,9 +14,6 @@ struct CountdownCarousel: View {
     @Environment(\.scenePhase) private var scenePhase
     @Environment(Clock.self) private var clock
     
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @Environment(\.verticalSizeClass) private var verticalSizeClass
-    
     var countdowns: [Countdown]
     
     private var last: Countdown? { countdown(at: -1) }
@@ -43,6 +40,10 @@ struct CountdownCarousel: View {
         })
     }
     
+    var showMultipleCards: Bool
+    
+    @State private var scrollIndex: UUID?
+    
     @State private var disableHorizontalDrag: Bool = false
     @State private var disableVerticalDrag: Bool = false
     
@@ -53,9 +54,6 @@ struct CountdownCarousel: View {
         1 - min(abs(offset.height)/1000, 1)
     }
     
-    private var showMultipleCards: Bool {
-        horizontalSizeClass == .regular && verticalSizeClass == .regular
-    }
     private let idealCardAspectRatio: CGFloat = 19.5/9
     
     private var carouselGapWidth: CGFloat {
@@ -77,22 +75,14 @@ struct CountdownCarousel: View {
                         HStack {
                             ForEach(countdowns) { countdown in
                                 cardDisplay(countdown: countdown, size: cardSize, edgeInsets: edgeInsets)
+                                    .id(countdown.id)
                             }
                         }
                         .padding(cardPadding)
                     }
-                    .overlay(alignment: .topTrailing) {
-                        Button {
-                            withAnimation {
-                                clock.select(nil)
-                            }
-                        } label: {
-                            Image(systemName: "xmark.circle.fill")
-                                .imageScale(.large)
-                                .foregroundStyle(.foreground)
-                                .opacity(0.8)
-                        }
-                        .padding()
+                    .scrollPosition(id: $scrollIndex, anchor: .center)
+                    .onAppear {
+                        scrollIndex = clock.selectedCountdown?.id
                     }
                 } else {
                     ZStack {
@@ -116,7 +106,9 @@ struct CountdownCarousel: View {
             .id(clock.selectedCountdown)
             .confettiCannon(counter: $confettiTrigger, num: 100, colors: (clock.selectedCountdown?.currentTintColor ?? .white).discretizedGradient(numberOfShades: 10), rainHeight: 1.5 * geometry.size.height, radius: 0.7 * max(geometry.size.height, geometry.size.width))
             .overlay(alignment: .bottom) {
-                footer
+                if !showMultipleCards && editingCountdown == nil {
+                    footer
+                }
             }
         }
         .onAppear {
@@ -149,7 +141,6 @@ struct CountdownCarousel: View {
     
     private func cardDisplay(countdown: Countdown, size: CGSize, edgeInsets: EdgeInsets) -> some View {
         CountdownCard(countdown: countdown, size: size, edgeInsets: edgeInsets, fullScreen: !showMultipleCards, animation: animation, editCard: editingCountdownWrapper(countdown))
-            .shadow(radius: 10)
             .offset(offset)
             .scaleEffect(scale)
             .gesture(isEditing(countdown) || showMultipleCards ? nil : cardGesture(size: size))

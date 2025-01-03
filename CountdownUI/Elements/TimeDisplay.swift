@@ -16,15 +16,17 @@ public struct TimeDisplay: View {
     var textStyle: Card.TextStyle
     var textWeight: Font.Weight
     var textOpacity: Double
+    var textShadow: Double
     
     var textSize: CGFloat
     
-    public init(timeRemaining: Date.TimeRemaining, tintColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, textOpacity: Double, textSize: CGFloat) {
+    public init(timeRemaining: Date.TimeRemaining, tintColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, textOpacity: Double, textShadow: Double, textSize: CGFloat) {
         self.timeRemaining = timeRemaining
         self.tintColor = tintColor
         self.textStyle = textStyle
         self.textWeight = textWeight
         self.textOpacity = textOpacity
+        self.textShadow = textShadow
         self.textSize = textSize
     }
     
@@ -36,7 +38,6 @@ public struct TimeDisplay: View {
         }
         .foregroundStyle(.thickMaterial)
         .environment(\.colorScheme, .light)
-        .shadow(radius: 10)
     }
     
     private func numberUnit(_ value: Int?, colon: Bool = false) -> some View {

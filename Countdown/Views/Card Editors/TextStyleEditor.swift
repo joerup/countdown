@@ -14,6 +14,7 @@ struct TextStyleEditor: View {
     @Binding var textWeight: Int
     @Binding var tintColor: Color
     @Binding var textOpacity: Double
+    @Binding var textShadow: Double
     
     @Binding var titleSize: Double
     @Binding var numberSize: Double
@@ -110,6 +111,12 @@ struct TextStyleEditor: View {
                 .padding(.vertical)
             
             CustomColorPicker(color: Binding(get: { tintColor }, set: { color in if let color { tintColor = color } }), opacity: $textOpacity, shape: Circle(), sliderValue: .saturation, opacityRange: 0.15...1)
+            
+            Divider()
+                .padding(.vertical)
+            
+            CustomSlider(value: $textShadow, in: 0...1, opacityGrid: true, colors: [.clear, Color(white: 0.3).opacity(0.8)])
+                .tint(Color(white: 0.3).opacity(textShadow))
         }
     }
 }

@@ -16,18 +16,20 @@ public struct DaysDisplay: View {
     var textStyle: Card.TextStyle
     var textWeight: Font.Weight
     var textOpacity: Double
+    var textShadow: Double
     
     var textSize: CGFloat
     
     var showDaysText: Bool
     
-    public init(daysRemaining: Int, tintColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, textOpacity: Double, textSize: CGFloat, showDaysText: Bool = false) {
+    public init(daysRemaining: Int, tintColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, textOpacity: Double, textShadow: Double, textSize: CGFloat, showDaysText: Bool = false) {
         self.daysRemaining = daysRemaining
         self.tintColor = tintColor
         self.textStyle = textStyle
         self.textWeight = textWeight
         self.textSize = textSize
         self.textOpacity = textOpacity
+        self.textShadow = textShadow
         self.showDaysText = showDaysText
     }
     

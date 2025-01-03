@@ -15,7 +15,10 @@ struct CountdownView: View {
     @Environment(Clock.self) private var clock
     @Environment(Premium.self) private var premium
     
-    var sortedCountdowns: [Countdown] {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+    
+    private var sortedCountdowns: [Countdown] {
         if !searchText.isEmpty {
             return (clock.countdowns.filter {  $0.name.lowercased().starts(with: searchText.lowercased()) } .sorted()
                     + clock.countdowns.filter { $0.name.lowercased().contains(searchText.lowercased()) && !$0.name.lowercased().starts(with: searchText.lowercased()) } .sorted())
@@ -27,6 +30,10 @@ struct CountdownView: View {
         }
     }
     
+    private var showMultipleCards: Bool {
+        horizontalSizeClass == .regular && verticalSizeClass == .regular
+    }
+    
     @State private var showSettings: Bool = false
     @State private var showArchive: Bool = false
     @State private var showSearch: Bool = false
@@ -36,29 +43,46 @@ struct CountdownView: View {
     @State private var newCountdown: Bool = false
     @State private var editingCountdown: Countdown?
     
+    @State private var viewType: ViewType = .grid
+    private enum ViewType {
+        case grid, carousel
+    }
+    
     @Namespace private var animation
     
     var body: some View {
         NavigationStack {
-            CountdownGrid(countdowns: sortedCountdowns, showArchive: showArchive, animation: animation)
-                .navigationBarTitleDisplayMode(.inline)
-                .overlay {
-                    if sortedCountdowns.isEmpty {
-                        Text(!searchText.isEmpty ? "No matching countdowns found." : showArchive ? "Completed countdowns will appear here." : "No countdowns are currently active!")
-                            .multilineTextAlignment(.center)
-                            .foregroundStyle(.gray)
-                            .padding(50)
+            Group {
+                switch viewType {
+                case .grid:
+                    CountdownGrid(countdowns: sortedCountdowns, showArchive: showArchive, animation: animation) { countdown in
+                        clock.select(countdown)
+                        if showMultipleCards {
+                            viewType = .carousel
+                        }
                     }
+                case .carousel:
+                    CountdownCarousel(countdowns: sortedCountdowns, editingCountdown: $editingCountdown, showMultipleCards: showMultipleCards, animation: animation)
                 }
-                .toolbar {
-                    headerButtons
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .overlay {
+                if sortedCountdowns.isEmpty {
+                    Text(!searchText.isEmpty ? "No matching countdowns found." : showArchive ? "Completed countdowns will appear here." : "No countdowns are currently active!")
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.gray)
+                        .padding(50)
                 }
+            }
+            .toolbar {
+                headerButtons
+            }
         }
         .searchable(text: $searchText, isPresented: $showSearch, placement: .navigationBarDrawer)
-        .opacity(clock.selectedCountdown == nil ? 1 : 0)
+        .opacity(clock.selectedCountdown == nil || showMultipleCards ? 1 : 0)
         .overlay {
-            if clock.selectedCountdown != nil {
-                CountdownCarousel(countdowns: sortedCountdowns, editingCountdown: $editingCountdown, animation: animation)
+            if !showMultipleCards, clock.selectedCountdown != nil {
+                CountdownCarousel(countdowns: sortedCountdowns, editingCountdown: $editingCountdown, showMultipleCards: showMultipleCards, animation: animation)
             }
         }
         .tint(.pink)

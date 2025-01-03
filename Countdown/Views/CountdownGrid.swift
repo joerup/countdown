@@ -18,14 +18,16 @@ struct CountdownGrid: View {
     
     var showArchive: Bool
     
+    var animation: Namespace.ID
+    
+    var onSelect: (Countdown) -> Void
+    
     @State private var editDestination: Bool = false
     @State private var editDestinationValue: Countdown?
     @State private var shareCountdown: Bool = false
     @State private var shareCountdownValue: Countdown?
     @State private var deleteCountdown: Bool = false
     @State private var deleteCountdownValue: Countdown?
-    
-    var animation: Namespace.ID
     
     var body: some View {
         GeometryReader { geometry in
@@ -35,13 +37,18 @@ struct CountdownGrid: View {
                     ForEach(countdowns) { countdown in
                         Button {
                             withAnimation {
-                                clock.select(countdown)
+                                onSelect(countdown)
                             }
                         } label: {
                             CountdownSquare(countdown: countdown)
                                 .aspectRatio(1.0, contentMode: .fill)
                                 .frame(maxWidth: 200)
                                 .background(Color.blue.opacity(0.2))
+                                .overlay {
+                                    if let bgData = countdown.card?.backgroundData, case .photo(let data) = bgData {
+                                        Text(String(data.count))
+                                    }
+                                }
                         }
                         .clipShape(RoundedRectangle(cornerRadius: 22.5))
                         .shadow(radius: 5)

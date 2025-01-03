@@ -16,18 +16,20 @@ public struct TitleDisplay: View {
     private var textStyle: Card.TextStyle
     private var textWeight: Font.Weight
     private var textOpacity: Double
+    private var textShadow: Double
     
     private var textSize: CGFloat
     
     private var capitalized: Bool 
     private var alignment: Card.Alignment
     
-    public init(title: String, tintColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, textOpacity: Double, textSize: CGFloat, capitalized: Bool = false, alignment: Card.Alignment = .center) {
+    public init(title: String, tintColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, textOpacity: Double, textShadow: Double, textSize: CGFloat, capitalized: Bool = false, alignment: Card.Alignment = .center) {
         self.title = title
         self.tintColor = tintColor
         self.textStyle = textStyle
         self.textWeight = textWeight
         self.textOpacity = textOpacity
+        self.textShadow = textShadow
         self.textSize = textSize
         self.capitalized = capitalized
         self.alignment = alignment
@@ -45,7 +47,6 @@ public struct TitleDisplay: View {
             .multilineTextAlignment(alignment.textAlignment)
             .textCase(capitalized ? .uppercase : nil)
             .environment(\.colorScheme, .light)
-//            .shadow(radius: 10)
     }
 }
 
@@ -56,17 +57,19 @@ public struct DateDisplay: View {
     private var tintColor: Color
     private var textWeight: Font.Weight
     private var textOpacity: Double
+    private var textShadow: Double
     
     private var textSize: CGFloat
     
     private var titleCapitalized: Bool
     private var alignment: Card.Alignment
     
-    public init(dateString: String, tintColor: Color, textWeight: Font.Weight, textOpacity: Double, textSize: CGFloat, titleCapitalized: Bool = false, alignment: Card.Alignment = .center) {
+    public init(dateString: String, tintColor: Color, textWeight: Font.Weight, textOpacity: Double, textShadow: Double, textSize: CGFloat, titleCapitalized: Bool = false, alignment: Card.Alignment = .center) {
         self.dateString = dateString
         self.tintColor = tintColor
         self.textWeight = textWeight
         self.textOpacity = textOpacity
+        self.textShadow = textShadow
         self.textSize = textSize
         self.titleCapitalized = titleCapitalized
         self.alignment = alignment
@@ -84,7 +87,6 @@ public struct DateDisplay: View {
             .multilineTextAlignment(alignment.textAlignment)
             .fixedSize(horizontal: false, vertical: true)
             .environment(\.colorScheme, .light)
-//            .shadow(radius: 10)
     }
 }
 

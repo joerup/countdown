@@ -20,6 +20,7 @@ public struct CountdownFullLayout: View {
     private var textStyle: Card.TextStyle
     private var textWeight: Font.Weight
     private var textOpacity: Double
+    private var textShadow: Double
     
     private var titleSize: Double
     private var numberSize: Double
@@ -33,6 +34,7 @@ public struct CountdownFullLayout: View {
         self.textStyle = countdown.currentTextStyle
         self.textWeight = Font.Weight(rawValue: countdown.currentTextWeight)
         self.textOpacity = countdown.currentTextOpacity
+        self.textShadow = countdown.currentTextShadow
         self.titleSize = countdown.currentTitleSize
         self.numberSize = countdown.currentNumberSize
     }
@@ -40,27 +42,30 @@ public struct CountdownFullLayout: View {
     public var body: some View {
         GeometryReader { geometry in
             let scale = geometry.size.width
-            let titleSize = 1.0
-            let numberSize = 1.0
-            
             VStack(spacing: 0) {
                 TitleDisplay(
                     title: title,
-                    tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity,
+                    tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow,
                     textSize: scale * titleSize * 0.1
                 )
                 DateDisplay(
                     dateString: dateString,
-                    tintColor: tintColor, textWeight: textWeight, textOpacity: textOpacity,
+                    tintColor: tintColor, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow,
                     textSize: scale * min(1.0, titleSize) * 0.08
                 )
                 Spacer(minLength: 0)
                 DaysDisplay(
-                    daysRemaining: daysRemaining,
-                    tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity,
+                    daysRemaining: timeRemaining.day,
+                    tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow,
                     textSize: scale * numberSize * 0.4
                 )
+                TimeDisplay(
+                    timeRemaining: timeRemaining,
+                    tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow,
+                    textSize: scale * numberSize * 0.1
+                )
             }
+            .shadow(color: Color(white: 0.3).opacity(textShadow), radius: 10)
             .frame(width: geometry.size.width, height: geometry.size.height)
         }
     }

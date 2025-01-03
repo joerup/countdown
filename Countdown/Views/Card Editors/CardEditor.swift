@@ -102,18 +102,20 @@ struct CardEditor: View {
             .padding()
             
             Divider()
-            
-            ScrollView {
-                Group {
-                    switch section {
-                    case .background:
-                        BackgroundEditor(background: background, backgroundData: card.backgroundData, backgroundIcon: backgroundIcon, backgroundIconData: card.backgroundIconData, backgroundTransform: backgroundTransform, backgroundColor: $backgroundColor, backgroundFade: $backgroundFade, backgroundBlur: $backgroundBlur, backgroundSaturation: $backgroundSaturation, backgroundBrightness: $backgroundBrightness, backgroundContrast: $backgroundContrast) { background, transform, resetStates in
-                            setBackground(background, transform: transform, resetStates: resetStates)
-                        }
-                        .id(forceUpdate)
-                    case .text:
-                        TextStyleEditor(textStyle: $textStyle, textWeight: $textWeight, tintColor: $tintColor, textOpacity: $textOpacity, titleSize: $titleSize, numberSize: $numberSize)
+    
+            switch section {
+            case .background:
+                ScrollView {
+                    BackgroundEditor(background: background, backgroundData: card.backgroundData, backgroundIcon: backgroundIcon, backgroundIconData: card.backgroundIconData, backgroundTransform: backgroundTransform, backgroundColor: $backgroundColor, backgroundFade: $backgroundFade, backgroundBlur: $backgroundBlur, backgroundSaturation: $backgroundSaturation, backgroundBrightness: $backgroundBrightness, backgroundContrast: $backgroundContrast) { background, transform, resetStates in
+                        setBackground(background, transform: transform, resetStates: resetStates)
                     }
+                    .id(forceUpdate)
+                }
+                .safeAreaPadding(.bottom, edgeInsets.bottom)
+                .safeAreaPadding()
+            case .text:
+                ScrollView {
+                    TextStyleEditor(textStyle: $textStyle, textWeight: $textWeight, tintColor: $tintColor, textOpacity: $textOpacity, textShadow: $textShadow, titleSize: $titleSize, numberSize: $numberSize)
                 }
                 .safeAreaPadding(.bottom, edgeInsets.bottom)
                 .safeAreaPadding()

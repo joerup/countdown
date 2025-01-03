@@ -21,6 +21,7 @@ public struct CountdownSquare: View {
     private var textStyle: Card.TextStyle
     private var textWeight: Int
     private var textOpacity: Double
+    private var textShadow: Double
     
     private var titleSize: Double
     private var numberSize: Double
@@ -43,6 +44,7 @@ public struct CountdownSquare: View {
         self.textStyle = countdown.currentTextStyle
         self.textWeight = countdown.currentTextWeight
         self.textOpacity = countdown.currentTextOpacity
+        self.textShadow = countdown.currentTextShadow
         self.titleSize = countdown.currentTitleSize
         self.numberSize = countdown.currentNumberSize
         self.background = countdown.currentBackgroundIcon
@@ -56,7 +58,7 @@ public struct CountdownSquare: View {
     
     public var body: some View {
         GeometryReader { geometry in
-            CountdownLayout(title: title, dateString: dateString, daysRemaining: daysRemaining, timeRemaining: timeRemaining, tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity, titleSize: titleSize, numberSize: numberSize)
+            CountdownLayout(title: title, dateString: dateString, daysRemaining: daysRemaining, timeRemaining: timeRemaining, tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow, titleSize: titleSize, numberSize: numberSize)
                 .padding([.horizontal, .top], geometry.size.width*0.1)
                 .padding(.bottom, geometry.size.width*0.04)
                 .background {
