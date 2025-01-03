@@ -12,6 +12,12 @@ extension Card {
     
     public static let maxPhotoSize: Double = 750000
     
+    /* DEPRECATED */
+    /* DEPRECATED */
+    /* DEPRECATED */
+    /* DEPRECATED */
+    /* DEPRECATED */
+    /* DEPRECATED */
     public enum Background {
         case photo(_ photo: UIImage)
         case loading
@@ -44,6 +50,12 @@ extension Card {
         }
     }
     
+    /* DEPRECATED */
+    /* DEPRECATED */
+    /* DEPRECATED */
+    /* DEPRECATED */
+    /* DEPRECATED */
+    /* DEPRECATED */
     public enum BackgroundData: Codable, Hashable {
         
         case photo(_ data: Data)

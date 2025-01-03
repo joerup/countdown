@@ -104,7 +104,7 @@ struct CountdownCarousel: View {
             }
             .frame(width: geometry.size.width, height: geometry.size.height)
             .id(clock.selectedCountdown)
-            .confettiCannon(counter: $confettiTrigger, num: 100, colors: (clock.selectedCountdown?.currentTintColor ?? .white).discretizedGradient(numberOfShades: 10), rainHeight: 1.5 * geometry.size.height, radius: 0.7 * max(geometry.size.height, geometry.size.width))
+            .confettiCannon(counter: $confettiTrigger, num: 100, colors: (clock.selectedCountdown?.currentTextColor ?? .white).discretizedGradient(numberOfShades: 10), rainHeight: 1.5 * geometry.size.height, radius: 0.7 * max(geometry.size.height, geometry.size.width))
             .overlay(alignment: .bottom) {
                 if !showMultipleCards && editingCountdown == nil {
                     footer

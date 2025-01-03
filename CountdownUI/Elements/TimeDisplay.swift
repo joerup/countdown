@@ -12,7 +12,7 @@ public struct TimeDisplay: View {
     
     var timeRemaining: Date.TimeRemaining
     
-    var tintColor: Color
+    var textColor: Color
     var textStyle: Card.TextStyle
     var textWeight: Font.Weight
     var textOpacity: Double
@@ -20,9 +20,9 @@ public struct TimeDisplay: View {
     
     var textSize: CGFloat
     
-    public init(timeRemaining: Date.TimeRemaining, tintColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, textOpacity: Double, textShadow: Double, textSize: CGFloat) {
+    public init(timeRemaining: Date.TimeRemaining, textColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, textOpacity: Double, textShadow: Double, textSize: CGFloat) {
         self.timeRemaining = timeRemaining
-        self.tintColor = tintColor
+        self.textColor = textColor
         self.textStyle = textStyle
         self.textWeight = textWeight
         self.textOpacity = textOpacity
@@ -48,19 +48,19 @@ public struct TimeDisplay: View {
                     .fontWeight(textWeight)
                     .fontDesign(textStyle.design)
                     .fontWidth(textStyle.width)
-                    .foregroundStyle(tintColor)
+                    .foregroundStyle(textColor)
                     .opacity(textOpacity)
                     .monospacedDigit()
                 if colon {
                     ZStack {
                         Text(":").foregroundStyle(.white)
-                        Text(":").foregroundStyle(tintColor.opacity(0.5))
+                        Text(":").foregroundStyle(textColor.opacity(0.5))
                     }
                     .font(.system(size: textSize * 5 / 6))
                     .fontWeight(textWeight)
                     .fontDesign(textStyle.design)
                     .fontWidth(textStyle.width)
-                    .foregroundStyle(tintColor)
+                    .foregroundStyle(textColor)
                     .opacity(textOpacity)
                 }
             }

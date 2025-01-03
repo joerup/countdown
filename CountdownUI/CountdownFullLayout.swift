@@ -16,7 +16,7 @@ public struct CountdownFullLayout: View {
     private var daysRemaining: Int
     private var timeRemaining: Date.TimeRemaining
     
-    private var tintColor: Color
+    private var textColor: Color
     private var textStyle: Card.TextStyle
     private var textWeight: Font.Weight
     private var textOpacity: Double
@@ -30,7 +30,7 @@ public struct CountdownFullLayout: View {
         self.dateString = countdown.dateString
         self.daysRemaining = countdown.daysRemaining
         self.timeRemaining = countdown.timeRemaining
-        self.tintColor = countdown.currentTintColor
+        self.textColor = countdown.currentTextColor
         self.textStyle = countdown.currentTextStyle
         self.textWeight = Font.Weight(rawValue: countdown.currentTextWeight)
         self.textOpacity = countdown.currentTextOpacity
@@ -45,23 +45,23 @@ public struct CountdownFullLayout: View {
             VStack(spacing: 0) {
                 TitleDisplay(
                     title: title,
-                    tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow,
+                    textColor: textColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow,
                     textSize: scale * titleSize * 0.1
                 )
                 DateDisplay(
                     dateString: dateString,
-                    tintColor: tintColor, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow,
+                    textColor: textColor, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow,
                     textSize: scale * min(1.0, titleSize) * 0.08
                 )
                 Spacer(minLength: 0)
                 DaysDisplay(
                     daysRemaining: timeRemaining.day,
-                    tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow,
+                    textColor: textColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow,
                     textSize: scale * numberSize * 0.4
                 )
                 TimeDisplay(
                     timeRemaining: timeRemaining,
-                    tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow,
+                    textColor: textColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow,
                     textSize: scale * numberSize * 0.1
                 )
             }

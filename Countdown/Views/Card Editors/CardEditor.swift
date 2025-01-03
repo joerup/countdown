@@ -29,7 +29,7 @@ struct CardEditor: View {
     @State private var savedInstance: CountdownInstance?
     @State private var savedBackgroundData: Card.BackgroundData?
     
-    @State private var tintColor: Color = .white
+    @State private var textColor: Color = .white
     @State private var textStyle: Card.TextStyle = .standard
     @State private var textWeight: Int = Font.Weight.medium.rawValue
     @State private var textOpacity: Double = 1.0
@@ -115,7 +115,7 @@ struct CardEditor: View {
                 .safeAreaPadding()
             case .text:
                 ScrollView {
-                    TextStyleEditor(textStyle: $textStyle, textWeight: $textWeight, tintColor: $tintColor, textOpacity: $textOpacity, textShadow: $textShadow, titleSize: $titleSize, numberSize: $numberSize)
+                    TextStyleEditor(textStyle: $textStyle, textWeight: $textWeight, textColor: $textColor, textOpacity: $textOpacity, textShadow: $textShadow, titleSize: $titleSize, numberSize: $numberSize)
                 }
                 .safeAreaPadding(.bottom, edgeInsets.bottom)
                 .safeAreaPadding()
@@ -128,8 +128,8 @@ struct CardEditor: View {
                 savedBackgroundData = card.backgroundData
             }
         }
-        .onChange(of: tintColor) { _, color in
-            card.tintColor = color
+        .onChange(of: textColor) { _, color in
+            card.textColor = color
             saveCard()
         }
         .onChange(of: textStyle) { _, style in
@@ -184,7 +184,7 @@ struct CardEditor: View {
     
     private func setStates() {
         backgroundTransform = card.backgroundTransformSquare
-        tintColor = card.tintColor
+        textColor = card.textColor
         textStyle = card.textStyle
         textWeight = card.textWeight
         textOpacity = card.textOpacity

@@ -65,7 +65,7 @@ public struct CountdownCard: View {
 //                    .background(RoundedRectangle(cornerRadius: 30).fill(Material.ultraThin))
 //            }
 //            VStack(spacing: 10) {
-//                TimeDisplay(timeRemaining: countdown.timeRemaining, tintColor: countdown.currentTintColor, textStyle: countdown.currentTextStyle, textWeight: Font.Weight(rawValue: countdown.currentTextWeight), textOpacity: 1.0, textSize: 37.5)
+//                TimeDisplay(timeRemaining: countdown.timeRemaining, textColor: countdown.currentTintColor, textStyle: countdown.currentTextStyle, textWeight: Font.Weight(rawValue: countdown.currentTextWeight), textOpacity: 1.0, textSize: 37.5)
 //                Text(countdown.date.fullString)
 //                    .font(.title3)
 //                    .fontWidth(.condensed)

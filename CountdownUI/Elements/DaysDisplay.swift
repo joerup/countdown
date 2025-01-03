@@ -12,7 +12,7 @@ public struct DaysDisplay: View {
     
     var daysRemaining: Int
     
-    var tintColor: Color
+    var textColor: Color
     var textStyle: Card.TextStyle
     var textWeight: Font.Weight
     var textOpacity: Double
@@ -22,9 +22,9 @@ public struct DaysDisplay: View {
     
     var showDaysText: Bool
     
-    public init(daysRemaining: Int, tintColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, textOpacity: Double, textShadow: Double, textSize: CGFloat, showDaysText: Bool = false) {
+    public init(daysRemaining: Int, textColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, textOpacity: Double, textShadow: Double, textSize: CGFloat, showDaysText: Bool = false) {
         self.daysRemaining = daysRemaining
-        self.tintColor = tintColor
+        self.textColor = textColor
         self.textStyle = textStyle
         self.textWeight = textWeight
         self.textSize = textSize
@@ -52,7 +52,7 @@ public struct DaysDisplay: View {
                 .fontWeight(textWeight)
                 .fontDesign(textStyle.design)
                 .fontWidth(textStyle.width)
-                .foregroundStyle(tintColor)
+                .foregroundStyle(textColor)
                 .opacity(textOpacity)
                 .lineLimit(0)
         }

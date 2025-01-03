@@ -15,8 +15,13 @@ public final class Card {
     public var countdown: Countdown?
     public private(set) var backgroundID: UUID = UUID()
     
+//    @Attribute(.externalStorage) public private(set) var imageData: Data?
+//    @Attribute(.externalStorage) public private(set) var imageDataSquare: Data?
+    
+    /* DEPRECATED */
     @Attribute(.externalStorage) public private(set) var backgroundData: BackgroundData?
     @Attribute(.externalStorage) public private(set) var backgroundIconData: BackgroundData?
+    /* ---------- */
     
     public var backgroundTransformSquare: ImageTransform?
     public var backgroundTransformFull: ImageTransform?
@@ -34,7 +39,7 @@ public final class Card {
     public var backgroundContrast: Double = 1.0
     
     private var tint: RGBColor = Color.white.rgb
-    public var tintColor: Color {
+    public var textColor: Color {
         get { Color(rgb: tint) }
         set { self.tint = newValue.rgb }
     }

@@ -12,7 +12,7 @@ struct TextStyleEditor: View {
     
     @Binding var textStyle: Card.TextStyle
     @Binding var textWeight: Int
-    @Binding var tintColor: Color
+    @Binding var textColor: Color
     @Binding var textOpacity: Double
     @Binding var textShadow: Double
     
@@ -110,7 +110,7 @@ struct TextStyleEditor: View {
             Divider()
                 .padding(.vertical)
             
-            CustomColorPicker(color: Binding(get: { tintColor }, set: { color in if let color { tintColor = color } }), opacity: $textOpacity, shape: Circle(), sliderValue: .saturation, opacityRange: 0.15...1)
+            CustomColorPicker(color: Binding(get: { textColor }, set: { color in if let color { textColor = color } }), opacity: $textOpacity, shape: Circle(), sliderValue: .saturation, opacityRange: 0.15...1)
             
             Divider()
                 .padding(.vertical)

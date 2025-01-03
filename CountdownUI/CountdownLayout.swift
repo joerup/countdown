@@ -16,7 +16,7 @@ public struct CountdownLayout: View {
     private var daysRemaining: Int
     private var timeRemaining: Date.TimeRemaining
     
-    private var tintColor: Color
+    private var textColor: Color
     private var textStyle: Card.TextStyle
     private var textWeight: Font.Weight
     private var textOpacity: Double
@@ -32,7 +32,7 @@ public struct CountdownLayout: View {
         self.dateString = countdown.dateString
         self.daysRemaining = countdown.daysRemaining
         self.timeRemaining = countdown.timeRemaining
-        self.tintColor = countdown.currentTintColor
+        self.textColor = countdown.currentTextColor
         self.textStyle = countdown.currentTextStyle
         self.textWeight = Font.Weight(rawValue: countdown.currentTextWeight)
         self.textOpacity = countdown.currentTextOpacity
@@ -45,7 +45,7 @@ public struct CountdownLayout: View {
         self.dateString = instance.dateString
         self.daysRemaining = instance.daysRemaining
         self.timeRemaining = instance.timeRemaining
-        self.tintColor = instance.tintColor
+        self.textColor = instance.textColor
         self.textStyle = instance.textStyle
         self.textWeight = Font.Weight(rawValue: instance.textWeight)
         self.textOpacity = instance.textOpacity
@@ -53,12 +53,12 @@ public struct CountdownLayout: View {
         self.titleSize = instance.titleSize
         self.numberSize = instance.numberSize
     }
-    public init(title: String, dateString: String, daysRemaining: Int, timeRemaining: Date.TimeRemaining, tintColor: Color, textStyle: Card.TextStyle, textWeight: Int, textOpacity: Double, textShadow: Double, titleSize: Double, numberSize: Double) {
+    public init(title: String, dateString: String, daysRemaining: Int, timeRemaining: Date.TimeRemaining, textColor: Color, textStyle: Card.TextStyle, textWeight: Int, textOpacity: Double, textShadow: Double, titleSize: Double, numberSize: Double) {
         self.title = title
         self.dateString = dateString
         self.daysRemaining = daysRemaining
         self.timeRemaining = timeRemaining
-        self.tintColor = tintColor
+        self.textColor = textColor
         self.textStyle = textStyle
         self.textWeight = Font.Weight(rawValue: textWeight)
         self.textOpacity = textOpacity
@@ -73,13 +73,13 @@ public struct CountdownLayout: View {
                 Aligner(.leading) {
                     TitleDisplay(
                         title: title,
-                        tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow,
+                        textColor: textColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow,
                         textSize: scale * titleSize * 0.15,
                         alignment: .leading
                     )
                     DateDisplay(
                         dateString: dateString,
-                        tintColor: tintColor, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow,
+                        textColor: textColor, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow,
                         textSize: scale * min(1.0, titleSize) * 0.12,
                         alignment: .leading
                     )
@@ -88,7 +88,7 @@ public struct CountdownLayout: View {
                 Aligner(.trailing) {
                     DaysDisplay(
                         daysRemaining: daysRemaining,
-                        tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow,
+                        textColor: textColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow,
                         textSize: scale * numberSize * 0.5
                     )
                 }

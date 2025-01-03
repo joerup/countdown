@@ -81,8 +81,8 @@ public final class Countdown {
         return card?.backgroundContrast ?? 1.0
     }
     
-    public var currentTintColor: Color {
-        return card?.tintColor ?? .white
+    public var currentTextColor: Color {
+        return card?.textColor ?? .white
     }
     public var currentTextStyle: Card.TextStyle {
         return card?.textStyle ?? .standard
@@ -146,7 +146,7 @@ public final class Countdown {
         self.displayName == countdown.displayName &&
         self.type == countdown.type &&
         self.occasion == countdown.occasion &&
-        self.currentTintColor.rgb == countdown.currentTintColor.rgb &&
+        self.currentTextColor.rgb == countdown.currentTextColor.rgb &&
         self.currentTextStyle == countdown.currentTextStyle &&
         self.currentTextOpacity == countdown.currentTextOpacity &&
         self.currentTextShadow == countdown.currentTextShadow &&

@@ -17,7 +17,7 @@ struct LayoutEditor: View {
     var dateString: String
     var daysRemaining: Int
     var timeRemaining: Date.TimeRemaining
-    var tintColor: Color
+    var textColor: Color
     var textStyle: Card.TextStyle
     var textWeight: Int
     var textOpacity: Double
@@ -40,7 +40,7 @@ struct LayoutEditor: View {
                                 self.layoutType = type
                                 setLayout()
                             } label: {
-//                                CountdownLayout(title: title, dateString: dateString, daysRemaining: daysRemaining, timeRemaining: timeRemaining, tintColor: tintColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity)
+//                                CountdownLayout(title: title, dateString: dateString, daysRemaining: daysRemaining, timeRemaining: timeRemaining, textColor: textColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity)
 //                                    .padding(16)
 //                                    .frame(width: 120, height: 120)
 //                                    .background(Material.ultraThin.opacity(layoutType == type ? 1.0 : 0.25))

@@ -20,7 +20,7 @@ public final class CountdownInstance: Codable {
     public private(set) var occasion: Occasion
     
     private(set) var tint: RGBColor
-    public var tintColor: Color { Color(rgb: tint) }
+    public var textColor: Color { Color(rgb: tint) }
     public private(set) var textStyle: Card.TextStyle
     public private(set) var textWeight: Int
     public private(set) var textOpacity: Double
@@ -65,7 +65,7 @@ public final class CountdownInstance: Codable {
         self.displayName = countdown.displayName
         self.type = countdown.type
         self.occasion = countdown.occasion
-        self.tint = countdown.currentTintColor.rgb
+        self.tint = countdown.currentTextColor.rgb
         self.textStyle = countdown.currentTextStyle
         self.textWeight = countdown.currentTextWeight
         self.textOpacity = countdown.currentTextOpacity
@@ -163,7 +163,7 @@ public final class CountdownInstance: Codable {
         self.displayName == countdown.displayName &&
         self.type == countdown.type &&
         self.occasion == countdown.occasion &&
-        self.tint == countdown.currentTintColor.rgb &&
+        self.tint == countdown.currentTextColor.rgb &&
         self.textStyle == countdown.currentTextStyle &&
         self.textWeight == countdown.currentTextWeight &&
         self.textShadow == countdown.currentTextShadow &&
