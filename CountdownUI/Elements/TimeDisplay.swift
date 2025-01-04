@@ -10,7 +10,9 @@ import CountdownData
 
 public struct TimeDisplay: View {
     
-    var timeRemaining: Date.TimeRemaining
+    var hours: Int
+    var minutes: Int
+    var seconds: Int
     
     var textColor: Color
     var textStyle: Card.TextStyle
@@ -20,8 +22,10 @@ public struct TimeDisplay: View {
     
     var textSize: CGFloat
     
-    public init(timeRemaining: Date.TimeRemaining, textColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, textOpacity: Double, textShadow: Double, textSize: CGFloat) {
-        self.timeRemaining = timeRemaining
+    public init(hours: Int, minutes: Int, seconds: Int, textColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, textOpacity: Double, textShadow: Double, textSize: CGFloat) {
+        self.hours = hours
+        self.minutes = minutes
+        self.seconds = seconds
         self.textColor = textColor
         self.textStyle = textStyle
         self.textWeight = textWeight
@@ -32,16 +36,16 @@ public struct TimeDisplay: View {
     
     public var body: some View {
         HStack(spacing: 1) {
-            numberUnit(timeRemaining.hour, colon: true)
-            numberUnit(timeRemaining.minute, colon: true)
-            numberUnit(timeRemaining.second)
+            numberUnit(hours, colon: true)
+            numberUnit(minutes, colon: true)
+            numberUnit(seconds)
         }
         .foregroundStyle(.thickMaterial)
         .environment(\.colorScheme, .light)
     }
     
-    private func numberUnit(_ value: Int?, colon: Bool = false) -> some View {
-        HStack(spacing: 1) {
+    private func numberUnit(_ value: Int?, unit: String? = nil, colon: Bool = false) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: 1) {
             if let value {
                 Text(String(format: "%02i", abs(value)))
                     .font(.system(size: textSize))
@@ -51,6 +55,19 @@ public struct TimeDisplay: View {
                     .foregroundStyle(textColor)
                     .opacity(textOpacity)
                     .monospacedDigit()
+                if let unit {
+                    ZStack {
+                        Text(unit).foregroundStyle(.white)
+                        Text(unit).foregroundStyle(textColor.opacity(0.5))
+                    }
+                    .font(.system(size: textSize * 0.7))
+                    .fontWeight(textWeight)
+                    .fontDesign(textStyle.design)
+                    .fontWidth(textStyle.width)
+                    .foregroundStyle(textColor)
+                    .opacity(textOpacity)
+                    .padding(.trailing, textSize * 0.3)
+                }
                 if colon {
                     ZStack {
                         Text(":").foregroundStyle(.white)
@@ -65,6 +82,8 @@ public struct TimeDisplay: View {
                 }
             }
         }
+        .lineLimit(0)
+        .minimumScaleFactor(0.1)
     }
 
 }

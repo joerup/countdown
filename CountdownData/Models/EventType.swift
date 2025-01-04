@@ -8,7 +8,7 @@
 import Foundation
 import EventKit
 
-public enum EventType: String, Codable, CaseIterable, Identifiable {
+public enum EventType: String, Codable, CaseIterable, Identifiable, Equatable {
     
     case holiday
     case custom

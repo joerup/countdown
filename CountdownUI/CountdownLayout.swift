@@ -87,7 +87,7 @@ public struct CountdownLayout: View {
                 Spacer(minLength: 0)
                 Aligner(.trailing) {
                     DaysDisplay(
-                        daysRemaining: daysRemaining,
+                        days: daysRemaining,
                         textColor: textColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow,
                         textSize: scale * numberSize * 0.5
                     )

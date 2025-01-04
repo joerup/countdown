@@ -26,8 +26,11 @@ public final class Clock {
     // selected countdown reference
     public private(set) var selectedCountdown: Countdown?
     
+    // model context
+    public private(set) var modelContext: ModelContext
+    
     // tick update boolean
-    public private(set) var tick: Bool = false
+    public private(set) var tick: Int = 0
     
     // tick updates enabled
     private var tickUpdatesEnabled: Bool = true
@@ -40,9 +43,6 @@ public final class Clock {
     
     // countdown id to select after fetching
     private var fetchID: UUID?
-    
-    // model context from environment
-    private var modelContext: ModelContext
     
     // init from model context
     public init(modelContext: ModelContext) {
@@ -165,8 +165,8 @@ public final class Clock {
         }
     }
     
-    // Edit countdown
-    public func edit(_ countdown: Countdown) {
+    // Save countdown after changes
+    public func save(_ countdown: Countdown) {
         try? modelContext.save()
         if isActive {
             Task {
@@ -294,7 +294,7 @@ public final class Clock {
         self.tickUpdatesEnabled = true
         
         // initial tick for setup
-        self.tick.toggle()
+        self.tick = -1
         
         // a short delay to start the clock when the next realtime second ticks
         let initialDelay: Double = 1 - Double(Date.now.component(.nanosecond))/1E9
@@ -302,7 +302,7 @@ public final class Clock {
             self.timer?.invalidate()
             
             // tick exactly on the second
-            self.tick.toggle()
+            self.tick = Date.now.component(.second)
             for countdown in self.countdowns {
                 countdown.tick()
             }
@@ -310,7 +310,10 @@ public final class Clock {
             // repeatedly tick every second after this
             self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
                 if self.tickUpdatesEnabled {
-                    self.tick.toggle()
+                    self.tick += 1
+                    if self.tick == 60 {
+                        self.tick = 0
+                    }
                 }
                 for countdown in self.countdowns {
                     countdown.tick()

@@ -140,13 +140,30 @@ struct CountdownCarousel: View {
     }
     
     private func cardDisplay(countdown: Countdown, size: CGSize, edgeInsets: EdgeInsets) -> some View {
-        CountdownCard(countdown: countdown, size: size, edgeInsets: edgeInsets, fullScreen: !showMultipleCards, animation: animation, editCard: editingCountdownWrapper(countdown))
+        CountdownCard(countdown: countdown, size: size, edgeInsets: edgeInsets, fullScreen: !showMultipleCards, animation: animation, editCountdown: editingCountdownWrapper(countdown))
             .offset(offset)
             .scaleEffect(scale)
             .gesture(isEditing(countdown) || showMultipleCards ? nil : cardGesture(size: size))
             .onTapGesture {
                 shootConfetti()
             }
+    }
+    
+    private var header: some View {
+        HStack {
+            Button {
+                withAnimation {
+                    clock.select(nil)
+                }
+            } label: {
+                Image(systemName: "xmark.circle.fill")
+                    .font(.title3)
+                    .opacity(0.5)
+                    .padding(5)
+            }
+            .tint(.white)
+        }
+        .padding(.horizontal)
     }
     
     private var footer: some View {

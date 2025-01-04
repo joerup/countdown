@@ -18,30 +18,33 @@ struct HolidayDetails: View {
     
     var body: some View {
         List {
-            Section("Name") {
-                TextField("Event Name", text: $displayName)
-            }
-            banner
-            if let occasion {
-                Section("Occurs") {
-                    HStack {
-                        if occasion.repeatAnnually {
-                            Image(systemName: "repeat")
+            Group {
+                Section("Name") {
+                    TextField("Event Name", text: $displayName)
+                }
+                if let occasion {
+                    Section("Occurs") {
+                        banner
+                        HStack {
+                            if occasion.repeatAnnually {
+                                Image(systemName: "repeat")
+                            }
+                            Text(occasion.string)
                         }
-                        Text(occasion.string)
+                        .foregroundStyle(.secondary)
                     }
-                    .foregroundStyle(.secondary)
-                }
-                Section("Upcoming Dates") {
-                    ForEach(occasion.futureDates(showMoreDates ? 10 : 3), id: \.self) { date in
-                        Text(date.fullDateString)
-                            .foregroundStyle(.secondary)
-                    }
-                    Button("Show \(showMoreDates ? "Less" : "More")") {
-                        showMoreDates.toggle()
+                    Section("Upcoming Dates") {
+                        ForEach(occasion.futureDates(showMoreDates ? 10 : 3), id: \.self) { date in
+                            Text(date.fullDateString)
+                                .foregroundStyle(.secondary)
+                        }
+                        Button("Show \(showMoreDates ? "Less" : "More")") {
+                            showMoreDates.toggle()
+                        }
                     }
                 }
             }
+            .listRowBackground(Color.white.opacity(0.1))
         }
     }
     

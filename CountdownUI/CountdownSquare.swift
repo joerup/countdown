@@ -10,7 +10,6 @@ import CountdownData
 
 public struct CountdownSquare: View {
     
-    private var countdownID: UUID
     private var title: String
     private var dateString: String
     
@@ -35,7 +34,6 @@ public struct CountdownSquare: View {
     private var backgroundContrast: Double
     
     public init(countdown: Countdown) {
-        self.countdownID = countdown.id
         self.title = countdown.displayName
         self.dateString = countdown.dateString
         self.daysRemaining = countdown.daysRemaining
@@ -54,6 +52,27 @@ public struct CountdownSquare: View {
         self.backgroundBrightness = countdown.currentBackgroundBrightness
         self.backgroundSaturation = countdown.currentBackgroundSaturation
         self.backgroundContrast = countdown.currentBackgroundContrast
+    }
+    
+    public init(instance: CountdownInstance) {
+        self.title = instance.displayName
+        self.dateString = instance.dateString
+        self.daysRemaining = instance.daysRemaining
+        self.timeRemaining = instance.timeRemaining
+        self.textColor = instance.textColor
+        self.textStyle = instance.textStyle
+        self.textWeight = instance.textWeight
+        self.textOpacity = instance.textOpacity
+        self.textShadow = instance.textShadow
+        self.titleSize = instance.titleSize
+        self.numberSize = instance.numberSize
+        self.background = instance.currentBackground
+        self.backgroundColor = instance.backgroundColor
+        self.backgroundFade = instance.backgroundFade
+        self.backgroundBlur = instance.backgroundBlur
+        self.backgroundBrightness = instance.backgroundBrightness
+        self.backgroundSaturation = instance.backgroundSaturation
+        self.backgroundContrast = instance.backgroundContrast
     }
     
     public var body: some View {

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		013D84E72A8204A400A8DE1A /* CountdownTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B31ACF2A81E86600002F15 /* CountdownTimelineProvider.swift */; };
 		013D84EA2A82052A00A8DE1A /* CountdownWidgetIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B31ACD2A81E82C00002F15 /* CountdownWidgetIntent.swift */; };
-		014FCD332AE48FB300C56FAF /* CardEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 014FCD322AE48FB300C56FAF /* CardEditor.swift */; };
 		014FCD352AE4AA2300C56FAF /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 014FCD342AE4AA2300C56FAF /* ConfettiSwiftUI */; };
 		015148372AED8E5300430189 /* PremiumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015148362AED8E5300430189 /* PremiumView.swift */; };
 		0157B7D52A8758D2007CF704 /* CountdownRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0157B7D42A8758D2007CF704 /* CountdownRoot.swift */; };
@@ -41,6 +40,7 @@
 		01C2086C2AE04B8B00F798CD /* CountdownGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C2086B2AE04B8B00F798CD /* CountdownGrid.swift */; };
 		01C209162AE0D31800F798CD /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C2090E2AE0CA7700F798CD /* CloudKit.framework */; };
 		01C3C7D42A7CD14000475FC4 /* HolidayEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C3C7D32A7CD14000475FC4 /* HolidayEditor.swift */; };
+		01C94C542D28E99C008D5B8F /* CountdownEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C94C532D28E998008D5B8F /* CountdownEditor.swift */; };
 		01CE90AD2ADC5959000537C5 /* SettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01CE90AC2ADC5959000537C5 /* SettingsMenu.swift */; };
 		01D3349B2AE1E93D00C47472 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C2090E2AE0CA7700F798CD /* CloudKit.framework */; };
 		01D9E0B32C6B16FF0043F000 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 01D9E0B22C6B16FF0043F000 /* ConfettiSwiftUI */; };
@@ -106,7 +106,6 @@
 /* Begin PBXFileReference section */
 		010A3F2C2B0D973600CE1609 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS10.0.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		013D84F52A820A0000A8DE1A /* CountdownWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CountdownWidgetExtension.entitlements; sourceTree = "<group>"; };
-		014FCD322AE48FB300C56FAF /* CardEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardEditor.swift; sourceTree = "<group>"; };
 		015148362AED8E5300430189 /* PremiumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumView.swift; sourceTree = "<group>"; };
 		0157B7D42A8758D2007CF704 /* CountdownRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownRoot.swift; sourceTree = "<group>"; };
 		015DD3BC2A774807000EB3C0 /* Countdown.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Countdown.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -144,6 +143,7 @@
 		01C2090E2AE0CA7700F798CD /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		01C2E2D72AC93A08009C1A10 /* CountdownUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CountdownUI; sourceTree = "<group>"; };
 		01C3C7D32A7CD14000475FC4 /* HolidayEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HolidayEditor.swift; sourceTree = "<group>"; };
+		01C94C532D28E998008D5B8F /* CountdownEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownEditor.swift; sourceTree = "<group>"; };
 		01CE90AC2ADC5959000537C5 /* SettingsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMenu.swift; sourceTree = "<group>"; };
 		01E0923B2A9EAD41006BDABF /* CountdownData */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CountdownData; sourceTree = "<group>"; };
 		01E4109F2C062DA900F7B936 /* Countdown.messages.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Countdown.messages.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -260,8 +260,9 @@
 				01C2086B2AE04B8B00F798CD /* CountdownGrid.swift */,
 				01C208692AE049B500F798CD /* CountdownCarousel.swift */,
 				0163E5E12D188D68004D60C9 /* CountdownCard.swift */,
-				01AAA5182D22548800F97470 /* Card Editors */,
+				01C94C532D28E998008D5B8F /* CountdownEditor.swift */,
 				0114EAA22A8FE0240013EE87 /* Occasion Editors */,
+				01AAA5182D22548800F97470 /* Card Editors */,
 				015DD3D62A77483A000EB3C0 /* Helper Views */,
 				01CE90AC2ADC5959000537C5 /* SettingsMenu.swift */,
 				017AD9862C0A5E080096E27A /* ShareMenu.swift */,
@@ -286,7 +287,6 @@
 		01AAA5182D22548800F97470 /* Card Editors */ = {
 			isa = PBXGroup;
 			children = (
-				014FCD322AE48FB300C56FAF /* CardEditor.swift */,
 				01AAA5192D2254A000F97470 /* BackgroundEditor.swift */,
 				01AAA51B2D2255FB00F97470 /* TextStyleEditor.swift */,
 				0176DCF12D211872007FEA03 /* LayoutEditor.swift */,
@@ -501,9 +501,9 @@
 				01C2086C2AE04B8B00F798CD /* CountdownGrid.swift in Sources */,
 				017846AB2D2099E20048055A /* CustomColorPicker.swift in Sources */,
 				0163E5E42D18C4C6004D60C9 /* OccasionCreator.swift in Sources */,
+				01C94C542D28E99C008D5B8F /* CountdownEditor.swift in Sources */,
 				0163E5E22D188D68004D60C9 /* CountdownCard.swift in Sources */,
 				015DD3C02A774807000EB3C0 /* CountdownApp.swift in Sources */,
-				014FCD332AE48FB300C56FAF /* CardEditor.swift in Sources */,
 				015DD3DC2A77483A000EB3C0 /* CountdownView.swift in Sources */,
 				01C2086A2AE049B500F798CD /* CountdownCarousel.swift in Sources */,
 				015148372AED8E5300430189 /* PremiumView.swift in Sources */,

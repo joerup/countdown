@@ -22,22 +22,25 @@ struct DateEditor: View {
     
     var body: some View {
         List {
-            Section("Name") {
-                TextField("Event Name", text: $name)
-            }
-            Section {
-                DatePicker("Date", selection: $date, displayedComponents: [.date])
-                    .datePickerStyle(.graphical)
-            }
-            Section {
-                Toggle("Include Time", isOn: $includeTime)
-                if includeTime {
-                    DatePicker("Time", selection: $time, displayedComponents: [.hourAndMinute])
+            Group {
+                Section("Name") {
+                    TextField("Event Name", text: $name)
+                }
+                Section {
+                    DatePicker("Date", selection: $date, displayedComponents: [.date])
+                        .datePickerStyle(.graphical)
+                }
+                Section {
+                    Toggle("Include Time", isOn: $includeTime)
+                    if includeTime {
+                        DatePicker("Time", selection: $time, displayedComponents: [.hourAndMinute])
+                    }
+                }
+                Section {
+                    Toggle("Repeat Annually", isOn: $repeatAnnually)
                 }
             }
-            Section { 
-                Toggle("Repeat Annually", isOn: $repeatAnnually)
-            }
+            .listRowBackground(Color.white.opacity(0.1))
         }
         .onAppear {
             if let occasion {

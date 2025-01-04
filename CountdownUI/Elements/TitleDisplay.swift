@@ -27,7 +27,7 @@ public struct TitleDisplay: View {
         self.title = title
         self.textColor = textColor
         self.textStyle = textStyle
-        self.textWeight = textWeight
+        self.textWeight = textWeight.bolder()
         self.textOpacity = textOpacity
         self.textShadow = textShadow
         self.textSize = textSize
@@ -38,7 +38,7 @@ public struct TitleDisplay: View {
     public var body: some View {
         Text(title)
             .font(.system(size: textSize))
-            .fontWeight(textWeight.bolder())
+            .fontWeight(textWeight)
             .fontDesign(textStyle.design)
             .fontWidth(textStyle.width)
             .foregroundStyle(textColor)
@@ -61,17 +61,15 @@ public struct DateDisplay: View {
     
     private var textSize: CGFloat
     
-    private var titleCapitalized: Bool
     private var alignment: Card.Alignment
     
-    public init(dateString: String, textColor: Color, textWeight: Font.Weight, textOpacity: Double, textShadow: Double, textSize: CGFloat, titleCapitalized: Bool = false, alignment: Card.Alignment = .center) {
+    public init(dateString: String, textColor: Color, textWeight: Font.Weight, textOpacity: Double, textShadow: Double, textSize: CGFloat, alignment: Card.Alignment = .center) {
         self.dateString = dateString
         self.textColor = textColor
         self.textWeight = textWeight
         self.textOpacity = textOpacity
         self.textShadow = textShadow
         self.textSize = textSize
-        self.titleCapitalized = titleCapitalized
         self.alignment = alignment
     }
     

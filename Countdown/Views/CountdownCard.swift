@@ -22,9 +22,8 @@ public struct CountdownCard: View {
     
     var animation: Namespace.ID
     
-    @Binding var editCard: Bool
+    @Binding var editCountdown: Bool
     
-    @State private var editDestination = false
     @State private var shareCountdown = false
     @State private var deleteCountdown = false
     
@@ -40,153 +39,107 @@ public struct CountdownCard: View {
     
     public var body: some View {
         let squareSize = min(size.width * 0.65, 400)
-        VStack {
-            if editCard {
-                CountdownSquare(countdown: countdown)
-                    .aspectRatio(1.0, contentMode: .fit)
-                    .frame(maxWidth: squareSize)
-                    .clipShape(RoundedRectangle(cornerRadius: 35))
-                Spacer(minLength: 0)
-            } else {
-                CountdownFullLayout(countdown: countdown)
-                    .padding([.horizontal, .bottom])
+        CountdownFullLayout(countdown: countdown)
+            .padding([.horizontal, .bottom])
+            .padding(.vertical, 40)
+            .padding(.top, topPadding)
+            .padding(20)
+            .frame(width: size.width, height: size.height)
+            .sheet(isPresented: $editCountdown) {
+                let sheetHeight = size.height + (fullScreen ? edgeInsets.bottom : 0) - topPadding - squareSize - 65
+                CountdownEditor(countdown: countdown, isEditing: $editCountdown, sheetHeight: sheetHeight)
+                    .interactiveDismissDisabled()
             }
-            Button {
-                withAnimation {
-                    self.editCard.toggle()
-                }
-            } label: {
-                Text("Edit")
-                    .fontWeight(.semibold)
-                    .fontDesign(.rounded)
-                    .foregroundStyle(.white)
-                    .padding()
-                    .padding(.horizontal)
-                    .background(RoundedRectangle(cornerRadius: 30).fill(Material.ultraThin))
-            }
-//            VStack(spacing: 10) {
-//                TimeDisplay(timeRemaining: countdown.timeRemaining, textColor: countdown.currentTintColor, textStyle: countdown.currentTextStyle, textWeight: Font.Weight(rawValue: countdown.currentTextWeight), textOpacity: 1.0, textSize: 37.5)
-//                Text(countdown.date.fullString)
-//                    .font(.title3)
-//                    .fontWidth(.condensed)
-//                    .fontWeight(.semibold)
-//                    .foregroundStyle(.white)
-//                    .opacity(0.9)
-//            }
-//            .padding()
-//            .background(Material.ultraThin.opacity(0.5))
-//            .clipShape(RoundedRectangle(cornerRadius: 20))
-//            Spacer(minLength: 0)
-        }
-        .padding(.bottom, 50)
-        .padding(.top, (editCard ? 10 : 50) + topPadding)
-        .padding(20)
-        .frame(width: size.width, height: size.height)
-        .overlay {
-            if editCard, let card = countdown.card {
-                ZStack(alignment: .bottom) {
-                    Rectangle()
-                        .fill(Color.white.opacity(1e-6))
-                        .onTapGesture {
-                            withAnimation {
-                                editCard = false
-                            }
-                        }
-                    CardEditor(card: card, edgeInsets: fullScreen ? edgeInsets : .init()) {
-                        withAnimation {
-                            editCard = false
-                        }
+            .background {
+                BackgroundDisplay(background: countdown.currentBackground?.full, color: countdown.currentBackgroundColor, fade: countdown.currentBackgroundFade, blur: countdown.currentBackgroundBlur, brightness: countdown.currentBackgroundBrightness, saturation: countdown.currentBackgroundSaturation, contrast: countdown.currentBackgroundContrast)
+                    .overlay(alignment: .bottom) {
+                        LinearGradient(colors: [.clear, .black.opacity(0.75)], startPoint: .top, endPoint: .bottom)
+                            .frame(height: size.height/3)
                     }
-                    .frame(maxHeight: size.height + (fullScreen ? edgeInsets.bottom : 0) - topPadding - squareSize - 65)
-                    .background(Material.ultraThin)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-                }
-                .transition(.move(edge: .bottom))
-                .ignoresSafeArea(edges: .vertical)
+                    .frame(width: totalWidth, height: totalHeight)
+                    .clipShape(RoundedRectangle(cornerRadius: fullScreen ? 0 : 40))
+                    .clipped()
+                    .ignoresSafeArea(edges: .vertical)
+                    .id(clock.tick)
             }
-        }
-        .background {
-            BackgroundDisplay(background: countdown.currentBackground?.full, color: countdown.currentBackgroundColor, fade: countdown.currentBackgroundFade, blur: countdown.currentBackgroundBlur, brightness: countdown.currentBackgroundBrightness, saturation: countdown.currentBackgroundSaturation, contrast: countdown.currentBackgroundContrast, fullScreen: true)
-                .overlay(Material.ultraThin.opacity(editCard ? 1 : 0))
-                .frame(width: totalWidth, height: totalHeight)
-                .clipShape(RoundedRectangle(cornerRadius: fullScreen ? 0 : 40))
-                .clipped()
-                .ignoresSafeArea(edges: .vertical)
-                .id(clock.tick)
-        }
-        .overlay(alignment: .top) {
-            if fullScreen && !editCard {
+            .overlay(alignment: .top) {
                 header
                     .padding(.top, topPadding)
             }
-        }
-        .sheet(isPresented: $editDestination) {
-            if let countdown = clock.selectedCountdown {
-                OccasionEditor(countdown: countdown)
-                    .presentationBackground(Material.thin)
-            }
-        }
-        .sheet(isPresented: $shareCountdown) {
-            if let countdown = clock.selectedCountdown {
-                ShareMenu(countdown: countdown)
-                    .presentationBackground(Material.thin)
-            }
-        }
-        .alert("Delete Countdown", isPresented: $deleteCountdown) {
-            Button("Cancel", role: .cancel) {
-                deleteCountdown = false
-            }
-            Button("Delete", role: .destructive) {
+            .sheet(isPresented: $shareCountdown) {
                 if let countdown = clock.selectedCountdown {
-                    clock.delete(countdown)
-                    clock.select(nil)
+                    ShareMenu(countdown: countdown)
+                        .presentationBackground(Material.thin)
                 }
             }
-        } message: {
-            Text("Are you sure you want to delete this countdown? This action cannot be undone.")
-        }
+            .alert("Delete \(clock.selectedCountdown?.name ?? "Countdown")", isPresented: $deleteCountdown) {
+                Button("Cancel", role: .cancel) {
+                    deleteCountdown = false
+                }
+                Button("Delete", role: .destructive) {
+                    if let countdown = clock.selectedCountdown {
+                        clock.delete(countdown)
+                        clock.select(nil)
+                    }
+                }
+            } message: {
+                Text("Are you sure you want to delete this countdown? This action cannot be undone.")
+            }
     }
     
     private var header: some View {
-        HStack {
-            Button {
-                editDestination.toggle()
-            } label: {
-                Image(systemName: "calendar")
-                    .opacity(0.5)
-                    .padding(5)
-            }
-            .tint(.white)
+        HStack(spacing: 15) {
             
-            Button {
-                deleteCountdown.toggle()
-            } label: {
-                Image(systemName: "trash")
-                    .opacity(0.5)
-                    .padding(5)
+            if !editCountdown {
+                Button {
+                    withAnimation {
+                        editCountdown.toggle()
+                    }
+                } label: {
+                    Image(systemName: "pencil.circle.fill")
+                        .font(.title3)
+                        .opacity(0.7)
+                        .padding(5)
+                }
+                .tint(.white)
             }
-            .tint(.white)
+            
+//            if editCountdown {
+//                Button {
+//                    editDestination.toggle()
+//                } label: {
+//                    Image(systemName: "calendar")
+//                        .opacity(0.9)
+//                        .padding(5)
+//                }
+//                .tint(.white)
+//                
+//                Button {
+//                    deleteCountdown.toggle()
+//                } label: {
+//                    Image(systemName: "trash")
+//                        .opacity(0.9)
+//                        .padding(5)
+//                }
+//                .tint(.white)
+//            }
             
             Spacer()
             
-            Button {
-                withAnimation {
-                    clock.select(nil)
+            if fullScreen && !editCountdown {
+                Button {
+                    withAnimation {
+                        clock.select(nil)
+                    }
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.title3)
+                        .opacity(0.7)
+                        .padding(5)
                 }
-            } label: {
-                Image(systemName: "xmark.circle.fill")
-                    .imageScale(.large)
-                    .opacity(0.5)
-                    .padding(5)
+                .tint(.white)
             }
-            .tint(.white)
         }
-//        .overlay {
-//            Text(countdown.displayName)
-//                .fontWeight(.bold)
-//                .foregroundStyle(.white)
-//                .opacity(0.8)
-//        }
         .padding(.horizontal)
     }
 }

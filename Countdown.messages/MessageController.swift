@@ -29,7 +29,7 @@ class MessageController: MSMessagesAppViewController {
                 await clock.loadStaticCountdownData(predicate: #Predicate { $0.id == id }, includeCards: false)
                 let existingCountdown = clock.countdowns.first
                 await instance.loadCard()
-                insertView(CountdownBubble(instance: instance, existingCountdown: existingCountdown, sent: sent, update: update(instance:sent:), add: clock.add(_:), edit: clock.edit(_:)))
+                insertView(CountdownBubble(instance: instance, existingCountdown: existingCountdown, sent: sent, update: update(instance:sent:), add: clock.add(_:), save: clock.save(_:)))
             }
         }
         else {

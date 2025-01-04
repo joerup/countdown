@@ -10,7 +10,7 @@ import CountdownData
 
 public struct DaysDisplay: View {
     
-    var daysRemaining: Int
+    var days: Int
     
     var textColor: Color
     var textStyle: Card.TextStyle
@@ -22,8 +22,8 @@ public struct DaysDisplay: View {
     
     var showDaysText: Bool
     
-    public init(daysRemaining: Int, textColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, textOpacity: Double, textShadow: Double, textSize: CGFloat, showDaysText: Bool = false) {
-        self.daysRemaining = daysRemaining
+    public init(days: Int, textColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, textOpacity: Double, textShadow: Double, textSize: CGFloat, showDaysText: Bool = false) {
+        self.days = days
         self.textColor = textColor
         self.textStyle = textStyle
         self.textWeight = textWeight
@@ -34,10 +34,10 @@ public struct DaysDisplay: View {
     }
     
     public var body: some View {
-        number(daysRemaining, size: fit(daysRemaining))
+        number(days, size: fit(days))
             .foregroundStyle(.thickMaterial)
             .environment(\.colorScheme, .light)
-            .padding(.bottom, 0.25 * (textSize - fit(daysRemaining)))
+            .padding(.bottom, 0.25 * (textSize - fit(days)))
     }
     
     private func fit(_ number: Int) -> CGFloat {

@@ -18,7 +18,7 @@ struct CountdownBubble: View {
     
     var update: (CountdownInstance?,Bool?) -> ()
     var add: (Countdown) -> ()
-    var edit: (Countdown) -> ()
+    var save: (Countdown) -> ()
     
     var body: some View {
         if let existingCountdown, instance.compareTo(countdown: existingCountdown), let url = existingCountdown.getURL() {
@@ -53,7 +53,7 @@ struct CountdownBubble: View {
         Button {
             if let existingCountdown {
                 existingCountdown.match(instance)
-                edit(existingCountdown)
+                save(existingCountdown)
             } else {
                 let countdown = Countdown(from: instance)
                 add(countdown)

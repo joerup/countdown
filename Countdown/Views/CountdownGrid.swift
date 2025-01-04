@@ -22,8 +22,6 @@ struct CountdownGrid: View {
     
     var onSelect: (Countdown) -> Void
     
-    @State private var editDestination: Bool = false
-    @State private var editDestinationValue: Countdown?
     @State private var shareCountdown: Bool = false
     @State private var shareCountdownValue: Countdown?
     @State private var deleteCountdown: Bool = false
@@ -44,22 +42,16 @@ struct CountdownGrid: View {
                                 .aspectRatio(1.0, contentMode: .fill)
                                 .frame(maxWidth: 200)
                                 .background(Color.blue.opacity(0.2))
-                                .overlay {
-                                    if let data = countdown.card?.background {
-                                        Text(String(data.count))
-                                    }
-                                }
+//                                .overlay {
+//                                    if let data = countdown.card?.background {
+//                                        Text(String(data.count))
+//                                    }
+//                                }
                         }
                         .clipShape(RoundedRectangle(cornerRadius: 22.5))
                         .shadow(radius: 5)
                         .id(clock.tick)
                         .contextMenu {
-//                            Button {
-//                                self.editDestinationValue = countdown
-//                                self.editDestination.toggle()
-//                            } label: {
-//                                Label("Edit Date", systemImage: "calendar")
-//                            }
 //                            Button {
 //                                self.shareCountdownValue = countdown
 //                                self.shareCountdown.toggle()
@@ -77,11 +69,6 @@ struct CountdownGrid: View {
                     }
                 }
                 .padding(.horizontal)
-            }
-            .sheet(isPresented: $editDestination) {
-                if let countdown = editDestinationValue {
-                    OccasionEditor(countdown: countdown)
-                }
             }
             .sheet(isPresented: $shareCountdown) {
                 if let countdown = shareCountdownValue {

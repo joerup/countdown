@@ -17,9 +17,8 @@ public struct BackgroundDisplay: View {
     private var brightness: Double
     private var saturation: Double
     private var contrast: Double
-    private var fullScreen: Bool
     
-    public init(background: UIImage?, color: Color? = nil, fade: Double = 0, blur: Double = 0, brightness: Double = 0, saturation: Double = 1.0, contrast: Double = 1.0, fullScreen: Bool = false) {
+    public init(background: UIImage?, color: Color? = nil, fade: Double = 0, blur: Double = 0, brightness: Double = 0, saturation: Double = 1.0, contrast: Double = 1.0) {
         self.image = background
         self.color = color
         self.fade = fade
@@ -27,7 +26,6 @@ public struct BackgroundDisplay: View {
         self.brightness = brightness
         self.saturation = saturation
         self.contrast = contrast
-        self.fullScreen = fullScreen
     }
     
     public var body: some View {
