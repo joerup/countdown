@@ -1,5 +1,5 @@
 //
-//  NewCountdown.swift
+//  NewCountdownMenu.swift
 //  Countdown
 //
 //  Created by Joe Rupertus on 12/22/24.
@@ -8,18 +8,16 @@
 import SwiftUI
 import CountdownData
 
-struct OccasionCreator: View {
-    
-    @Environment(Clock.self) private var clock
+struct NewCountdownMenu: View {
     
     @Environment(\.dismiss) var dismiss
     
-    var countdown: Countdown?
+    @State private var showEditor: Bool = false
     
     @State private var name: String = ""
     @State private var displayName: String = ""
-    @State private var occasion: Occasion?
-    @State private var type: EventType? = nil
+    @State private var occasion: Occasion = .now
+    @State private var type: EventType = .custom
     
     @State private var navigationPath: [Destination] = []
     
@@ -30,7 +28,6 @@ struct OccasionCreator: View {
     }
     
     init(onCreate: @escaping (Countdown) -> Void) {
-        self.countdown = nil
         self.onCreate = onCreate
     }
     
@@ -60,6 +57,12 @@ struct OccasionCreator: View {
             .navigationDestination(for: Destination.self) { destination in
                 destinationPage(for: destination)
             }
+            .sheet(isPresented: $showEditor) {
+                CountdownEditor(name: name, displayName: displayName, type: type, occasion: occasion) { countdown in
+                    dismiss()
+                    onCreate(countdown)
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Cancel") {
@@ -72,18 +75,12 @@ struct OccasionCreator: View {
     }
     
     private enum Destination: Hashable {
-        case addCustomEvent
-        case addHoliday
         case allHolidaysList
     }
     
     private func destinationPage(for destination: Destination) -> some View {
         Group {
             switch destination {
-            case .addCustomEvent:
-                DateEditor(name: $name, displayName: $displayName, occasion: $occasion)
-            case .addHoliday:
-                HolidayDetails(name: $name, displayName: $displayName, occasion: $occasion)
             case .allHolidaysList:
                 HolidayList { holiday in
                     selectHoliday(holiday)
@@ -91,32 +88,14 @@ struct OccasionCreator: View {
                 .navigationTitle("All Holidays")
             }
         }
-        .toolbar {
-            switch destination {
-            case .addCustomEvent, .addHoliday:
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Add") {
-                        saveCountdown()
-                        dismiss()
-                    }
-                    .fontWeight(.semibold)
-                    .disabled(type == .custom && (occasion == nil || name.isEmpty))
-                }
-            default:
-                ToolbarItem(placement: .topBarTrailing) {
-                    EmptyView()
-                }
-            }
-        }
-        .toolbarTitleDisplayMode(.inline)
     }
     
     private func selectCustomEvent() {
         type = .custom
         name = ""
         displayName = ""
-        occasion = nil
-        navigationPath.append(.addCustomEvent)
+        occasion = .now
+        showEditor.toggle()
     }
     
     private func selectHoliday(_ holiday: Holiday) {
@@ -124,13 +103,6 @@ struct OccasionCreator: View {
         name = holiday.name
         displayName = holiday.displayName
         occasion = holiday.occasion
-        navigationPath.append(.addHoliday)
-    }
-    
-    private func saveCountdown() {
-        guard let occasion, let type else { return }
-        let countdown = Countdown(name: name, displayName: displayName, type: type, occasion: occasion)
-        clock.add(countdown)
-        onCreate(countdown)
+        showEditor.toggle()
     }
 }

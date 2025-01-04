@@ -11,7 +11,7 @@ import SwiftUI
 
 public final class CountdownInstance: Codable {
     
-    public private(set) var timestamp: Date
+    public private(set) var timestamp: Date?
     public private(set) var countdownID: UUID
     
     public var name: String
@@ -19,33 +19,32 @@ public final class CountdownInstance: Codable {
     public var type: EventType
     public var occasion: Occasion
 
-    private(set) var tint: RGBColor
+    private(set) var tint: RGBColor = Color.white.rgb
     public var textColor: Color {
         get { Color(rgb: tint) }
         set { tint = newValue.rgb }
     }
-    public var textStyle: Card.TextStyle
-    public var textWeight: Int
-    public var textOpacity: Double
-    public var textShadow: Double
-
-    public var titleSize: Double
-    public var numberSize: Double
-
+    public var textStyle: Card.TextStyle = .standard
+    public var textWeight: Int = Font.Weight.medium.rawValue
+    public var textOpacity: Double = 1.0
+    public var textShadow: Double = 0
+    public var titleSize: Double = 1.0
+    public var numberSize: Double = 1.0
+ 
     public var background: Data?
     public var backgroundTransforms: Card.BackgroundTransforms?
-    public var backgroundID: UUID
+    public var backgroundID: UUID = UUID()
     
     private(set) var backgroundRGB: RGBColor?
     public var backgroundColor: Color? {
         get { if let backgroundRGB { Color(rgb: backgroundRGB) } else { nil } }
         set { backgroundRGB = newValue?.rgb }
     }
-    public var backgroundFade: Double
-    public var backgroundBlur: Double
-    public var backgroundBrightness: Double
-    public var backgroundSaturation: Double
-    public var backgroundContrast: Double
+    public var backgroundFade: Double = 0.4
+    public var backgroundBlur: Double = 0
+    public var backgroundBrightness: Double = 0
+    public var backgroundSaturation: Double = 1.0
+    public var backgroundContrast: Double = 1.0
 
     public var currentBackground: Card.Background?
     
@@ -56,14 +55,14 @@ public final class CountdownInstance: Codable {
         "\(date.dateString)\(occasion.includeTime ? " \(date.timeString)" : "")"
     }
     public var daysRemaining: Int {
-        date.daysRemaining(relativeTo: timestamp)
+        date.daysRemaining(relativeTo: timestamp ?? .now)
     }
     public var timeRemaining: Date.TimeRemaining {
-        date.timeRemaining(relativeTo: timestamp)
+        date.timeRemaining(relativeTo: timestamp ?? .now)
     }
     
-    public init(from countdown: Countdown) {
-        self.timestamp = .now
+    public init(from countdown: Countdown, timestamp: Date? = nil) {
+        self.timestamp = timestamp
         self.countdownID = countdown.id
         self.name = countdown.name
         self.displayName = countdown.displayName
@@ -87,6 +86,15 @@ public final class CountdownInstance: Codable {
         self.backgroundContrast = countdown.currentBackgroundContrast
         self.backgroundID = countdown.card?.backgroundID ?? UUID()
     }
+    
+    public init(name: String, displayName: String, type: EventType, occasion: Occasion) {
+        self.countdownID = UUID()
+        self.name = name
+        self.displayName = displayName
+        self.type = type
+        self.occasion = occasion
+    }
+    
     public func setBackground(_ data: Data?, transforms: Card.BackgroundTransforms? = nil) {
         self.background = data
         self.backgroundTransforms = transforms
@@ -107,7 +115,7 @@ public final class CountdownInstance: Codable {
     }
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        timestamp = try container.decode(Date.self, forKey: .timestamp)
+        timestamp = try? container.decode(Date.self, forKey: .timestamp)
         countdownID = try container.decode(UUID.self, forKey: .countdownID)
         name = try container.decode(String.self, forKey: .name)
         displayName = try container.decode(String.self, forKey: .displayName)

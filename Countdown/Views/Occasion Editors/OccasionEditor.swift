@@ -12,7 +12,7 @@ struct OccasionEditor: View {
     
     @Binding var name: String
     @Binding var displayName: String
-    @Binding var occasion: Occasion?
+    @Binding var occasion: Occasion
     @Binding var type: EventType
     
     var body: some View {

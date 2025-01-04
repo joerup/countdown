@@ -12,39 +12,34 @@ struct HolidayDetails: View {
     
     @Binding var name: String
     @Binding var displayName: String
-    @Binding var occasion: Occasion?
+    @Binding var occasion: Occasion
     
     @State private var showMoreDates: Bool = false
     
     var body: some View {
-        List {
-            Group {
-                Section("Name") {
-                    TextField("Event Name", text: $displayName)
-                }
-                if let occasion {
-                    Section("Occurs") {
-                        banner
-                        HStack {
-                            if occasion.repeatAnnually {
-                                Image(systemName: "repeat")
-                            }
-                            Text(occasion.string)
-                        }
-                        .foregroundStyle(.secondary)
-                    }
-                    Section("Upcoming Dates") {
-                        ForEach(occasion.futureDates(showMoreDates ? 10 : 3), id: \.self) { date in
-                            Text(date.fullDateString)
-                                .foregroundStyle(.secondary)
-                        }
-                        Button("Show \(showMoreDates ? "Less" : "More")") {
-                            showMoreDates.toggle()
-                        }
-                    }
-                }
+        Group {
+            Section("Name") {
+                TextField("Event Name", text: $displayName)
             }
-            .listRowBackground(Color.white.opacity(0.1))
+            Section("Occurs") {
+                HStack {
+                    if occasion.repeatAnnually {
+                        Image(systemName: "repeat")
+                    }
+                    Text(occasion.string)
+                }
+                .foregroundStyle(.secondary)
+                banner
+            }
+//                    Section("Upcoming Dates") {
+//                        ForEach(occasion.futureDates(showMoreDates ? 10 : 3), id: \.self) { date in
+//                            Text(date.fullDateString)
+//                                .foregroundStyle(.secondary)
+//                        }
+//                        Button("Show \(showMoreDates ? "Less" : "More")") {
+//                            showMoreDates.toggle()
+//                        }
+//                    }
         }
     }
     

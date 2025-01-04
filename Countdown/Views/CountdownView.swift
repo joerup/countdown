@@ -87,9 +87,8 @@ struct CountdownView: View {
         }
         .tint(.pink)
         .sheet(isPresented: $newCountdown) {
-            OccasionCreator { countdown in
+            NewCountdownMenu { countdown in
                 clock.select(countdown)
-                editingCountdown = countdown
             }
             .presentationBackground(Material.thin)
         }

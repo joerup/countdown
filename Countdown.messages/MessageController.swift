@@ -68,7 +68,7 @@ class MessageController: MSMessagesAppViewController {
         message.layout = layout
         
         // Create a specific instance and URL to decode it
-        let instance = CountdownInstance(from: countdown)
+        let instance = CountdownInstance(from: countdown, timestamp: .now)
         if let url = instance.toEncodingURL() {
             message.url = url
         }

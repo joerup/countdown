@@ -25,7 +25,6 @@ public struct CountdownCard: View {
     @Binding var editCountdown: Bool
     
     @State private var shareCountdown = false
-    @State private var deleteCountdown = false
     
     private var topPadding: CGFloat {
         fullScreen ? 0 : 15
@@ -46,8 +45,7 @@ public struct CountdownCard: View {
             .padding(20)
             .frame(width: size.width, height: size.height)
             .sheet(isPresented: $editCountdown) {
-                let sheetHeight = size.height + (fullScreen ? edgeInsets.bottom : 0) - topPadding - squareSize - 65
-                CountdownEditor(countdown: countdown, isEditing: $editCountdown, sheetHeight: sheetHeight)
+                CountdownEditor(countdown: countdown) { _ in }
                     .interactiveDismissDisabled()
             }
             .background {
@@ -71,19 +69,6 @@ public struct CountdownCard: View {
                     ShareMenu(countdown: countdown)
                         .presentationBackground(Material.thin)
                 }
-            }
-            .alert("Delete \(clock.selectedCountdown?.name ?? "Countdown")", isPresented: $deleteCountdown) {
-                Button("Cancel", role: .cancel) {
-                    deleteCountdown = false
-                }
-                Button("Delete", role: .destructive) {
-                    if let countdown = clock.selectedCountdown {
-                        clock.delete(countdown)
-                        clock.select(nil)
-                    }
-                }
-            } message: {
-                Text("Are you sure you want to delete this countdown? This action cannot be undone.")
             }
     }
     

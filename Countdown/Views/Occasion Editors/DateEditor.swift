@@ -12,7 +12,7 @@ struct DateEditor: View {
     
     @Binding var name: String
     @Binding var displayName: String
-    @Binding var occasion: Occasion?
+    @Binding var occasion: Occasion
     
     @State private var date: Date = .now.midnight
     @State private var time: Date = .now.midnight
@@ -20,38 +20,40 @@ struct DateEditor: View {
     @State private var includeTime: Bool = false
     @State private var repeatAnnually: Bool = false
     
+    @State private var editDate: Bool = false
+    
     var body: some View {
-        List {
-            Group {
-                Section("Name") {
-                    TextField("Event Name", text: $name)
+        Group {
+            Section("Event") {
+                TextField("Event", text: $name)
+            }
+            Section("Occurs") {
+                Button {
+                    editDate.toggle()
+                } label: {
+                    HStack {
+                        if occasion.repeatAnnually {
+                            Image(systemName: "repeat")
+                        }
+                        Text(occasion.string)
+                    }
                 }
-                Section {
+                if editDate {
+                    Toggle("Repeat Annually", isOn: $repeatAnnually)
                     DatePicker("Date", selection: $date, displayedComponents: [.date])
-                        .datePickerStyle(.graphical)
-                }
-                Section {
+                        .datePickerStyle(.wheel)
                     Toggle("Include Time", isOn: $includeTime)
                     if includeTime {
                         DatePicker("Time", selection: $time, displayedComponents: [.hourAndMinute])
                     }
                 }
-                Section {
-                    Toggle("Repeat Annually", isOn: $repeatAnnually)
-                }
             }
-            .listRowBackground(Color.white.opacity(0.1))
         }
         .onAppear {
-            if let occasion {
-                self.date = occasion.date
-                self.time = occasion.date
-                self.includeTime = occasion.includeTime
-                self.repeatAnnually = occasion.repeatAnnually
-            } else {
-                self.date = .now.midnight
-                self.time = .now.midnight
-            }
+            self.date = occasion.date
+            self.time = occasion.date
+            self.includeTime = occasion.includeTime
+            self.repeatAnnually = occasion.repeatAnnually
         }
         .onChange(of: name) { _, name in
             self.displayName = name

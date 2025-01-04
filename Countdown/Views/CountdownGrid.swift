@@ -75,7 +75,7 @@ struct CountdownGrid: View {
                     ShareMenu(countdown: countdown)
                 }
             }
-            .alert("Delete Countdown", isPresented: $deleteCountdown) {
+            .alert("Delete \(deleteCountdownValue?.displayName ?? "Countdown")", isPresented: $deleteCountdown) {
                 Button("Cancel", role: .cancel) {
                     deleteCountdown = false
                     deleteCountdownValue = nil

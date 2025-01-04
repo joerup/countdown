@@ -14,9 +14,12 @@ struct CountdownEditor: View {
     
     @Environment(Clock.self) private var clock
     
-    private var countdown: Countdown
+    @Environment(\.dismiss) private var dismissEditor
     
-    @Binding private var isEditing: Bool
+    private var countdown: Countdown?
+    private var create: Bool
+    
+    private var onSave: (Countdown) -> Void
     
     @State private var section: CardEditorSection = .countdown
     
@@ -24,23 +27,16 @@ struct CountdownEditor: View {
         case countdown, background, text
     }
     
+    @State private var changeToggle: Bool?
     @State private var cancelAlert: Bool = false
-    
-    private var sheetHeight: CGFloat
+    @State private var deleteCountdown = false
     
     @State private var editedCountdown: CountdownInstance
     
-    @State private var name: String = ""
-    @State private var displayName: String = ""
-    @State private var occasion: Occasion?
-    @State private var type: EventType = .custom
-    
-    @State private var backgroundColor: Color?
-    @State private var backgroundFade: Double = 0
-    @State private var backgroundBlur: Double = 0
-    @State private var backgroundSaturation: Double = 0
-    @State private var backgroundBrightness: Double = 0
-    @State private var backgroundContrast: Double = 0
+    @State private var name: String
+    @State private var displayName: String
+    @State private var occasion: Occasion
+    @State private var type: EventType
     
     @State private var textColor: Color = .white
     @State private var textStyle: Card.TextStyle = .standard
@@ -50,15 +46,54 @@ struct CountdownEditor: View {
     @State private var titleSize: Double = 1.0
     @State private var numberSize: Double = 1.0
     
-    init(countdown: Countdown, isEditing: Binding<Bool>, sheetHeight: CGFloat) {
+    @State private var backgroundColor: Color?
+    @State private var backgroundFade: Double = 0
+    @State private var backgroundBlur: Double = 0
+    @State private var backgroundSaturation: Double = 0
+    @State private var backgroundBrightness: Double = 0
+    @State private var backgroundContrast: Double = 0
+    
+    init(name: String, displayName: String, type: EventType, occasion: Occasion, onSave: @escaping (Countdown) -> Void) {
+        self._name = State(initialValue: name)
+        self._displayName = State(initialValue: displayName)
+        self._occasion = State(initialValue: occasion)
+        self._type = State(initialValue: type)
+        self.create = true
+        self.onSave = onSave
+        
+        let instance = CountdownInstance(name: name, displayName: displayName, type: type, occasion: occasion)
+        self._editedCountdown = State(initialValue: instance)
+    }
+    
+    init(countdown: Countdown, onSave: @escaping (Countdown) -> Void) {
         self.countdown = countdown
-        self._editedCountdown = State(initialValue: CountdownInstance(from: countdown))
-        self._isEditing = isEditing
-        self.sheetHeight = sheetHeight
+        self.create = false
+        self.onSave = onSave
+        
+        let instance = CountdownInstance(from: countdown)
+        self._editedCountdown = State(initialValue: instance)
+        
+        _name = State(initialValue: instance.name)
+        _displayName = State(initialValue: instance.displayName)
+        _occasion = State(initialValue: instance.occasion)
+        _type = State(initialValue: instance.type)
+        _textColor = State(initialValue: instance.textColor)
+        _textStyle = State(initialValue: instance.textStyle)
+        _textWeight = State(initialValue: instance.textWeight)
+        _textOpacity = State(initialValue: instance.textOpacity)
+        _textShadow = State(initialValue: instance.textShadow)
+        _titleSize = State(initialValue: instance.titleSize)
+        _numberSize = State(initialValue: instance.numberSize)
+        _backgroundColor = State(initialValue: instance.backgroundColor)
+        _backgroundFade = State(initialValue: instance.backgroundFade)
+        _backgroundBlur = State(initialValue: instance.backgroundBlur)
+        _backgroundSaturation = State(initialValue: instance.backgroundSaturation)
+        _backgroundBrightness = State(initialValue: instance.backgroundBrightness)
+        _backgroundContrast = State(initialValue: instance.backgroundContrast)
     }
     
     var body: some View {
-        Group {
+        GeometryReader { geometry in
             VStack {
                 header
                     .padding()
@@ -66,8 +101,10 @@ struct CountdownEditor: View {
                 CountdownSquare(instance: editedCountdown)
                     .aspectRatio(1.0, contentMode: .fit)
                     .clipShape(RoundedRectangle(cornerRadius: 35))
+                    .frame(height: min(min(geometry.size.width * 0.6, geometry.size.height * 0.3), 300))
                     .padding(.top, -30)
                     .padding(.bottom, 12)
+                    .id(changeToggle)
                 
                 VStack(spacing: 0) {
                     sectionPicker
@@ -75,7 +112,6 @@ struct CountdownEditor: View {
                     Divider()
                     editorContent
                 }
-                .frame(height: sheetHeight)
                 .background(Material.ultraThin)
                 .transition(.move(edge: .bottom))
                 .ignoresSafeArea(edges: .vertical)
@@ -84,76 +120,74 @@ struct CountdownEditor: View {
                 BackgroundDisplay(background: editedCountdown.currentBackground?.full, color: backgroundColor, fade: backgroundFade, blur: backgroundBlur, brightness: backgroundBrightness, saturation: backgroundSaturation, contrast: backgroundContrast)
                     .overlay(Material.ultraThin)
             }
-            .onAppear {
-                name = editedCountdown.name
-                displayName = editedCountdown.displayName
-                occasion = editedCountdown.occasion
-                type = editedCountdown.type
-                textColor = editedCountdown.textColor
-                textStyle = editedCountdown.textStyle
-                textWeight = editedCountdown.textWeight
-                textOpacity = editedCountdown.textOpacity
-                textShadow = editedCountdown.textShadow
-                titleSize = editedCountdown.titleSize
-                numberSize = editedCountdown.numberSize
-                backgroundColor = editedCountdown.backgroundColor
-                backgroundFade = editedCountdown.backgroundFade
-                backgroundBlur = editedCountdown.backgroundBlur
-                backgroundSaturation = editedCountdown.backgroundSaturation
-                backgroundBrightness = editedCountdown.backgroundBrightness
-                backgroundContrast = editedCountdown.backgroundContrast
-            }
             .onChange(of: name) { _, name in
                 editedCountdown.name = name
+                makeChange()
             }
             .onChange(of: displayName) { _, name in
                 editedCountdown.displayName = name
+                makeChange()
             }
             .onChange(of: occasion) { _, occasion in
-                editedCountdown.occasion = occasion ?? .now
+                editedCountdown.occasion = occasion
+                makeChange()
             }
             .onChange(of: type) { _, type in
                 editedCountdown.type = type
+                makeChange()
             }
         }
         .onChange(of: textColor) { _, color in
             editedCountdown.textColor = color
+            makeChange()
         }
         .onChange(of: textStyle) { _, style in
             editedCountdown.textStyle = style
+            makeChange()
         }
         .onChange(of: textWeight) { _, weight in
             editedCountdown.textWeight = weight
+            makeChange()
         }
         .onChange(of: textOpacity) { _, opacity in
             editedCountdown.textOpacity = opacity
+            makeChange()
         }
         .onChange(of: textShadow) { _, shadow in
             editedCountdown.textShadow = shadow
+            makeChange()
         }
         .onChange(of: titleSize) { _, size in
             editedCountdown.titleSize = size
+            makeChange()
         }
         .onChange(of: numberSize) { _, size in
             editedCountdown.numberSize = size
+            makeChange()
         }
         .onChange(of: backgroundColor) { _, color in
             editedCountdown.backgroundColor = color
+            makeChange()
         }
         .onChange(of: backgroundFade) { _, fade in
             editedCountdown.backgroundFade = fade
+            makeChange()
         }
         .onChange(of: backgroundBlur) { _, blur in
             editedCountdown.backgroundBlur = blur
+            makeChange()
         }
         .onChange(of: backgroundSaturation) { _, saturation in
             editedCountdown.backgroundSaturation = saturation
+            makeChange()
         }
         .onChange(of: backgroundBrightness) { _, brightness in
             editedCountdown.backgroundBrightness = brightness
+            makeChange()
         }
         .onChange(of: backgroundContrast) { _, contrast in
             editedCountdown.backgroundContrast = contrast
+            makeChange()
         }
     }
     
@@ -161,12 +195,20 @@ struct CountdownEditor: View {
     private var editorContent: some View {
         switch section {
         case .countdown:
-            OccasionEditor(
-                name: $name,
-                displayName: $displayName,
-                occasion: $occasion,
-                type: $type
-            )
+            List {
+                Group {
+                    OccasionEditor(
+                        name: $name,
+                        displayName: $displayName,
+                        occasion: $occasion,
+                        type: $type
+                    )
+                    if !create {
+                        deleteButton
+                    }
+                }
+                .listRowBackground(Color.white.opacity(0.1))
+            }
             .scrollContentBackground(.hidden)
         case .background:
             ScrollView {
@@ -181,6 +223,7 @@ struct CountdownEditor: View {
                     backgroundContrast: $backgroundContrast
                 ) { data, transforms, resetStates in
                     setBackground(data, transforms: transforms, resetStates: resetStates)
+                    makeChange()
                 }
             }
             .safeAreaPadding()
@@ -211,23 +254,41 @@ struct CountdownEditor: View {
         }
     }
     
+    private var deleteButton: some View {
+        Button("Delete Countdown", systemImage: "trash", role: .destructive) {
+            deleteCountdown.toggle()
+        }
+        .alert("Delete \(displayName)", isPresented: $deleteCountdown) {
+            Button("Cancel", role: .cancel) {
+                deleteCountdown = false
+            }
+            Button("Delete", role: .destructive) {
+                if let countdown {
+                    clock.delete(countdown)
+                    dismiss(deselect: true)
+                }
+            }
+        } message: {
+            Text("Are you sure you want to delete this countdown? This action cannot be undone.")
+        }
+    }
+    
     private var header: some View {
         HStack {
             Button {
-                if !editedCountdown.compareTo(countdown: countdown) {
+                if changeToggle != nil {
                     cancelAlert = true
                 } else {
                     dismiss()
                 }
             } label: {
                 Text("Cancel")
-                    .fontWeight(.semibold)
             }
             .confirmationDialog("Cancel", isPresented: $cancelAlert) {
-                Button(false ? "Delete Countdown" : "Discard Changes", role: .destructive) {
+                Button(create ? "Delete Countdown" : "Discard Changes", role: .destructive) {
                     dismiss()
                 }
-                Button(false ? "Save Countdown" : "Save Changes") {
+                Button(create ? "Save Countdown" : "Save Changes") {
                     saveCountdown()
                     dismiss()
                 }
@@ -238,7 +299,7 @@ struct CountdownEditor: View {
                 saveCountdown()
                 dismiss()
             } label: {
-                Text("Save")
+                Text(create ? "Add" : "Save")
                     .fontWeight(.semibold)
             }
         }
@@ -260,17 +321,38 @@ struct CountdownEditor: View {
         }
     }
     
-    private func saveCountdown() {
-        countdown.match(editedCountdown)
-        clock.save(countdown)
-        Task {
-            await countdown.loadCards()
+    private func makeChange() {
+        if changeToggle != nil {
+            changeToggle?.toggle()
+        } else {
+            changeToggle = true
         }
     }
     
-    private func dismiss() {
+    private func saveCountdown() {
+        if let countdown {
+            countdown.match(editedCountdown)
+            clock.save(countdown)
+            Task {
+                await countdown.loadCards()
+            }
+            onSave(countdown)
+        } else {
+            let countdown = Countdown(from: editedCountdown)
+            clock.add(countdown)
+            Task {
+                await countdown.loadCards()
+            }
+            onSave(countdown)
+        }
+    }
+    
+    private func dismiss(deselect: Bool = false) {
         withAnimation {
-            isEditing = false
+            dismissEditor()
+            if deselect {
+                clock.select(nil)
+            }
         }
     }
 }
