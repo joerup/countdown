@@ -26,6 +26,7 @@ public final class Card {
     
     public var backgroundFade: Double = 0.4
     public var backgroundBlur: Double = 0
+    public var backgroundDim: Double = 0
     public var backgroundBrightness: Double = 0
     public var backgroundSaturation: Double = 1.0
     public var backgroundContrast: Double = 1.0
@@ -60,6 +61,7 @@ public final class Card {
         self.backgroundRGB = instance.backgroundRGB
         self.backgroundFade = instance.backgroundFade
         self.backgroundBlur = instance.backgroundBlur
+        self.backgroundDim = instance.backgroundDim
         self.backgroundBrightness = instance.backgroundBrightness
         self.backgroundSaturation = instance.backgroundSaturation
         self.backgroundContrast = instance.backgroundContrast
@@ -80,6 +82,7 @@ public final class Card {
         self.backgroundRGB = instance.backgroundRGB
         self.backgroundFade = instance.backgroundFade
         self.backgroundBlur = instance.backgroundBlur
+        self.backgroundDim = instance.backgroundDim
         self.backgroundBrightness = instance.backgroundBrightness
         self.backgroundSaturation = instance.backgroundSaturation
         self.backgroundContrast = instance.backgroundContrast

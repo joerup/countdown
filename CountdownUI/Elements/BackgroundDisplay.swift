@@ -14,15 +14,17 @@ public struct BackgroundDisplay: View {
     private var color: Color?
     private var fade: Double
     private var blur: Double
+    private var dim: Double
     private var brightness: Double
     private var saturation: Double
     private var contrast: Double
     
-    public init(background: UIImage?, color: Color? = nil, fade: Double = 0, blur: Double = 0, brightness: Double = 0, saturation: Double = 1.0, contrast: Double = 1.0) {
+    public init(background: UIImage?, color: Color? = nil, fade: Double = 0, blur: Double = 0, dim: Double = 0, brightness: Double = 0, saturation: Double = 1.0, contrast: Double = 1.0) {
         self.image = background
         self.color = color
         self.fade = fade
         self.blur = blur
+        self.dim = dim
         self.brightness = brightness
         self.saturation = saturation
         self.contrast = contrast
@@ -35,12 +37,13 @@ public struct BackgroundDisplay: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .scaleEffect(1.01)
+                    .brightness(brightness)
                     .saturation(saturation)
                     .contrast(contrast)
                     .blur(radius: blur)
                     .overlay {
-                        Color.black.opacity(max(-brightness, 0))
-                        Color.white.opacity(max(brightness, 0))
+                        Color.black.opacity(max(dim, 0))
+                        Color.white.opacity(max(-dim, 0))
                     }
                 if let color {
                     Rectangle()

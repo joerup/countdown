@@ -25,7 +25,7 @@ struct DateEditor: View {
     var body: some View {
         Group {
             Section("Event") {
-                TextField("Event", text: $name)
+                TextField("My Event", text: $name)
             }
             Section("Occurs") {
                 Button {

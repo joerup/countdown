@@ -24,7 +24,7 @@ public struct TitleDisplay: View {
     private var alignment: Card.Alignment
     
     public init(title: String, textColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, textOpacity: Double, textShadow: Double, textSize: CGFloat, capitalized: Bool = false, alignment: Card.Alignment = .center) {
-        self.title = title
+        self.title = title.isEmpty ? "My Event" : title
         self.textColor = textColor
         self.textStyle = textStyle
         self.textWeight = textWeight.bolder()

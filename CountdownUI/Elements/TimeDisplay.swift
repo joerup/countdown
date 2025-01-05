@@ -10,6 +10,7 @@ import CountdownData
 
 public struct TimeDisplay: View {
     
+    var days: Int?
     var hours: Int
     var minutes: Int
     var seconds: Int
@@ -22,7 +23,8 @@ public struct TimeDisplay: View {
     
     var textSize: CGFloat
     
-    public init(hours: Int, minutes: Int, seconds: Int, textColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, textOpacity: Double, textShadow: Double, textSize: CGFloat) {
+    public init(days: Int? = nil, hours: Int, minutes: Int, seconds: Int, textColor: Color, textStyle: Card.TextStyle, textWeight: Font.Weight, textOpacity: Double, textShadow: Double, textSize: CGFloat) {
+        self.days = days
         self.hours = hours
         self.minutes = minutes
         self.seconds = seconds
@@ -36,6 +38,10 @@ public struct TimeDisplay: View {
     
     public var body: some View {
         HStack(spacing: 1) {
+            if let days {
+                numberUnit(days)
+                    .padding(.trailing, 10)
+            }
             numberUnit(hours, colon: true)
             numberUnit(minutes, colon: true)
             numberUnit(seconds)

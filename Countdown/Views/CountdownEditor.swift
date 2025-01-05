@@ -49,6 +49,7 @@ struct CountdownEditor: View {
     @State private var backgroundColor: Color?
     @State private var backgroundFade: Double = 0
     @State private var backgroundBlur: Double = 0
+    @State private var backgroundDim: Double = 0
     @State private var backgroundSaturation: Double = 0
     @State private var backgroundBrightness: Double = 0
     @State private var backgroundContrast: Double = 0
@@ -87,6 +88,7 @@ struct CountdownEditor: View {
         _backgroundColor = State(initialValue: instance.backgroundColor)
         _backgroundFade = State(initialValue: instance.backgroundFade)
         _backgroundBlur = State(initialValue: instance.backgroundBlur)
+        _backgroundDim = State(initialValue: instance.backgroundDim)
         _backgroundSaturation = State(initialValue: instance.backgroundSaturation)
         _backgroundBrightness = State(initialValue: instance.backgroundBrightness)
         _backgroundContrast = State(initialValue: instance.backgroundContrast)
@@ -114,10 +116,9 @@ struct CountdownEditor: View {
                 }
                 .background(Material.ultraThin)
                 .transition(.move(edge: .bottom))
-                .ignoresSafeArea(edges: .vertical)
             }
             .background {
-                BackgroundDisplay(background: editedCountdown.currentBackground?.full, color: backgroundColor, fade: backgroundFade, blur: backgroundBlur, brightness: backgroundBrightness, saturation: backgroundSaturation, contrast: backgroundContrast)
+                BackgroundDisplay(background: editedCountdown.currentBackground?.full, color: backgroundColor, fade: backgroundFade, blur: backgroundBlur, dim: backgroundDim, brightness: backgroundBrightness, saturation: backgroundSaturation, contrast: backgroundContrast)
                     .overlay(Material.ultraThin)
             }
             .onChange(of: name) { _, name in
@@ -177,6 +178,10 @@ struct CountdownEditor: View {
             editedCountdown.backgroundBlur = blur
             makeChange()
         }
+        .onChange(of: backgroundDim) { _, dim in
+            editedCountdown.backgroundDim = dim
+            makeChange()
+        }
         .onChange(of: backgroundSaturation) { _, saturation in
             editedCountdown.backgroundSaturation = saturation
             makeChange()
@@ -218,6 +223,7 @@ struct CountdownEditor: View {
                     backgroundColor: $backgroundColor,
                     backgroundFade: $backgroundFade,
                     backgroundBlur: $backgroundBlur,
+                    backgroundDim: $backgroundDim,
                     backgroundSaturation: $backgroundSaturation,
                     backgroundBrightness: $backgroundBrightness,
                     backgroundContrast: $backgroundContrast
@@ -255,8 +261,14 @@ struct CountdownEditor: View {
     }
     
     private var deleteButton: some View {
-        Button("Delete Countdown", systemImage: "trash", role: .destructive) {
+        Button(role: .destructive) {
             deleteCountdown.toggle()
+        } label: {
+            HStack {
+                Text("Delete Countdown")
+                Spacer()
+                Image(systemName: "trash")
+            }
         }
         .alert("Delete \(displayName)", isPresented: $deleteCountdown) {
             Button("Cancel", role: .cancel) {
@@ -283,6 +295,7 @@ struct CountdownEditor: View {
                 }
             } label: {
                 Text("Cancel")
+                    .foregroundStyle(.white)
             }
             .confirmationDialog("Cancel", isPresented: $cancelAlert) {
                 Button(create ? "Delete Countdown" : "Discard Changes", role: .destructive) {
@@ -301,6 +314,7 @@ struct CountdownEditor: View {
             } label: {
                 Text(create ? "Add" : "Save")
                     .fontWeight(.semibold)
+                    .foregroundStyle(.white)
             }
         }
     }
@@ -315,6 +329,7 @@ struct CountdownEditor: View {
             backgroundColor = nil
             backgroundFade = 0.4
             backgroundBlur = 0
+            backgroundDim = 0
             backgroundBrightness = 0
             backgroundSaturation = 1.0
             backgroundContrast = 1.0

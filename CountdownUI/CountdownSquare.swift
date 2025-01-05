@@ -29,6 +29,7 @@ public struct CountdownSquare: View {
     private var backgroundColor: Color?
     private var backgroundFade: Double
     private var backgroundBlur: Double
+    private var backgroundDim: Double
     private var backgroundBrightness: Double
     private var backgroundSaturation: Double
     private var backgroundContrast: Double
@@ -49,6 +50,7 @@ public struct CountdownSquare: View {
         self.backgroundColor = countdown.currentBackgroundColor
         self.backgroundFade = countdown.currentBackgroundFade
         self.backgroundBlur = countdown.currentBackgroundBlur
+        self.backgroundDim = countdown.currentBackgroundDim
         self.backgroundBrightness = countdown.currentBackgroundBrightness
         self.backgroundSaturation = countdown.currentBackgroundSaturation
         self.backgroundContrast = countdown.currentBackgroundContrast
@@ -70,6 +72,7 @@ public struct CountdownSquare: View {
         self.backgroundColor = instance.backgroundColor
         self.backgroundFade = instance.backgroundFade
         self.backgroundBlur = instance.backgroundBlur
+        self.backgroundDim = instance.backgroundDim
         self.backgroundBrightness = instance.backgroundBrightness
         self.backgroundSaturation = instance.backgroundSaturation
         self.backgroundContrast = instance.backgroundContrast
@@ -81,7 +84,7 @@ public struct CountdownSquare: View {
                 .padding([.horizontal, .top], geometry.size.width*0.1)
                 .padding(.bottom, geometry.size.width*0.04)
                 .background {
-                    BackgroundDisplay(background: background?.square, color: backgroundColor, fade: backgroundFade, blur: backgroundBlur, brightness: backgroundBrightness, saturation: backgroundSaturation, contrast: backgroundContrast)
+                    BackgroundDisplay(background: background?.square, color: backgroundColor, fade: backgroundFade, blur: backgroundBlur, dim: backgroundDim, brightness: backgroundBrightness, saturation: backgroundSaturation, contrast: backgroundContrast)
                         .padding(.bottom, -geometry.size.width*0.01)
                 }
         }

@@ -26,18 +26,18 @@ struct CountdownBubble: View {
                 CountdownLayout(instance: instance)
             }
             .padding(sent ? .trailing : .leading, 7)
-            .padding(.top, 37.5)
+            .padding(.top, 32)
             .padding(.leading, 12.5)
             .padding(.trailing, 15)
-            .padding(.bottom, 5)
+            .padding(.bottom, 15)
             .background(background)
         } else {
             CountdownLayout(instance: instance)
                 .padding(sent ? .trailing : .leading, 7)
-                .padding(.top, 37.5)
+                .padding(.top, 32)
                 .padding(.leading, 12.5)
                 .padding(.trailing, 15)
-                .padding(.bottom, 5)
+                .padding(.bottom, 15)
                 .background(background)
                 .overlay(alignment: .topTrailing) {
                     saveButton
@@ -46,7 +46,7 @@ struct CountdownBubble: View {
     }
     
     private var background: some View {
-        BackgroundDisplay(background: instance.currentBackground?.square, color: instance.backgroundColor, fade: instance.backgroundFade, blur: instance.backgroundBlur, brightness: instance.backgroundBrightness, saturation: instance.backgroundSaturation, contrast: instance.backgroundContrast)
+        BackgroundDisplay(background: instance.currentBackground?.square, color: instance.backgroundColor, fade: instance.backgroundFade, blur: instance.backgroundBlur, dim: instance.backgroundDim, brightness: instance.backgroundBrightness, saturation: instance.backgroundSaturation, contrast: instance.backgroundContrast)
     }
     
     private var saveButton: some View {

@@ -68,6 +68,9 @@ public final class Countdown {
     public var currentBackgroundBlur: Double {
         return card?.backgroundBlur ?? 0
     }
+    public var currentBackgroundDim: Double {
+        return card?.backgroundDim ?? 0
+    }
     public var currentBackgroundBrightness: Double {
         return card?.backgroundBrightness ?? 0
     }

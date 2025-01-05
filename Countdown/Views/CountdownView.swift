@@ -87,14 +87,10 @@ struct CountdownView: View {
         }
         .tint(.pink)
         .sheet(isPresented: $newCountdown) {
-            NewCountdownMenu { countdown in
-                clock.select(countdown)
-            }
-            .presentationBackground(Material.thin)
+            NewCountdownMenu()
         }
         .sheet(isPresented: $showSettings) {
             SettingsMenu()
-                .presentationBackground(Material.thin)
         }
     }
     

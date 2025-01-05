@@ -87,7 +87,7 @@ struct TextStyleEditor: View {
                         .imageScale(.large)
                         .foregroundStyle(.secondary)
                         .dynamicTypeSize(..<DynamicTypeSize.xLarge)
-                    CustomSlider(value: $titleSize, in: 0.8...1.25, mask: true, colors: [.pink.lighter(), .pink])
+                    CustomSlider(value: $titleSize, in: 0.7...1.3, mask: true, colors: [.pink.lighter(), .pink])
                         .padding(.leading, 3)
                 }
                 .padding(8)
@@ -99,7 +99,7 @@ struct TextStyleEditor: View {
                         .imageScale(.large)
                         .foregroundStyle(.secondary)
                         .dynamicTypeSize(..<DynamicTypeSize.xLarge)
-                    CustomSlider(value: $numberSize, in: 0.8...1.25, mask: true, colors: [.pink.lighter(), .pink])
+                    CustomSlider(value: $numberSize, in: 0.7...1.3, mask: true, colors: [.pink.lighter(), .pink])
                         .padding(.leading, 3)
                 }
                 .padding(8)

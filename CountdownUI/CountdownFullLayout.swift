@@ -55,12 +55,12 @@ public struct CountdownFullLayout: View {
                 )
                 Spacer(minLength: 0)
                 DaysDisplay(
-                    days: timeRemaining.day,
+                    days: daysRemaining,
                     textColor: textColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow,
-                    textSize: scale * numberSize * 0.2
+                    textSize: scale * numberSize * 0.35
                 )
                 TimeDisplay(
-                    hours: timeRemaining.hour, minutes: timeRemaining.minute, seconds: timeRemaining.second,
+                    days: timeRemaining.day, hours: timeRemaining.hour, minutes: timeRemaining.minute, seconds: timeRemaining.second,
                     textColor: textColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow,
                     textSize: scale * numberSize * 0.12
                 )

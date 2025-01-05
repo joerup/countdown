@@ -42,6 +42,7 @@ public final class CountdownInstance: Codable {
     }
     public var backgroundFade: Double = 0.4
     public var backgroundBlur: Double = 0
+    public var backgroundDim: Double = 0
     public var backgroundBrightness: Double = 0
     public var backgroundSaturation: Double = 1.0
     public var backgroundContrast: Double = 1.0
@@ -81,6 +82,7 @@ public final class CountdownInstance: Codable {
         self.backgroundRGB = countdown.currentBackgroundColor?.rgb
         self.backgroundFade = countdown.currentBackgroundFade
         self.backgroundBlur = countdown.currentBackgroundBlur
+        self.backgroundDim = countdown.currentBackgroundDim
         self.backgroundBrightness = countdown.currentBackgroundBrightness
         self.backgroundSaturation = countdown.currentBackgroundSaturation
         self.backgroundContrast = countdown.currentBackgroundContrast
@@ -108,7 +110,7 @@ public final class CountdownInstance: Codable {
         case timestamp, countdownID, name, displayName, type, occasion,
              tint, textStyle, textWeight, textOpacity, textShadow, titleSize, numberSize,
              backgroundTransforms, backgroundID,
-             backgroundColor, backgroundFade, backgroundBlur, backgroundSaturation, backgroundBrightness, backgroundContrast,
+             backgroundColor, backgroundFade, backgroundBlur, backgroundDim, backgroundSaturation, backgroundBrightness, backgroundContrast,
              
              // deprecated
              backgroundData, backgroundIconData
@@ -133,6 +135,7 @@ public final class CountdownInstance: Codable {
         backgroundRGB = try? container.decode(RGBColor.self, forKey: .backgroundColor)
         backgroundFade = (try? container.decode(Double.self, forKey: .backgroundFade)) ?? 0.4
         backgroundBlur = (try? container.decode(Double.self, forKey: .backgroundBlur)) ?? 0
+        backgroundDim = (try? container.decode(Double.self, forKey: .backgroundDim)) ?? 0
         backgroundBrightness = (try? container.decode(Double.self, forKey: .backgroundBrightness)) ?? 0
         backgroundSaturation = (try? container.decode(Double.self, forKey: .backgroundSaturation)) ?? 1.0
         backgroundContrast = (try? container.decode(Double.self, forKey: .backgroundContrast)) ?? 1.0
@@ -161,6 +164,7 @@ public final class CountdownInstance: Codable {
         try container.encode(backgroundRGB, forKey: .backgroundColor)
         try container.encode(backgroundFade, forKey: .backgroundFade)
         try container.encode(backgroundBlur, forKey: .backgroundBlur)
+        try container.encode(backgroundDim, forKey: .backgroundDim)
         try container.encode(backgroundSaturation, forKey: .backgroundSaturation)
         try container.encode(backgroundBrightness, forKey: .backgroundBrightness)
         try container.encode(backgroundContrast, forKey: .backgroundContrast)
@@ -184,6 +188,7 @@ public final class CountdownInstance: Codable {
         self.backgroundRGB == countdown.currentBackgroundColor?.rgb &&
         self.backgroundFade == countdown.currentBackgroundFade &&
         self.backgroundBlur == countdown.currentBackgroundBlur &&
+        self.backgroundDim == countdown.currentBackgroundDim &&
         self.backgroundSaturation == countdown.currentBackgroundSaturation &&
         self.backgroundBrightness == countdown.currentBackgroundBrightness &&
         self.backgroundContrast == countdown.currentBackgroundContrast

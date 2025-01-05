@@ -21,6 +21,7 @@ struct BackgroundEditor: View {
     @Binding var backgroundColor: Color?
     @Binding var backgroundFade: Double
     @Binding var backgroundBlur: Double
+    @Binding var backgroundDim: Double
     @Binding var backgroundSaturation: Double
     @Binding var backgroundBrightness: Double
     @Binding var backgroundContrast: Double
@@ -50,7 +51,7 @@ struct BackgroundEditor: View {
                         }
                     }
                 } label: {
-                    BackgroundDisplay(background: background?.square, color: backgroundColor, fade: backgroundFade, blur: backgroundBlur, brightness: backgroundBrightness, saturation: backgroundSaturation, contrast: backgroundContrast)
+                    BackgroundDisplay(background: background?.square, color: backgroundColor, fade: backgroundFade, blur: backgroundBlur, dim: backgroundDim, brightness: backgroundBrightness, saturation: backgroundSaturation, contrast: backgroundContrast)
                         .aspectRatio(1.0, contentMode: .fill)
                         .frame(maxWidth: 140, maxHeight: 140)
                         .clipShape(RoundedRectangle(cornerRadius: 20))
@@ -66,30 +67,38 @@ struct BackgroundEditor: View {
                 .padding(.vertical)
             
             if background != nil {
-                VStack {
-                    HStack(spacing: 0) {
-                        CustomSlider(value: $backgroundBrightness, in: -0.8...0.8, colors: [.black, .white])
-                        Image(systemName: "sun.max")
-                            .foregroundStyle(.yellow)
-                            .frame(minWidth: 25)
+                HStack {
+                    CustomSlider(value: $backgroundDim, in: 0...0.8, opacityGrid: true, colors: [.clear, .black.opacity(0.8)])
+                    Image(systemName: "sun.horizon")
+                        .frame(minWidth: 25)
+                }
+                .padding(.bottom, 8)
+                HStack {
+                    CustomSlider(value: $backgroundBlur, in: 0...10, mask: true, colors: [.white, .cyan])
+                    Image(systemName: "drop")
+                        .frame(minWidth: 25)
+                }
+                
+                Divider()
+                    .padding(.vertical)
+                
+                HStack(alignment: .top) {
+                    VStack {
+                        CustomSlider(value: $backgroundBrightness, in: -0.4...0.4, colors: [.black, .white])
+                        Image(systemName: "sun.min")
                     }
-                    HStack(spacing: 0) {
+                    VStack {
                         CustomSlider(value: $backgroundSaturation, in: 0...2, colors: [.gray, .pink])
-                        Image(systemName: "paintpalette")
-                            .renderingMode(.original)
-                            .frame(minWidth: 25)
+                        Image(systemName: "circle.fill")
+                            .foregroundColor(.clear)
+                            .background(
+                                LinearGradient(colors: [.red, .orange, .yellow, .green, .blue, .purple, .red], startPoint: .leading, endPoint: .trailing)
+                                    .mask(Image(systemName: "circle.fill"))
+                            )
                     }
-                    HStack(spacing: 0) {
+                    VStack {
                         CustomSlider(value: $backgroundContrast, in: 0.1...1.9, mask: true, colors: [.white, .black])
                         Image(systemName: "circle.lefthalf.filled")
-                            .foregroundStyle(.black)
-                            .frame(minWidth: 25)
-                    }
-                    HStack(spacing: 0) {
-                        CustomSlider(value: $backgroundBlur, in: 0...10, mask: true, colors: [.white, .cyan])
-                        Image(systemName: "drop.fill")
-                            .foregroundStyle(.blue)
-                            .frame(minWidth: 25)
                     }
                 }
                 

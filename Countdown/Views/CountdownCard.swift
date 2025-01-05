@@ -37,7 +37,6 @@ public struct CountdownCard: View {
     }
     
     public var body: some View {
-        let squareSize = min(size.width * 0.65, 400)
         CountdownFullLayout(countdown: countdown)
             .padding([.horizontal, .bottom])
             .padding(.vertical, 40)
@@ -49,7 +48,7 @@ public struct CountdownCard: View {
                     .interactiveDismissDisabled()
             }
             .background {
-                BackgroundDisplay(background: countdown.currentBackground?.full, color: countdown.currentBackgroundColor, fade: countdown.currentBackgroundFade, blur: countdown.currentBackgroundBlur, brightness: countdown.currentBackgroundBrightness, saturation: countdown.currentBackgroundSaturation, contrast: countdown.currentBackgroundContrast)
+                BackgroundDisplay(background: countdown.currentBackground?.full, color: countdown.currentBackgroundColor, fade: countdown.currentBackgroundFade, blur: countdown.currentBackgroundBlur, dim: countdown.currentBackgroundDim, brightness: countdown.currentBackgroundBrightness, saturation: countdown.currentBackgroundSaturation, contrast: countdown.currentBackgroundContrast)
                     .overlay(alignment: .bottom) {
                         LinearGradient(colors: [.clear, .black.opacity(0.75)], startPoint: .top, endPoint: .bottom)
                             .frame(height: size.height/3)
