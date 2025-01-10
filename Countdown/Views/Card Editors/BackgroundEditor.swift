@@ -82,24 +82,27 @@ struct BackgroundEditor: View {
                 Divider()
                     .padding(.vertical)
                 
-                HStack(alignment: .top) {
-                    VStack {
-                        CustomSlider(value: $backgroundBrightness, in: -0.4...0.4, colors: [.black, .white])
-                        Image(systemName: "sun.min")
-                    }
-                    VStack {
-                        CustomSlider(value: $backgroundSaturation, in: 0...2, colors: [.gray, .pink])
-                        Image(systemName: "circle.fill")
-                            .foregroundColor(.clear)
-                            .background(
-                                LinearGradient(colors: [.red, .orange, .yellow, .green, .blue, .purple, .red], startPoint: .leading, endPoint: .trailing)
-                                    .mask(Image(systemName: "circle.fill"))
-                            )
-                    }
-                    VStack {
-                        CustomSlider(value: $backgroundContrast, in: 0.1...1.9, mask: true, colors: [.white, .black])
-                        Image(systemName: "circle.lefthalf.filled")
-                    }
+                HStack {
+                    CustomSlider(value: $backgroundBrightness, in: -0.4...0.4, colors: [.black, .white])
+                    Image(systemName: "sun.min")
+                        .frame(minWidth: 25)
+                }
+                .padding(.bottom, 8)
+                HStack {
+                    CustomSlider(value: $backgroundSaturation, in: 0...2, colors: [.gray, .pink])
+                    Image(systemName: "circle.fill")
+                        .foregroundColor(.clear)
+                        .background(
+                            LinearGradient(colors: [.red, .orange, .yellow, .green, .blue, .purple, .red], startPoint: .leading, endPoint: .trailing)
+                                .mask(Image(systemName: "circle.fill"))
+                        )
+                        .frame(minWidth: 25)
+                }
+                .padding(.bottom, 8)
+                HStack {
+                    CustomSlider(value: $backgroundContrast, in: 0.1...1.9, mask: true, colors: [.white, .black])
+                    Image(systemName: "circle.lefthalf.filled")
+                        .frame(minWidth: 25)
                 }
                 
                 Divider()

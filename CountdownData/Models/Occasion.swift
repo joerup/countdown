@@ -102,7 +102,7 @@ public enum Occasion: Codable, Hashable, Equatable {
     
     private func single(calendar identifier: Calendar.Identifier, year: Int, month: Int, day: Int, hour: Int = 0, minute: Int = 0) -> (date: Date, components: DateComponents)? {
         let calendar = Calendar(identifier: identifier)
-        let components = DateComponents(year: year, month: month, day: day, hour: hour, minute: minute)
+        let components = DateComponents(year: year, month: month, day: day, hour: hour, minute: minute).adjusted(calendar: calendar)
         if let date = calendar.date(from: components) {
             return (date, components)
         }
@@ -112,7 +112,7 @@ public enum Occasion: Codable, Hashable, Equatable {
     private func annual(calendar identifier: Calendar.Identifier, year: Int? = nil, month: Int, day: Int, hour: Int = 0, minute: Int = 0, after referenceDate: Date = .now) -> (date: Date, components: DateComponents)? {
         let calendar = Calendar(identifier: identifier)
         let year = year ?? Date.currentYear(identifier)
-        let components = DateComponents(year: year, month: month, day: day, hour: hour, minute: minute)
+        let components = DateComponents(year: year, month: month, day: day, hour: hour, minute: minute).adjusted(calendar: calendar)
         if let date = calendar.date(from: components) {
             if date.midnight < referenceDate.midnight {
                 return annual(calendar: identifier, year: year+1, month: month, day: day, hour: hour, minute: minute, after: referenceDate)
@@ -126,7 +126,7 @@ public enum Occasion: Codable, Hashable, Equatable {
     private func annual(calendar identifier: Calendar.Identifier, year: Int? = nil, month: Int, week: Int, weekday: Int, after referenceDate: Date = .now) -> (date: Date, components: DateComponents)? {
         let calendar = Calendar(identifier: identifier)
         let year = year ?? Date.currentYear(identifier)
-        let components = DateComponents(year: year, month: month, weekday: weekday, weekdayOrdinal: week)
+        let components = DateComponents(year: year, month: month, weekday: weekday, weekdayOrdinal: week).adjusted(calendar: calendar)
         if let date = calendar.date(from: components) {
             if date.midnight < referenceDate.midnight {
                 return annual(calendar: identifier, year: year+1, month: month, week: week, weekday: weekday, after: referenceDate)
@@ -140,7 +140,7 @@ public enum Occasion: Codable, Hashable, Equatable {
     private func annual(calendar identifier: Calendar.Identifier, year: Int? = nil, month: Int, weekday: Int, after: Bool, day: Int, after referenceDate: Date = .now) -> (date: Date, components: DateComponents)? {
         let calendar = Calendar(identifier: identifier)
         let year = year ?? Date.currentYear(identifier)
-        let components = DateComponents(year: year, month: month, day: day)
+        let components = DateComponents(year: year, month: month, day: day).adjusted(calendar: calendar)
         let baseDate = calendar.date(from: components) ?? .now
         let baseWeekday = baseDate.component(.weekday)
         let offset = (after ? 1 : -1) * (baseWeekday - weekday + 7) % 7
@@ -163,7 +163,7 @@ public enum Occasion: Codable, Hashable, Equatable {
         case "orthodox_easter": components = orthodoxEaster(for: year)
         default: components = nil
         }
-        guard let components else { return nil }
+        guard let components = components?.adjusted(calendar: calendar) else { return nil }
         if let baseDate = calendar.date(from: components), let date = calendar.date(byAdding: .day, value: offset, to: baseDate) {
             if date.midnight < referenceDate.midnight {
                 return annual(calendar: identifier, year: year+1, tag: tag, offset: offset, after: referenceDate)
@@ -298,6 +298,19 @@ public enum Occasion: Codable, Hashable, Equatable {
 
 }
 
+extension DateComponents {
+    
+    func adjusted(calendar: Calendar) -> Self {
+        if [.hebrew, .islamic, .islamicCivil, .islamicTabular, .islamicUmmAlQura].contains(calendar.identifier) {
+            if let date = calendar.date(from: self) {
+                if let adjustedDate = calendar.date(byAdding: .day, value: -1, to: date) {
+                    return calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: adjustedDate)
+                }
+            }
+        }
+        return self
+    }
+}
 
 extension Occasion {
     

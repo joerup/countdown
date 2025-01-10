@@ -28,7 +28,6 @@ struct HolidayDetails: View {
                     }
                     Text(occasion.string)
                 }
-                .foregroundStyle(.secondary)
                 banner
             }
 //                    Section("Upcoming Dates") {

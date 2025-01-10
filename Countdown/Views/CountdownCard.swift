@@ -35,6 +35,12 @@ public struct CountdownCard: View {
     private var totalHeight: CGFloat {
         size.height + (fullScreen ? (edgeInsets.bottom + edgeInsets.top) : 0)
     }
+    private var widthOffset: CGFloat {
+        fullScreen ? (edgeInsets.trailing - edgeInsets.leading) : 0
+    }
+    private var heightOffset: CGFloat {
+        fullScreen ? (edgeInsets.top - edgeInsets.bottom) : 0
+    }
     
     public var body: some View {
         CountdownFullLayout(countdown: countdown)
@@ -54,9 +60,10 @@ public struct CountdownCard: View {
                             .frame(height: size.height/3)
                     }
                     .frame(width: totalWidth, height: totalHeight)
-                    .clipShape(RoundedRectangle(cornerRadius: fullScreen ? 0 : 40))
+                    .clipShape(RoundedRectangle(cornerRadius: 40))
                     .clipped()
-                    .ignoresSafeArea(edges: .vertical)
+                    .padding(.leading, widthOffset)
+                    .padding(.bottom, heightOffset)
                     .id(clock.tick)
             }
             .overlay(alignment: .top) {

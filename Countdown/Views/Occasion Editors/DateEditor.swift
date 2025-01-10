@@ -37,6 +37,7 @@ struct DateEditor: View {
                         }
                         Text(occasion.string)
                     }
+                    .foregroundStyle(.black)
                 }
                 if editDate {
                     Toggle("Repeat Annually", isOn: $repeatAnnually)
