@@ -22,8 +22,8 @@ struct CountdownGrid: View {
     
     var onSelect: (Countdown) -> Void
     
-    @State private var shareCountdown: Bool = false
-    @State private var shareCountdownValue: Countdown?
+    @State private var editCountdown: Countdown?
+    
     @State private var deleteCountdown: Bool = false
     @State private var deleteCountdownValue: Countdown?
     
@@ -42,22 +42,15 @@ struct CountdownGrid: View {
                                 .aspectRatio(1.0, contentMode: .fill)
                                 .frame(maxWidth: 200)
                                 .background(Color.blue.opacity(0.2))
-//                                .overlay {
-//                                    if let data = countdown.card?.background {
-//                                        Text(String(data.count))
-//                                    }
-//                                }
                         }
                         .clipShape(RoundedRectangle(cornerRadius: 22.5))
                         .shadow(radius: 5)
-                        .id(clock.tick)
                         .contextMenu {
-//                            Button {
-//                                self.shareCountdownValue = countdown
-//                                self.shareCountdown.toggle()
-//                            } label: {
-//                                Label("Share", systemImage: "square.and.arrow.up")
-//                            }
+                            Button {
+                                self.editCountdown = countdown
+                            } label: {
+                                Label("Edit", systemImage: "pencil")
+                            }
                             Button(role: .destructive) {
                                 self.deleteCountdownValue = countdown
                                 self.deleteCountdown.toggle()
@@ -70,10 +63,8 @@ struct CountdownGrid: View {
                 }
                 .padding(.horizontal)
             }
-            .sheet(isPresented: $shareCountdown) {
-                if let countdown = shareCountdownValue {
-                    ShareMenu(countdown: countdown)
-                }
+            .sheet(item: $editCountdown) { countdown in
+                CountdownEditor(countdown: countdown) { _ in }
             }
             .alert("Delete \(deleteCountdownValue?.displayName ?? "Countdown")", isPresented: $deleteCountdown) {
                 Button("Cancel", role: .cancel) {
@@ -92,5 +83,6 @@ struct CountdownGrid: View {
                 await clock.refresh()
             }
         }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
 }

@@ -13,19 +13,21 @@ extension Card {
     public struct Background {
         var id: UUID
         public private(set) var data: Data
+        public private(set) var previewData: Data?
         
         public private(set) var full: UIImage?
         public private(set) var square: UIImage?
         
-        init?(id: UUID, imageData: Data?, transforms: BackgroundTransforms?) async {
-            guard let imageData, let image = UIImage(data: imageData) else { return nil }
+        init?(id: UUID, imageData: Data?, previewImageData: Data?, transforms: BackgroundTransforms?) async {
+            guard let imageData, let previewImageData, let image = UIImage(data: imageData), let previewImage = UIImage(data: previewImageData) else { return nil }
             let transforms = transforms ?? .init()
             
             self.id = id
             self.data = imageData
+            self.previewData = previewImageData
             
             self.full = image
-            self.square = image.cropped(offset: transforms.square.offset, scale: transforms.square.scale)
+            self.square = previewImage.cropped(offset: transforms.square.offset, scale: transforms.square.scale)
         }
     }
     

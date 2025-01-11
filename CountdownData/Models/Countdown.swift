@@ -161,12 +161,12 @@ public final class Countdown {
         // Update old backgrounds if they still exist
         await card?.updateOldBackgrounds()
         
-        // Match backgrounds and background icons
-//        for card in (cards ?? []) {
-//            if let background = card.background {
-//                card.setBackground(background)
-//            }
-//        }
+        // Match background previews
+        for card in (cards ?? []) {
+            if let background = card.background, card.backgroundPreview == nil {
+                card.setBackground(background, transforms: card.backgroundTransforms)
+            }
+        }
         
         // Fetch current background
         if let card, currentBackground?.id != card.backgroundID {

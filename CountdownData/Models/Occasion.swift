@@ -42,7 +42,7 @@ public enum Occasion: Codable, Hashable, Equatable {
     case annualOther(calendar: String, tag: String, offset: Int)
     
     // Placeholder
-    public static let now = Self.annualDate(calendar: "gregorian", month: Date.currentMonth, day: Date.currentDay)
+    public static let now = Self.singleDate(calendar: "gregorian", year: Date.currentYear, month: Date.currentMonth, day: Date.currentDay)
     
     private var next: (date: Date, components: DateComponents)? {
         return next(after: .now)
@@ -211,7 +211,19 @@ public enum Occasion: Codable, Hashable, Equatable {
     }
 
     private func formattedTime(hour: Int, minute: Int) -> String {
-        String(format: "%02d:%02d", hour, minute)
+        var components = DateComponents()
+        components.hour = hour
+        components.minute = minute
+        
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        formatter.locale = Locale.current
+        
+        if let date = Calendar.current.date(from: components) {
+            return formatter.string(from: date)
+        }
+        return String(format: "%02d:%02d", hour, minute)
     }
     
     private func formattedDate(calendar identifier: String, month: Int, day: Int, year: Int? = nil) -> String {

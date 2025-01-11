@@ -16,7 +16,10 @@ public final class Card {
     public private(set) var backgroundID: UUID = UUID()
     
     @Attribute(.externalStorage) public private(set) var background: Data?
+    @Attribute(.externalStorage) public private(set) var backgroundPreview: Data?
     public var backgroundTransforms: BackgroundTransforms?
+    
+    static let backgroundPreviewSize: CGFloat = 500
     
     private var backgroundRGB: RGBColor?
     public var backgroundColor: Color? {
@@ -56,6 +59,7 @@ public final class Card {
         self.titleSize = instance.titleSize
         self.numberSize = instance.numberSize
         self.background = instance.background
+        self.backgroundPreview = instance.backgroundPreview
         self.backgroundTransforms = instance.backgroundTransforms
         self.backgroundID = instance.backgroundID
         self.backgroundRGB = instance.backgroundRGB
@@ -77,6 +81,7 @@ public final class Card {
         self.titleSize = instance.titleSize
         self.numberSize = instance.numberSize
         self.background = instance.background
+        self.backgroundPreview = instance.backgroundPreview
         self.backgroundTransforms = instance.backgroundTransforms
         self.backgroundID = instance.backgroundID
         self.backgroundRGB = instance.backgroundRGB
@@ -92,11 +97,12 @@ public final class Card {
     
     public func setBackground(_ data: Data?, transforms: Card.BackgroundTransforms? = nil) {
         self.background = data
+        self.backgroundPreview = data?.resizeData(withSize: Card.backgroundPreviewSize)
         self.backgroundTransforms = transforms
         self.backgroundID = UUID()
     }
     public func getBackground() async -> Background? {
-        return await Background(id: backgroundID, imageData: background, transforms: backgroundTransforms)
+        return await Background(id: backgroundID, imageData: background, previewImageData: backgroundPreview, transforms: backgroundTransforms)
     }
     
     /* DEPRECATED */

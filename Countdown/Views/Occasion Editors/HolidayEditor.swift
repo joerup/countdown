@@ -16,19 +16,31 @@ struct HolidayDetails: View {
     
     @State private var showMoreDates: Bool = false
     
+    @State private var editDate: Bool = false
+    
     var body: some View {
         Group {
-            Section("Name") {
+            Section("Event") {
                 TextField("Event Name", text: $displayName)
             }
             Section("Occurs") {
-                HStack {
-                    if occasion.repeatAnnually {
+                Button {
+                    editDate.toggle()
+                } label: {
+                    HStack {
                         Image(systemName: "repeat")
+                            .foregroundStyle(.secondary)
+                        Text("\(occasion.string)")
                     }
-                    Text(occasion.string)
+                    .foregroundStyle(.foreground)
                 }
-                banner
+                .popover(isPresented: $editDate) {
+                    banner
+                        .padding()
+                        .presentationCompactAdaptation(.popover)
+                        .presentationBackground(Color.blue.opacity(0.1))
+                        .presentationCornerRadius(30)
+                }
             }
 //                    Section("Upcoming Dates") {
 //                        ForEach(occasion.futureDates(showMoreDates ? 10 : 3), id: \.self) { date in
@@ -43,18 +55,13 @@ struct HolidayDetails: View {
     }
     
     private var banner: some View {
-        Section {
-            HStack {
-                Image(systemName: "info.circle.fill")
-                    .font(.title3)
-                    .foregroundColor(.blue)
-                Text("This countdown is automatically set to the next date of \(name).")
-                    .font(.callout)
-                    .foregroundColor(.primary)
-            }
-            .listRowBackground(Color.blue.opacity(0.1))
+        HStack {
+            Image(systemName: "info.circle.fill")
+                .font(.title3)
+                .foregroundColor(.blue)
+            Text("This countdown is automatically set to the next date of \(name).")
+                .fixedSize(horizontal: false, vertical: true)
         }
-        .textCase(nil)
     }
 }
 
@@ -106,5 +113,19 @@ struct Holidays: View {
                 .foregroundColor(.primary)
             }
         }
+    }
+}
+
+#Preview {
+    @Previewable @State var name: String = "Christmas"
+    @Previewable @State var displayName: String = "Christmas"
+    @Previewable @State var occasion: Occasion = .annualDate(calendar: "gregorian", month: 12, day: 25)
+    
+    List {
+        HolidayDetails(
+            name: $name,
+            displayName: $displayName,
+            occasion: $occasion
+        )
     }
 }

@@ -32,6 +32,7 @@ public final class CountdownInstance: Codable {
     public var numberSize: Double = 1.0
  
     public var background: Data?
+    public var backgroundPreview: Data?
     public var backgroundTransforms: Card.BackgroundTransforms?
     public var backgroundID: UUID = UUID()
     
@@ -99,11 +100,12 @@ public final class CountdownInstance: Codable {
     
     public func setBackground(_ data: Data?, transforms: Card.BackgroundTransforms? = nil) {
         self.background = data
+        self.backgroundPreview = data?.resizeData(withSize: Card.backgroundPreviewSize)
         self.backgroundTransforms = transforms
         self.backgroundID = UUID()
     }
     public func loadCard() async {
-        currentBackground = await Card.Background(id: backgroundID, imageData: background, transforms: backgroundTransforms)
+        currentBackground = await Card.Background(id: backgroundID, imageData: background, previewImageData: backgroundPreview, transforms: backgroundTransforms)
     }
     
     enum CodingKeys: CodingKey {

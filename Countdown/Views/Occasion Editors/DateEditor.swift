@@ -32,21 +32,35 @@ struct DateEditor: View {
                     editDate.toggle()
                 } label: {
                     HStack {
-                        if occasion.repeatAnnually {
-                            Image(systemName: "repeat")
-                        }
-                        Text(occasion.string)
+                        Image(systemName: repeatAnnually ? "repeat" : "calendar")
+                            .foregroundStyle(.secondary)
+                        Text("\(occasion.string)")
                     }
-                    .foregroundStyle(.black)
+                    .foregroundStyle(.foreground)
                 }
-                if editDate {
-                    Toggle("Repeat Annually", isOn: $repeatAnnually)
-                    DatePicker("Date", selection: $date, displayedComponents: [.date])
-                        .datePickerStyle(.wheel)
-                    Toggle("Include Time", isOn: $includeTime)
-                    if includeTime {
-                        DatePicker("Time", selection: $time, displayedComponents: [.hourAndMinute])
+                .popover(isPresented: $editDate) {
+                    VStack {
+                        HStack {
+                            Text("Frequency")
+                            Spacer()
+                            Picker("Frequency", selection: $repeatAnnually) {
+                                Text("One Time").tag(false)
+                                Text("Annual").tag(true)
+                            }
+                            .pickerStyle(.menu)
+                        }
+                        DatePicker("", selection: $date, displayedComponents: [.date])
+                            .datePickerStyle(.wheel)
+                        Toggle("Include Time", isOn: $includeTime)
+                        if includeTime {
+                            DatePicker("Time", selection: $time, displayedComponents: [.hourAndMinute])
+                        }
                     }
+                    .padding()
+                    .padding()
+                    .presentationCompactAdaptation(.popover)
+                    .presentationBackground(Material.thin)
+                    .presentationCornerRadius(30)
                 }
             }
         }
@@ -98,5 +112,19 @@ struct DateEditor: View {
                 occasion = .singleDate(calendar: "gregorian", year: year, month: month, day: day)
             }
         }
+    }
+}
+
+#Preview {
+    @Previewable @State var name: String = "My Event"
+    @Previewable @State var displayName: String = "My Event"
+    @Previewable @State var occasion: Occasion = .singleDate(calendar: "gregorian", year: 2025, month: 1, day: 11)
+    
+    List {
+        DateEditor(
+            name: $name,
+            displayName: $displayName,
+            occasion: $occasion
+        )
     }
 }

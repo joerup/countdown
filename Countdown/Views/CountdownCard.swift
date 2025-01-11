@@ -51,7 +51,6 @@ public struct CountdownCard: View {
             .frame(width: size.width, height: size.height)
             .sheet(isPresented: $editCountdown) {
                 CountdownEditor(countdown: countdown) { _ in }
-                    .interactiveDismissDisabled()
             }
             .background {
                 BackgroundDisplay(background: countdown.currentBackground?.full, color: countdown.currentBackgroundColor, fade: countdown.currentBackgroundFade, blur: countdown.currentBackgroundBlur, dim: countdown.currentBackgroundDim, brightness: countdown.currentBackgroundBrightness, saturation: countdown.currentBackgroundSaturation, contrast: countdown.currentBackgroundContrast)
@@ -60,7 +59,7 @@ public struct CountdownCard: View {
                             .frame(height: size.height/3)
                     }
                     .frame(width: totalWidth, height: totalHeight)
-                    .clipShape(RoundedRectangle(cornerRadius: 40))
+                    .clipShape(RoundedRectangle(cornerRadius: editCountdown && fullScreen ? 0 : 40))
                     .clipped()
                     .padding(.leading, widthOffset)
                     .padding(.bottom, heightOffset)

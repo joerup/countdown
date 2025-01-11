@@ -27,22 +27,23 @@ public extension UIImage {
         return UIGraphicsGetImageFromCurrentImageContext()
     }
     
-    func resized(withSize newSize: CGFloat) -> UIImage? {
+    func resizeData(withSize newSize: CGFloat) -> Data? {
         let canvasSize = CGSize(width: newSize * min(1.0, size.width/size.height), height: newSize * min(1.0, size.height/size.width))
         UIGraphicsBeginImageContextWithOptions(canvasSize, false, scale)
         defer { UIGraphicsEndImageContext() }
         draw(in: CGRect(origin: .zero, size: canvasSize))
-        return UIGraphicsGetImageFromCurrentImageContext()
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        return image?.jpegData(compressionQuality: 0.8)
     }
-    
-    func resizedIfTooLarge(withSize newSize: CGFloat) -> UIImage? {
-        guard size.height > newSize || size.width > newSize else { return self }
-        let canvasSize = CGSize(width: newSize * min(1.0, size.width/size.height), height: newSize * min(1.0, size.height/size.width))
-        UIGraphicsBeginImageContextWithOptions(canvasSize, false, scale)
-        defer { UIGraphicsEndImageContext() }
-        draw(in: CGRect(origin: .zero, size: canvasSize))
-        return UIGraphicsGetImageFromCurrentImageContext()
-    }
+//    
+//    func resizedIfTooLarge(withSize newSize: CGFloat) -> UIImage? {
+//        guard size.height > newSize || size.width > newSize else { return self }
+//        let canvasSize = CGSize(width: newSize * min(1.0, size.width/size.height), height: newSize * min(1.0, size.height/size.width))
+//        UIGraphicsBeginImageContextWithOptions(canvasSize, false, scale)
+//        defer { UIGraphicsEndImageContext() }
+//        draw(in: CGRect(origin: .zero, size: canvasSize))
+//        return UIGraphicsGetImageFromCurrentImageContext()
+//    }
 
     func compressed(size: Double) -> Data? {
         guard let minimum = jpegData(compressionQuality: 0.9) else { return nil }
@@ -87,34 +88,34 @@ public extension UIImage {
         return UIImage(cgImage: cgImage, scale: self.scale, orientation: .up)
     }
     
-    func withTextOverlay(text: String, textColor: UIColor = .black, font: UIFont = UIFont.systemFont(ofSize: 200), atPoint point: CGPoint) -> UIImage {
-        // Setup the font attributes that will be later used to dictate how the text should be drawn
-        let textFontAttributes = [
-            NSAttributedString.Key.font: font,
-            NSAttributedString.Key.foregroundColor: textColor,
-        ] as [NSAttributedString.Key : Any]
-        
-        // Create a bitmap graphics context of the given size
-        UIGraphicsBeginImageContextWithOptions(self.size, false, 0.0)
-        
-        // Put the image into a rectangle as large as the original image
-        self.draw(in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height))
-        
-        // Create a point within the space that is as big as the image
-        let rect = CGRect(x: point.x, y: point.y, width: self.size.width, height: self.size.height)
-        
-        // Draw the text into an image
-        text.draw(in: rect, withAttributes: textFontAttributes)
-        
-        // Create a new image out of the images we have created
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        
-        // End the context now that we have the image we need
-        UIGraphicsEndImageContext()
-        
-        // Return the new image
-        return newImage ?? self
-    }
+//    func withTextOverlay(text: String, textColor: UIColor = .black, font: UIFont = UIFont.systemFont(ofSize: 200), atPoint point: CGPoint) -> UIImage {
+//        // Setup the font attributes that will be later used to dictate how the text should be drawn
+//        let textFontAttributes = [
+//            NSAttributedString.Key.font: font,
+//            NSAttributedString.Key.foregroundColor: textColor,
+//        ] as [NSAttributedString.Key : Any]
+//        
+//        // Create a bitmap graphics context of the given size
+//        UIGraphicsBeginImageContextWithOptions(self.size, false, 0.0)
+//        
+//        // Put the image into a rectangle as large as the original image
+//        self.draw(in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height))
+//        
+//        // Create a point within the space that is as big as the image
+//        let rect = CGRect(x: point.x, y: point.y, width: self.size.width, height: self.size.height)
+//        
+//        // Draw the text into an image
+//        text.draw(in: rect, withAttributes: textFontAttributes)
+//        
+//        // Create a new image out of the images we have created
+//        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+//        
+//        // End the context now that we have the image we need
+//        UIGraphicsEndImageContext()
+//        
+//        // Return the new image
+//        return newImage ?? self
+//    }
     
     func add(image: UIImage) -> UIImage? {
         let newSize = size
@@ -129,6 +130,16 @@ public extension UIImage {
         UIGraphicsEndImageContext()
         
         return newImage
+    }
+}
+
+public extension Data {
+    
+    func resizeData(withSize newSize: CGFloat) -> Data? {
+        if let image = UIImage(data: self) {
+            return image.resizeData(withSize: newSize)
+        }
+        return nil
     }
 }
 

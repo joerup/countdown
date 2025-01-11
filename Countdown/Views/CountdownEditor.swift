@@ -138,6 +138,8 @@ struct CountdownEditor: View {
                 makeChange()
             }
         }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
+        .interactiveDismissDisabled()
         .onChange(of: textColor) { _, color in
             editedCountdown.textColor = color
             makeChange()

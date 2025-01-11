@@ -119,7 +119,7 @@ struct BackgroundEditor: View {
             setBackground(background, .init(square: transform), true)
         }
         .repositionMenu(isPresented: $showRepositionMenu, image: background?.full, transform: backgroundTransforms?.square) { transform in
-            setBackground(background?.data, .init(square: transform), true)
+            setBackground(background?.data, .init(square: transform), false)
         }
     }
 }

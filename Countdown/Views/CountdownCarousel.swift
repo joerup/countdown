@@ -111,6 +111,7 @@ struct CountdownCarousel: View {
                 }
             }
         }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
         .onAppear {
             UIImpactFeedbackGenerator().impactOccurred()
             shootConfetti()

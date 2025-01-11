@@ -16,15 +16,13 @@ struct CountdownWidget: Widget {
      
     let kind: String = "CountdownWidget"
     
-    private let maxSize: CGFloat = 500
-    
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: CountdownWidgetIntent.self, provider: CountdownTimelineProvider()) { entry in
             if let countdown = entry.countdown {
                 CountdownLayout(countdown: countdown)
                     .padding(.bottom, -10)
                     .containerBackground(for: .widget) {
-                        BackgroundDisplay(background: countdown.currentBackground?.square?.resizedIfTooLarge(withSize: maxSize), color: countdown.currentBackgroundColor, fade: countdown.currentBackgroundFade, blur: countdown.currentBackgroundBlur, dim: countdown.currentBackgroundDim, brightness: countdown.currentBackgroundBrightness, saturation: countdown.currentBackgroundSaturation, contrast: countdown.currentBackgroundContrast)
+                        BackgroundDisplay(background: countdown.currentBackground?.square, color: countdown.currentBackgroundColor, fade: countdown.currentBackgroundFade, blur: countdown.currentBackgroundBlur, dim: countdown.currentBackgroundDim, brightness: countdown.currentBackgroundBrightness, saturation: countdown.currentBackgroundSaturation, contrast: countdown.currentBackgroundContrast)
                             .scaleEffect(1.01)
                     }
                     .widgetURL(countdown.getURL())
