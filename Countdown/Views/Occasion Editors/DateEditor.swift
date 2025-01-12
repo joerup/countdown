@@ -24,10 +24,10 @@ struct DateEditor: View {
     
     var body: some View {
         Group {
-            Section("Event") {
+            Section {
                 TextField("My Event", text: $name)
             }
-            Section("Occurs") {
+            Section {
                 Button {
                     editDate.toggle()
                 } label: {
@@ -39,27 +39,35 @@ struct DateEditor: View {
                     .foregroundStyle(.foreground)
                 }
                 .popover(isPresented: $editDate) {
-                    VStack {
-                        HStack {
-                            Text("Frequency")
-                            Spacer()
-                            Picker("Frequency", selection: $repeatAnnually) {
-                                Text("One Time").tag(false)
-                                Text("Annual").tag(true)
+                    VStack(spacing: 16) {
+                        Group {
+                            HStack {
+                                Text("Frequency")
+                                Spacer()
+                                Picker("Frequency", selection: $repeatAnnually) {
+                                    Text("One Time").tag(false)
+                                    Text("Annual").tag(true)
+                                }
+                                .pickerStyle(.menu)
                             }
-                            .pickerStyle(.menu)
+                            CustomDatePicker(date: $date, showYear: !repeatAnnually)
+                                .frame(minWidth: 300, minHeight: 150)
+                            VStack {
+                                Toggle("Include Time", isOn: $includeTime)
+                                if includeTime {
+                                    Divider()
+                                    DatePicker("Time", selection: $time, displayedComponents: [.hourAndMinute])
+                                }
+                            }
                         }
-                        DatePicker("", selection: $date, displayedComponents: [.date])
-                            .datePickerStyle(.wheel)
-                        Toggle("Include Time", isOn: $includeTime)
-                        if includeTime {
-                            DatePicker("Time", selection: $time, displayedComponents: [.hourAndMinute])
-                        }
+                        .padding(.vertical, 5)
+                        .padding(.horizontal)
+                        .background(Color(uiColor: .systemGroupedBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
                     .padding()
-                    .padding()
                     .presentationCompactAdaptation(.popover)
-                    .presentationBackground(Material.thin)
+                    .presentationBackground(Color(uiColor: .systemGray6))
                     .presentationCornerRadius(30)
                 }
             }

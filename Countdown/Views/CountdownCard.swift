@@ -94,26 +94,6 @@ public struct CountdownCard: View {
                 .tint(.white)
             }
             
-//            if editCountdown {
-//                Button {
-//                    editDestination.toggle()
-//                } label: {
-//                    Image(systemName: "calendar")
-//                        .opacity(0.9)
-//                        .padding(5)
-//                }
-//                .tint(.white)
-//                
-//                Button {
-//                    deleteCountdown.toggle()
-//                } label: {
-//                    Image(systemName: "trash")
-//                        .opacity(0.9)
-//                        .padding(5)
-//                }
-//                .tint(.white)
-//            }
-            
             Spacer()
             
             if fullScreen && !editCountdown {

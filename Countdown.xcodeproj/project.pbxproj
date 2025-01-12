@@ -41,7 +41,7 @@
 		01C209162AE0D31800F798CD /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C2090E2AE0CA7700F798CD /* CloudKit.framework */; };
 		01C3C7D42A7CD14000475FC4 /* HolidayEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C3C7D32A7CD14000475FC4 /* HolidayEditor.swift */; };
 		01C94C542D28E99C008D5B8F /* CountdownEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C94C532D28E998008D5B8F /* CountdownEditor.swift */; };
-		01C94C562D29B84E008D5B8F /* MonthDayPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C94C552D29B84B008D5B8F /* MonthDayPicker.swift */; };
+		01C94C562D29B84E008D5B8F /* CustomDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C94C552D29B84B008D5B8F /* CustomDatePicker.swift */; };
 		01CE90AD2ADC5959000537C5 /* SettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01CE90AC2ADC5959000537C5 /* SettingsMenu.swift */; };
 		01D3349B2AE1E93D00C47472 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C2090E2AE0CA7700F798CD /* CloudKit.framework */; };
 		01D9E0B32C6B16FF0043F000 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 01D9E0B22C6B16FF0043F000 /* ConfettiSwiftUI */; };
@@ -145,7 +145,7 @@
 		01C2E2D72AC93A08009C1A10 /* CountdownUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CountdownUI; sourceTree = "<group>"; };
 		01C3C7D32A7CD14000475FC4 /* HolidayEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HolidayEditor.swift; sourceTree = "<group>"; };
 		01C94C532D28E998008D5B8F /* CountdownEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownEditor.swift; sourceTree = "<group>"; };
-		01C94C552D29B84B008D5B8F /* MonthDayPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthDayPicker.swift; sourceTree = "<group>"; };
+		01C94C552D29B84B008D5B8F /* CustomDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDatePicker.swift; sourceTree = "<group>"; };
 		01CE90AC2ADC5959000537C5 /* SettingsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMenu.swift; sourceTree = "<group>"; };
 		01E0923B2A9EAD41006BDABF /* CountdownData */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CountdownData; sourceTree = "<group>"; };
 		01E4109F2C062DA900F7B936 /* Countdown.messages.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Countdown.messages.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -282,7 +282,7 @@
 				0163E5E52D19FF38004D60C9 /* ImageTransformer.swift */,
 				017846AA2D2099DF0048055A /* CustomColorPicker.swift */,
 				01AAA51D2D23805600F97470 /* CustomSlider.swift */,
-				01C94C552D29B84B008D5B8F /* MonthDayPicker.swift */,
+				01C94C552D29B84B008D5B8F /* CustomDatePicker.swift */,
 			);
 			path = "Helper Views";
 			sourceTree = "<group>";
@@ -505,7 +505,7 @@
 				017846AB2D2099E20048055A /* CustomColorPicker.swift in Sources */,
 				0163E5E42D18C4C6004D60C9 /* NewCountdownMenu.swift in Sources */,
 				01C94C542D28E99C008D5B8F /* CountdownEditor.swift in Sources */,
-				01C94C562D29B84E008D5B8F /* MonthDayPicker.swift in Sources */,
+				01C94C562D29B84E008D5B8F /* CustomDatePicker.swift in Sources */,
 				0163E5E22D188D68004D60C9 /* CountdownCard.swift in Sources */,
 				015DD3C02A774807000EB3C0 /* CountdownApp.swift in Sources */,
 				015DD3DC2A77483A000EB3C0 /* CountdownView.swift in Sources */,
