@@ -12,11 +12,6 @@ struct CustomColorPicker<ColorShape: Shape>: View {
     @Binding var color: Color?
     @Binding var opacity: Double
     var shape: ColorShape
-    var sliderValue: SliderValue?
-    
-    enum SliderValue {
-        case saturation, brightness
-    }
     
     @State private var isWhite: Bool = false
     @State private var isCustom: Bool = false
@@ -24,31 +19,41 @@ struct CustomColorPicker<ColorShape: Shape>: View {
     @State private var saturation: Double
     @State private var brightness: Double
     
+    private let brightnessSlider: Bool
+    private let saturationSlider: Bool
+    private let opacitySlider: Bool
     private let allowNoColor: Bool
     private let allowWhite: Bool
     private let hueCount: Int
+    private let brightnessRange: ClosedRange<Double>
+    private let saturationRange: ClosedRange<Double>
     private let opacityRange: ClosedRange<Double>
     
     @State private var scrollPosition: Int?
     
-    init(color: Binding<Color?>, opacity: Binding<Double>, shape: ColorShape, sliderValue: SliderValue? = nil, allowNoColor: Bool = false, allowWhite: Bool = true, hueCount: Int = 12, opacityRange: ClosedRange<Double> = 0...1) {
+    init(color: Binding<Color?>, opacity: Binding<Double>, shape: ColorShape, brightnessSlider: Bool, saturationSlider: Bool, opacitySlider: Bool, allowNoColor: Bool = false, allowWhite: Bool = true, hueCount: Int = 12, brightnessRange: ClosedRange<Double> = 0...1, saturationRange: ClosedRange<Double> = 0...1, opacityRange: ClosedRange<Double> = 0...1) {
         self._color = color
         self._opacity = opacity
         self.shape = shape
-        self.sliderValue = sliderValue
+        self.brightnessSlider = brightnessSlider
+        self.saturationSlider = saturationSlider
+        self.opacitySlider = opacitySlider
         self.allowNoColor = allowNoColor
         self.allowWhite = allowWhite
         self.hueCount = hueCount
+        self.brightnessRange = brightnessRange
+        self.saturationRange = saturationRange
         self.opacityRange = opacityRange
         
-        switch sliderValue {
-        case .saturation:
-            saturation = 0.3
-            brightness = 1.0
-        case .brightness:
+        if brightnessSlider {
             saturation = 1.0
             brightness = 0.8
-        case nil:
+        }
+        else if saturationSlider {
+            saturation = 0.3
+            brightness = 1.0
+        }
+        else {
             saturation = 0.3
             brightness = 1.0
         }
@@ -98,27 +103,28 @@ struct CustomColorPicker<ColorShape: Shape>: View {
             }
             .scrollPosition(id: $scrollPosition, anchor: .center)
             .scrollIndicators(.hidden)
+            .padding(.bottom, 4)
             
             if !isWhite && !isCustom, let color {
-                switch sliderValue {
-                case .saturation:
-                    CustomSlider(value: $saturation, in: 0.1...0.5, colors: [Color(hue: color.hue, saturation: 0.1, brightness: color.value), Color(hue: color.hue, saturation: 0.5, brightness: color.value)])
-                        .tint(color)
-                        .onChange(of: saturation) { _, saturation in
-                            self.color = Color(hue: color.hue, saturation: saturation, brightness: color.value)
-                        }
-                case .brightness:
-                    CustomSlider(value: $brightness, in: 0.25...1.0, colors: [Color(hue: color.hue, saturation: color.saturation, brightness: 0.25), Color(hue: color.hue, saturation: color.saturation, brightness: 1.0)])
+                
+                if brightnessSlider {
+                    CustomSlider(value: $brightness, in: brightnessRange, colors: [Color(hue: color.hue, saturation: color.saturation, brightness: brightnessRange.lowerBound), Color(hue: color.hue, saturation: color.saturation, brightness: brightnessRange.upperBound)])
                         .tint(color)
                         .onChange(of: brightness) { _, saturation in
                             self.color = Color(hue: color.hue, saturation: color.saturation, brightness: brightness)
                         }
-                default:
-                    EmptyView()
+                }
+                
+                if saturationSlider {
+                    CustomSlider(value: $saturation, in: saturationRange, colors: [Color(hue: color.hue, saturation: saturationRange.lowerBound, brightness: color.value), Color(hue: color.hue, saturation: saturationRange.upperBound, brightness: color.value)])
+                        .tint(color)
+                        .onChange(of: saturation) { _, saturation in
+                            self.color = Color(hue: color.hue, saturation: saturation, brightness: color.value)
+                        }
                 }
             }
             
-            if let color {
+            if opacitySlider, let color {
                 CustomSlider(value: $opacity, in: opacityRange, opacityGrid: true, colors: [color.opacity(opacityRange.lowerBound), color.opacity(opacityRange.upperBound)])
                     .tint(color.opacity(opacity))
             }
@@ -150,13 +156,11 @@ struct CustomColorPicker<ColorShape: Shape>: View {
         isWhite = color.hue.isApproximately(Color.white.hue) && color.saturation.isApproximately(Color.white.saturation) && color.value.isApproximately(Color.white.value)
         isCustom = !(color.hue * Double(hueCount)).isApproximately((color.hue * Double(hueCount)).rounded())
         if !isWhite && !isCustom {
-            switch sliderValue {
-            case .saturation:
+            if saturationSlider {
                 saturation = color.saturation
-            case .brightness:
+            }
+            if brightnessSlider {
                 brightness = color.value
-            default:
-                break
             }
         }
     }

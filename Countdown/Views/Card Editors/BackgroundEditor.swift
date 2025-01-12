@@ -40,7 +40,7 @@ struct BackgroundEditor: View {
                             showUnsplashLibrary.toggle()
                         }
                         if background != nil {
-                            Button("Remove Photo") {
+                            Button("No Photo") {
                                 setBackground(nil, nil, true)
                             }
                         }
@@ -48,6 +48,10 @@ struct BackgroundEditor: View {
                     if background != nil {
                         Button("Reposition", systemImage: "crop") {
                             showRepositionMenu.toggle()
+                        }
+                    } else if backgroundColor != .defaultColor {
+                        Button("Default") {
+                            backgroundColor = .defaultColor
                         }
                     }
                 } label: {
@@ -58,7 +62,8 @@ struct BackgroundEditor: View {
                         .overlay {
                             Image(systemName: "photo")
                                 .font(.title)
-                                .foregroundStyle(.gray)
+                                .foregroundStyle(.white)
+                                .shadow(radius: 5)
                         }
                 }
             }
@@ -107,10 +112,10 @@ struct BackgroundEditor: View {
                 
                 Divider()
                     .padding(.top)
-                    
-                CustomColorPicker(color: $backgroundColor, opacity: $backgroundFade, shape: RoundedRectangle(cornerRadius: 15), sliderValue: .brightness, allowNoColor: true, allowWhite: false, opacityRange: 0...0.8)
-                    .padding(.vertical)
             }
+            
+            CustomColorPicker(color: $backgroundColor, opacity: $backgroundFade, shape: RoundedRectangle(cornerRadius: 15), brightnessSlider: true, saturationSlider: background == nil, opacitySlider: background != nil, allowNoColor: background != nil, allowWhite: false, brightnessRange: 0.25...1, saturationRange: 0.2...1, opacityRange: 0...0.8)
+                .padding(.vertical)
         }
         .photoMenu(isPresented: $showPhotoLibrary) { background, transform in
             setBackground(background, .init(square: transform), true)

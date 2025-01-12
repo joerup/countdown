@@ -50,7 +50,11 @@ public struct BackgroundDisplay: View {
                         .fill(color)
                         .opacity(fade)
                 }
-            } else {
+            }
+            else if let color {
+                color
+            }
+            else {
                 Color.defaultColor
             }
         }

@@ -46,7 +46,7 @@ struct CountdownEditor: View {
     @State private var titleSize: Double = 1.0
     @State private var numberSize: Double = 1.0
     
-    @State private var backgroundColor: Color?
+    @State private var backgroundColor: Color? = .defaultColor
     @State private var backgroundFade: Double = 0
     @State private var backgroundBlur: Double = 0
     @State private var backgroundDim: Double = 0
@@ -326,15 +326,15 @@ struct CountdownEditor: View {
         UIImpactFeedbackGenerator().impactOccurred()
         Task {
             await editedCountdown.loadCard()
-        }
-        if resetStates {
-            backgroundColor = nil
-            backgroundFade = 0.4
-            backgroundBlur = 0
-            backgroundDim = 0
-            backgroundBrightness = 0
-            backgroundSaturation = 1.0
-            backgroundContrast = 1.0
+            if resetStates {
+                backgroundColor = data == nil ? .defaultColor : nil
+                backgroundFade = 0.4
+                backgroundBlur = 0
+                backgroundDim = 0
+                backgroundBrightness = 0
+                backgroundSaturation = 1.0
+                backgroundContrast = 1.0
+            }
         }
     }
     

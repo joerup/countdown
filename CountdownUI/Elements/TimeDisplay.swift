@@ -39,12 +39,11 @@ public struct TimeDisplay: View {
     public var body: some View {
         HStack(spacing: 1) {
             if let days {
-                numberUnit(days)
-                    .padding(.trailing, 10)
+                numberUnit(days, unit: "d")
             }
-            numberUnit(hours, colon: true)
-            numberUnit(minutes, colon: true)
-            numberUnit(seconds)
+            numberUnit(hours, unit: "h")
+            numberUnit(minutes, unit: "m")
+            numberUnit(seconds, unit: "s")
         }
         .foregroundStyle(.thickMaterial)
         .environment(\.colorScheme, .light)
@@ -56,8 +55,7 @@ public struct TimeDisplay: View {
                 Text(String(format: "%02i", abs(value)))
                     .font(.system(size: textSize))
                     .fontWeight(textWeight)
-                    .fontDesign(textStyle.design)
-                    .fontWidth(textStyle.width)
+                    .fontWidth(.condensed)
                     .foregroundStyle(textColor)
                     .opacity(textOpacity)
                     .monospacedDigit()
@@ -68,11 +66,10 @@ public struct TimeDisplay: View {
                     }
                     .font(.system(size: textSize * 0.7))
                     .fontWeight(textWeight)
-                    .fontDesign(textStyle.design)
-                    .fontWidth(textStyle.width)
+                    .fontWidth(.condensed)
                     .foregroundStyle(textColor)
                     .opacity(textOpacity)
-                    .padding(.trailing, textSize * 0.3)
+                    .padding(.trailing, textSize * 0.2)
                 }
                 if colon {
                     ZStack {
@@ -81,8 +78,7 @@ public struct TimeDisplay: View {
                     }
                     .font(.system(size: textSize * 5 / 6))
                     .fontWeight(textWeight)
-                    .fontDesign(textStyle.design)
-                    .fontWidth(textStyle.width)
+                    .fontWidth(.condensed)
                     .foregroundStyle(textColor)
                     .opacity(textOpacity)
                 }

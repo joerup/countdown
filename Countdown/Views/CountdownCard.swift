@@ -55,8 +55,10 @@ public struct CountdownCard: View {
             .background {
                 BackgroundDisplay(background: countdown.currentBackground?.full, color: countdown.currentBackgroundColor, fade: countdown.currentBackgroundFade, blur: countdown.currentBackgroundBlur, dim: countdown.currentBackgroundDim, brightness: countdown.currentBackgroundBrightness, saturation: countdown.currentBackgroundSaturation, contrast: countdown.currentBackgroundContrast)
                     .overlay(alignment: .bottom) {
-                        LinearGradient(colors: [.clear, .black.opacity(0.75)], startPoint: .top, endPoint: .bottom)
-                            .frame(height: size.height/3)
+                        if countdown.currentBackground != nil {
+                            LinearGradient(colors: [.clear, .black.opacity(0.75)], startPoint: .top, endPoint: .bottom)
+                                .frame(height: size.height/3)
+                        }
                     }
                     .frame(width: totalWidth, height: totalHeight)
                     .clipShape(RoundedRectangle(cornerRadius: editCountdown && fullScreen ? 0 : 40))

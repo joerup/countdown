@@ -110,7 +110,7 @@ struct TextStyleEditor: View {
             Divider()
                 .padding(.vertical)
             
-            CustomColorPicker(color: Binding(get: { textColor }, set: { color in if let color { textColor = color } }), opacity: $textOpacity, shape: Circle(), sliderValue: .saturation, opacityRange: 0.15...1)
+            CustomColorPicker(color: Binding(get: { textColor }, set: { color in if let color { textColor = color } }), opacity: $textOpacity, shape: Circle(), brightnessSlider: false, saturationSlider: true, opacitySlider: true, saturationRange: 0.1...0.5, opacityRange: 0.15...1)
             
             Divider()
                 .padding(.vertical)
