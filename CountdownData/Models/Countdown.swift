@@ -129,6 +129,8 @@ public final class Countdown {
         self.type = instance.type
         self.occasion = instance.occasion
         self.cards = [Card(from: instance)]
+        self.daysRemaining = instance.daysRemaining
+        self.timeRemaining = instance.timeRemaining
     }
     public func match(_ instance: CountdownInstance) {
         self.id = instance.countdownID
@@ -137,6 +139,8 @@ public final class Countdown {
         self.type = instance.type
         self.occasion = instance.occasion
         self.card?.match(instance)
+        self.daysRemaining = instance.daysRemaining
+        self.timeRemaining = instance.timeRemaining
     }
     public func compareTo(countdown: Countdown) -> Bool {
         self.id == countdown.id &&

@@ -80,7 +80,7 @@ public struct CountdownCard: View {
     private var header: some View {
         HStack(spacing: 15) {
             
-            if !editCountdown {
+            if fullScreen && !editCountdown {
                 Button {
                     withAnimation {
                         editCountdown.toggle()

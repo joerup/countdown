@@ -42,7 +42,8 @@ struct CountdownCarousel: View {
     
     var showMultipleCards: Bool
     
-    @State private var scrollIndex: UUID?
+    @State private var scrollPosition: CGFloat = 0
+    @State private var gesturePosition: CGFloat = 0
     
     @State private var disableHorizontalDrag: Bool = false
     @State private var disableVerticalDrag: Bool = false
@@ -62,6 +63,15 @@ struct CountdownCarousel: View {
     private var cardPadding: CGFloat {
         showMultipleCards ? 20 : 0
     }
+    private func totalCardWidth(_ size: CGSize) -> CGFloat {
+        size.width * scale + carouselGapWidth
+    }
+    private func carouselCenterOffset(_ size: CGSize) -> CGFloat {
+        totalCardWidth(size) * CGFloat(countdowns.count)/2
+    }
+    private func positionForIndex(_ index: Int, size: CGSize) -> CGFloat {
+        -totalCardWidth(size) * (CGFloat(index) + 0.5)
+    }
     
     var animation: Namespace.ID
     
@@ -71,28 +81,32 @@ struct CountdownCarousel: View {
             let edgeInsets = geometry.safeAreaInsets
             Group {
                 if showMultipleCards {
-                    ScrollView(.horizontal) {
-                        HStack {
-                            ForEach(countdowns) { countdown in
-                                cardDisplay(countdown: countdown, size: cardSize, edgeInsets: edgeInsets)
-                                    .id(countdown.id)
-                            }
+                    HStack(spacing: carouselGapWidth) {
+                        ForEach(countdowns) { countdown in
+                            cardDisplay(countdown: countdown, size: cardSize, edgeInsets: edgeInsets)
+                                .frame(maxWidth: cardSize.width)
+                                .opacity(clock.selectedCountdown == countdown ? 1 : 0.35)
                         }
-                        .padding(cardPadding)
                     }
-                    .scrollPosition(id: $scrollIndex, anchor: .center)
-                    .onAppear {
-                        scrollIndex = clock.selectedCountdown?.id
+                    .padding(cardPadding)
+                    .offset(x: scrollPosition + gesturePosition + carouselCenterOffset(cardSize))
+                    .frame(minWidth: geometry.size.width, maxWidth: .infinity)
+                    .overlay(alignment: .topLeading) {
+                        editButton
                     }
+                    .overlay(alignment: .topTrailing) {
+                        closeButton
+                    }
+                    .gesture(carouselScrollGesture(cardSize: cardSize, geometrySize: geometry.size))
                 } else {
                     ZStack {
                         if let last {
                             cardDisplay(countdown: last, size: cardSize, edgeInsets: edgeInsets)
-                                .offset(x: -cardSize.width * scale - carouselGapWidth)
+                                .offset(x: -totalCardWidth(cardSize))
                         }
                         if let next {
                             cardDisplay(countdown: next, size: cardSize, edgeInsets: edgeInsets)
-                                .offset(x: cardSize.width * scale + carouselGapWidth)
+                                .offset(x: totalCardWidth(cardSize))
                         }
                         if let countdown = clock.selectedCountdown {
                             cardDisplay(countdown: countdown, size: cardSize, edgeInsets: edgeInsets)
@@ -100,33 +114,43 @@ struct CountdownCarousel: View {
                         }
                     }
                     .padding(cardPadding)
+                    .id(clock.selectedCountdown)
                 }
             }
             .frame(width: geometry.size.width, height: geometry.size.height)
-            .id(clock.selectedCountdown)
             .confettiCannon(counter: $confettiTrigger, num: 100, colors: (clock.selectedCountdown?.currentTextColor ?? .white).discretizedGradient(numberOfShades: 10), rainHeight: 1.5 * geometry.size.height, radius: 0.7 * max(geometry.size.height, geometry.size.width))
             .overlay(alignment: .bottom) {
                 if !showMultipleCards && editingCountdown == nil {
                     footer
                 }
             }
-        }
-        .ignoresSafeArea(.keyboard, edges: .bottom)
-        .onAppear {
-            UIImpactFeedbackGenerator().impactOccurred()
-            shootConfetti()
-        }
-        .onChange(of: scenePhase) { _, phase in
-            withAnimation {
-                offset = .zero
+            .onAppear {
+                UIImpactFeedbackGenerator().impactOccurred()
+                shootConfetti()
             }
-            if case .active = phase {
+            .onAppear {
+                if let countdown = clock.selectedCountdown, let index = countdowns.firstIndex(where: { $0 == countdown }) {
+                    scrollPosition = positionForIndex(index, size: cardSize)
+                }
+            }
+            .onChange(of: scenePhase) { _, phase in
+                withAnimation {
+                    offset = .zero
+                }
+                if let countdown = clock.selectedCountdown, let index = countdowns.firstIndex(where: { $0 == countdown }) {
+                    withAnimation {
+                        scrollPosition = positionForIndex(index, size: cardSize)
+                    }
+                }
+                if case .active = phase {
+                    shootConfetti()
+                }
+            }
+            .onChange(of: clock.selectedCountdown?.isComplete) { _, _ in
                 shootConfetti()
             }
         }
-        .onChange(of: clock.selectedCountdown?.isComplete) { _, _ in
-            shootConfetti()
-        }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
     
     private func cardSize(from geometrySize: CGSize) -> CGSize {
@@ -267,5 +291,75 @@ struct CountdownCarousel: View {
                     }
                 }
             }
+    }
+    
+    private func carouselScrollGesture(cardSize: CGSize, geometrySize: CGSize) -> some Gesture {
+        DragGesture()
+            .onChanged { value in
+                gesturePosition = value.translation.width
+                constrainScroll(cardSize: cardSize, geometrySize: geometrySize)
+            }
+            .onEnded { value in
+                scrollPosition += value.translation.width
+                gesturePosition = 0
+                constrainScroll(cardSize: cardSize, geometrySize: geometrySize, snap: true)
+            }
+    }
+    
+    private func constrainScroll(cardSize: CGSize, geometrySize: CGSize, snap: Bool = false) {
+        let min: CGFloat = -totalCardWidth(cardSize)/2
+        let max = -totalCardWidth(cardSize) * (CGFloat(countdowns.count) - 0.5)
+        
+        if scrollPosition > min {
+            withAnimation {
+                scrollPosition = min
+            }
+        }
+        if scrollPosition < max {
+            withAnimation {
+                scrollPosition = max
+            }
+        }
+        
+        let index = -Int(round((scrollPosition + gesturePosition) / totalCardWidth(cardSize) + 0.5))
+        if index >= 0, index < countdowns.count, let countdown = clock.selectedCountdown {
+            if countdown != countdowns[index] {
+                clock.select(countdowns[index])
+            }
+            if snap {
+                withAnimation {
+                    scrollPosition = positionForIndex(index, size: cardSize)
+                    gesturePosition = 0
+                }
+            }
+        }
+    }
+    
+    private var editButton: some View {
+        Button {
+            withAnimation {
+                editingCountdown = clock.selectedCountdown
+            }
+        } label: {
+            Image(systemName: "pencil.circle.fill")
+                .font(.title3)
+                .opacity(0.7)
+                .padding()
+        }
+        .tint(.gray)
+    }
+    
+    private var closeButton: some View {
+        Button {
+            withAnimation {
+                clock.select(nil)
+            }
+        } label: {
+            Image(systemName: "xmark.circle.fill")
+                .font(.title3)
+                .opacity(0.7)
+                .padding()
+        }
+        .tint(.gray)
     }
 }

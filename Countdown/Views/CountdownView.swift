@@ -19,11 +19,11 @@ struct CountdownView: View {
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     
     private var sortedCountdowns: [Countdown] {
-        if !searchText.isEmpty {
+        /*if !searchText.isEmpty {
             return (clock.countdowns.filter {  $0.name.lowercased().starts(with: searchText.lowercased()) } .sorted()
                     + clock.countdowns.filter { $0.name.lowercased().contains(searchText.lowercased()) && !$0.name.lowercased().starts(with: searchText.lowercased()) } .sorted())
             .filter { showArchive ? $0.isComplete : !$0.isPastDay }
-        } else if showArchive {
+        } else */if showArchive {
             return clock.countdowns.filter { $0.isComplete } .sorted().reversed()
         } else {
             return clock.countdowns.filter { !$0.isPastDay } .sorted()
@@ -36,39 +36,26 @@ struct CountdownView: View {
     
     @State private var showSettings: Bool = false
     @State private var showArchive: Bool = false
-    @State private var showSearch: Bool = false
+//    @State private var showSearch: Bool = false
     
-    @State private var searchText: String = ""
+//    @State private var searchText: String = ""
     
     @State private var newCountdown: Bool = false
     @State private var editingCountdown: Countdown?
-    
-    @State private var viewType: ViewType = .grid
-    private enum ViewType {
-        case grid, carousel
-    }
     
     @Namespace private var animation
     
     var body: some View {
         NavigationStack {
             Group {
-                switch viewType {
-                case .grid:
-                    CountdownGrid(countdowns: sortedCountdowns, showArchive: showArchive, animation: animation) { countdown in
-                        clock.select(countdown)
-                        if showMultipleCards {
-                            viewType = .carousel
-                        }
-                    }
-                case .carousel:
-                    CountdownCarousel(countdowns: sortedCountdowns, editingCountdown: $editingCountdown, showMultipleCards: showMultipleCards, animation: animation)
+                CountdownGrid(countdowns: sortedCountdowns, showArchive: showArchive, animation: animation) { countdown in
+                    clock.select(countdown)
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
             .overlay {
                 if sortedCountdowns.isEmpty {
-                    Text(!searchText.isEmpty ? "No matching countdowns found." : showArchive ? "Completed countdowns will appear here." : "No countdowns are currently active!")
+                    Text(/*!searchText.isEmpty ? "No matching countdowns found." : */showArchive ? "Completed countdowns will appear here." : "No countdowns are currently active!")
                         .multilineTextAlignment(.center)
                         .foregroundStyle(.gray)
                         .padding(50)
@@ -78,10 +65,10 @@ struct CountdownView: View {
                 headerButtons
             }
         }
-        .searchable(text: $searchText, isPresented: $showSearch, placement: .navigationBarDrawer)
-        .opacity(clock.selectedCountdown == nil || showMultipleCards ? 1 : 0)
+//        .searchable(text: $searchText, isPresented: $showSearch, placement: .navigationBarDrawer)
+        .opacity(clock.selectedCountdown == nil ? 1 : 0)
         .overlay {
-            if !showMultipleCards, clock.selectedCountdown != nil {
+            if clock.selectedCountdown != nil {
                 CountdownCarousel(countdowns: sortedCountdowns, editingCountdown: $editingCountdown, showMultipleCards: showMultipleCards, animation: animation)
             }
         }
@@ -121,14 +108,14 @@ struct CountdownView: View {
                     .fontWeight(.medium)
             }
         }
-        ToolbarItem(placement: .topBarTrailing) {
-            Button {
-                showSearch.toggle()
-            } label: {
-                Image(systemName: "magnifyingglass")
-                    .fontWeight(.medium)
-            }
-        }
+//        ToolbarItem(placement: .topBarTrailing) {
+//            Button {
+//                showSearch.toggle()
+//            } label: {
+//                Image(systemName: "magnifyingglass")
+//                    .fontWeight(.medium)
+//            }
+//        }
         ToolbarItem(placement: .topBarTrailing) {
             if premium.isActive || clock.countdowns.filter({ !$0.isPastDay }).count < 4 {
                 Button {
