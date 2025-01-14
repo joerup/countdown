@@ -62,7 +62,7 @@ public struct CountdownFullLayout: View {
                 TimeDisplay(
                     days: timeRemaining.day, hours: timeRemaining.hour, minutes: timeRemaining.minute, seconds: timeRemaining.second,
                     textColor: textColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow,
-                    textSize: scale * numberSize * 0.12
+                    textSize: scale * 0.1
                 )
             }
             .shadow(color: Color(white: 0.3).opacity(textShadow), radius: 10)

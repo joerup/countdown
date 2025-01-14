@@ -80,7 +80,7 @@ public struct CountdownSquare: View {
     
     public var body: some View {
         GeometryReader { geometry in
-            CountdownLayout(title: title, dateString: dateString, daysRemaining: daysRemaining, timeRemaining: timeRemaining, textColor: textColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow, titleSize: titleSize, numberSize: numberSize)
+            CountdownSquareLayout(title: title, dateString: dateString, daysRemaining: daysRemaining, timeRemaining: timeRemaining, textColor: textColor, textStyle: textStyle, textWeight: textWeight, textOpacity: textOpacity, textShadow: textShadow, titleSize: titleSize, numberSize: numberSize)
                 .padding([.horizontal, .top], geometry.size.width*0.1)
                 .padding(.bottom, geometry.size.width*0.04)
                 .background {

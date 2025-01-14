@@ -19,7 +19,7 @@ struct CountdownWidget: Widget {
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: CountdownWidgetIntent.self, provider: CountdownTimelineProvider()) { entry in
             if let countdown = entry.countdown {
-                CountdownLayout(countdown: countdown)
+                CountdownSquareLayout(countdown: countdown)
                     .padding(.bottom, -10)
                     .containerBackground(for: .widget) {
                         BackgroundDisplay(background: countdown.currentBackground?.square, color: countdown.currentBackgroundColor, fade: countdown.currentBackgroundFade, blur: countdown.currentBackgroundBlur, dim: countdown.currentBackgroundDim, brightness: countdown.currentBackgroundBrightness, saturation: countdown.currentBackgroundSaturation, contrast: countdown.currentBackgroundContrast)

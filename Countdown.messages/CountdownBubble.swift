@@ -23,7 +23,7 @@ struct CountdownBubble: View {
     var body: some View {
         if let existingCountdown, instance.compareTo(countdown: existingCountdown), let url = existingCountdown.getURL() {
             Link(destination: url) {
-                CountdownLayout(instance: instance)
+                CountdownSquareLayout(instance: instance)
             }
             .padding(sent ? .trailing : .leading, 7)
             .padding(.top, 32)
@@ -32,7 +32,7 @@ struct CountdownBubble: View {
             .padding(.bottom, 15)
             .background(background)
         } else {
-            CountdownLayout(instance: instance)
+            CountdownSquareLayout(instance: instance)
                 .padding(sent ? .trailing : .leading, 7)
                 .padding(.top, 32)
                 .padding(.leading, 12.5)

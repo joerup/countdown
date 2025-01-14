@@ -1,5 +1,5 @@
 //
-//  CountdownLayout.swift
+//  CountdownSquareLayout.swift
 //  CountdownUI
 //
 //  Created by Joe Rupertus on 12/30/24.
@@ -8,7 +8,7 @@
 import SwiftUI
 import CountdownData
 
-public struct CountdownLayout: View {
+public struct CountdownSquareLayout: View {
     
     private var title: String
     private var dateString: String
