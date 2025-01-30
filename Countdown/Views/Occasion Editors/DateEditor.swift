@@ -24,51 +24,37 @@ struct DateEditor: View {
     
     var body: some View {
         Group {
-            Section {
+            Section("Title") {
                 TextField("My Event", text: $name)
             }
-            Section {
+            Section("Occurs") {
                 Button {
-                    editDate.toggle()
+                    withAnimation {
+                        editDate.toggle()
+                    }
                 } label: {
                     HStack {
                         Image(systemName: repeatAnnually ? "repeat" : "calendar")
                             .foregroundStyle(.secondary)
                         Text("\(occasion.string)")
+                            .foregroundStyle(editDate ? Color.pink : Color.primary)
                     }
                     .foregroundStyle(.foreground)
                 }
-                .popover(isPresented: $editDate) {
-                    VStack(spacing: 16) {
-                        Group {
-                            HStack {
-                                Text("Frequency")
-                                Spacer()
-                                Picker("Frequency", selection: $repeatAnnually) {
-                                    Text("One Time").tag(false)
-                                    Text("Annual").tag(true)
-                                }
-                                .pickerStyle(.menu)
-                            }
-                            CustomDatePicker(date: $date, showYear: !repeatAnnually)
-                                .frame(minWidth: 300, minHeight: 150)
-                            VStack {
-                                Toggle("Include Time", isOn: $includeTime)
-                                if includeTime {
-                                    Divider()
-                                    DatePicker("Time", selection: $time, displayedComponents: [.hourAndMinute])
-                                }
-                            }
+                if editDate {
+                    HStack {
+                        Picker("Frequency", selection: $repeatAnnually) {
+                            Text("One Time").tag(false)
+                            Text("Annual").tag(true)
                         }
-                        .padding(.vertical, 5)
-                        .padding(.horizontal)
-                        .background(Color(uiColor: .systemGroupedBackground))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .pickerStyle(.menu)
                     }
-                    .padding()
-                    .presentationCompactAdaptation(.popover)
-                    .presentationBackground(Color(uiColor: .systemGray6))
-                    .presentationCornerRadius(30)
+                    CustomDatePicker(date: $date, showYear: !repeatAnnually)
+                        .frame(minWidth: 300, minHeight: 150)
+                    Toggle("Include Time", isOn: $includeTime)
+                    if includeTime {
+                        DatePicker("Time", selection: $time, displayedComponents: [.hourAndMinute])
+                    }
                 }
             }
         }

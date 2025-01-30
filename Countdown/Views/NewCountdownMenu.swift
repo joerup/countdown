@@ -11,6 +11,7 @@ import CountdownData
 struct NewCountdownMenu: View {
     
     @Environment(\.dismiss) var dismiss
+    @Environment(Clock.self) var clock
     
     @State private var newCountdown: ProtoCountdown?
     
@@ -54,6 +55,7 @@ struct NewCountdownMenu: View {
             .sheet(item: $newCountdown) { countdown in
                 CountdownEditor(name: countdown.name, displayName: countdown.displayName, type: countdown.type, occasion: countdown.occasion) { countdown in
                     dismiss()
+                    clock.select(countdown)
                 }
             }
             .toolbar {

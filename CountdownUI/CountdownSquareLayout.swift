@@ -92,7 +92,7 @@ public struct CountdownSquareLayout: View {
                         textSize: scale * numberSize * 0.5
                     )
                 }
-                .padding(.trailing, scale * numberSize * 0.04)
+                .padding(.horizontal, scale * numberSize * 0.04)
                 .padding(.bottom, -scale * numberSize * 0.1)
             }
             .shadow(color: Color(white: 0.3).opacity(textShadow), radius: 10)

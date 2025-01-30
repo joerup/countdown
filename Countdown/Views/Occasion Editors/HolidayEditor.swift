@@ -20,10 +20,10 @@ struct HolidayDetails: View {
     
     var body: some View {
         Group {
-            Section {
-                TextField("Event Name", text: $displayName)
+            Section("Title") {
+                TextField("My Event", text: $name)
             }
-            Section {
+            Section("Occurs") {
                 Button {
                     editDate.toggle()
                 } label: {

@@ -49,10 +49,6 @@ struct BackgroundEditor: View {
                         Button("Reposition", systemImage: "crop") {
                             showRepositionMenu.toggle()
                         }
-                    } else if backgroundColor != .defaultColor {
-                        Button("Default") {
-                            backgroundColor = .defaultColor
-                        }
                     }
                 } label: {
                     BackgroundDisplay(background: background?.square, color: backgroundColor, fade: backgroundFade, blur: backgroundBlur, dim: backgroundDim, brightness: backgroundBrightness, saturation: backgroundSaturation, contrast: backgroundContrast)
