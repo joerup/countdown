@@ -27,17 +27,17 @@ struct CountdownBubble: View {
             }
             .padding(sent ? .trailing : .leading, 7)
             .padding(.top, 32)
-            .padding(.leading, 12.5)
-            .padding(.trailing, 15)
-            .padding(.bottom, 15)
+            .padding(.leading, 17.5)
+            .padding(.trailing, 20)
+            .padding(.bottom, 25)
             .background(background)
         } else {
             CountdownSquareLayout(instance: instance)
                 .padding(sent ? .trailing : .leading, 7)
                 .padding(.top, 32)
-                .padding(.leading, 12.5)
-                .padding(.trailing, 15)
-                .padding(.bottom, 15)
+                .padding(.leading, 17.5)
+                .padding(.trailing, 20)
+                .padding(.bottom, 25)
                 .background(background)
                 .overlay(alignment: .topTrailing) {
                     saveButton

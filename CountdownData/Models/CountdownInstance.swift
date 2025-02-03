@@ -174,26 +174,7 @@ public final class CountdownInstance: Codable {
     
     // Compare all states of this instance to a given countdown
     public func compareTo(countdown: Countdown) -> Bool {
-        self.countdownID == countdown.id &&
-        self.name == countdown.name &&
-        self.displayName == countdown.displayName &&
-        self.type == countdown.type &&
-        self.occasion == countdown.occasion &&
-        self.tint == countdown.currentTextColor.rgb &&
-        self.textStyle == countdown.currentTextStyle &&
-        self.textWeight == countdown.currentTextWeight &&
-        self.textShadow == countdown.currentTextShadow &&
-        self.titleSize == countdown.currentTitleSize &&
-        self.numberSize == countdown.currentNumberSize &&
-        self.backgroundID == countdown.card?.backgroundID &&
-        self.backgroundTransforms == countdown.card?.backgroundTransforms &&
-        self.backgroundRGB == countdown.currentBackgroundColor?.rgb &&
-        self.backgroundFade == countdown.currentBackgroundFade &&
-        self.backgroundBlur == countdown.currentBackgroundBlur &&
-        self.backgroundDim == countdown.currentBackgroundDim &&
-        self.backgroundSaturation == countdown.currentBackgroundSaturation &&
-        self.backgroundBrightness == countdown.currentBackgroundBrightness &&
-        self.backgroundContrast == countdown.currentBackgroundContrast
+        self.countdownID == countdown.id
     }
     
     // Create an encoding for this instance
