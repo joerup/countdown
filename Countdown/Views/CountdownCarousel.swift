@@ -49,7 +49,8 @@ struct CountdownCarousel: View {
     @State private var disableVerticalDrag: Bool = false
     
     @State private var confettiCannonReady: Bool = true
-    @State private var confettiTrigger: Int = 1
+    @State private var confettiTrigger1: Int = 1
+    @State private var confettiTrigger2: Int = 1
     
     private var scale: CGFloat {
         1 - min(abs(offset.height)/1000, 1)
@@ -118,7 +119,14 @@ struct CountdownCarousel: View {
                 }
             }
             .frame(width: geometry.size.width, height: geometry.size.height)
-            .confettiCannon(counter: $confettiTrigger, num: 100, colors: (clock.selectedCountdown?.currentTextColor ?? .white).discretizedGradient(numberOfShades: 10), rainHeight: 1.5 * geometry.size.height, radius: 0.7 * max(geometry.size.height, geometry.size.width))
+            .confettiCannon(counter: $confettiTrigger2, num: 100, colors: (clock.selectedCountdown?.currentTextColor ?? .white).discretizedGradient(numberOfShades: 10), rainHeight: 1.5 * geometry.size.height, radius: 0.7 * max(geometry.size.height, geometry.size.width))
+            .onAppear {
+                if confettiTrigger1 > 1, let countdown = clock.selectedCountdown, !isEditing(countdown), countdown.isComplete, countdown.isToday {
+                    confettiTrigger2 += 1
+                    UIImpactFeedbackGenerator().impactOccurred()
+                }
+            }
+            .id(confettiTrigger1)
             .overlay(alignment: .bottom) {
                 if !showMultipleCards && editingCountdown == nil {
                     footer
@@ -209,9 +217,10 @@ struct CountdownCarousel: View {
     
     private func shootConfetti() {
         guard confettiCannonReady, let countdown = clock.selectedCountdown, !isEditing(countdown), countdown.isComplete, countdown.isToday else { return }
-        confettiTrigger += 1
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.36) {
+            confettiTrigger1 += 1
+        }
         confettiCannonReady = false
-        UIImpactFeedbackGenerator().impactOccurred()
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
             confettiCannonReady = true
         }
