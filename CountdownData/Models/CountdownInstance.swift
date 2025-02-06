@@ -57,10 +57,10 @@ public final class CountdownInstance: Codable {
         "\(date.dateString)\(occasion.includeTime ? " \(date.timeString)" : "")"
     }
     public var daysRemaining: Int {
-        date.daysRemaining(relativeTo: timestamp ?? .now)
+        date.daysRemaining(relativeTo: timestamp ?? .current)
     }
     public var timeRemaining: Date.TimeRemaining {
-        date.timeRemaining(relativeTo: timestamp ?? .now)
+        date.timeRemaining(relativeTo: timestamp ?? .current)
     }
     
     public init(from countdown: Countdown, timestamp: Date? = nil) {

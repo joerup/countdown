@@ -31,22 +31,22 @@ public final class Countdown {
     @Transient public var timeRemaining: Date.TimeRemaining = .zero
     
     public var isActive: Bool {
-        return date > .now
+        return date > .current
     }
     public var isComplete: Bool {
         return !isActive
     }
     public var isToday: Bool {
-        return date.midnight == .now.midnight
+        return date.midnight == .current.midnight
     }
     public var isPastDay: Bool {
-        return date.midnight < .now.midnight
+        return date.midnight < .current.midnight
     }
     public var isFutureDay: Bool {
-        return date.midnight > .now.midnight
+        return date.midnight > .current.midnight
     }
     public var under24Hr: Bool {
-        return Calendar.current.date(byAdding: .day, value: 1, to: .now) ?? .now >= date
+        return Calendar.current.date(byAdding: .day, value: 1, to: .current) ?? .current >= date
     }
     
     

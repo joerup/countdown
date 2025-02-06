@@ -45,7 +45,7 @@ public enum Occasion: Codable, Hashable, Equatable {
     public static let now = Self.singleDate(calendar: "gregorian", year: Date.currentYear, month: Date.currentMonth, day: Date.currentDay)
     
     private var next: (date: Date, components: DateComponents)? {
-        return next(after: .now)
+        return next(after: Date.current)
     }
     private func next(after referenceDate: Date) -> (date: Date, components: DateComponents)? {
         switch self {
@@ -79,7 +79,7 @@ public enum Occasion: Codable, Hashable, Equatable {
             dates.append(date)
         }
         while dates.count < amount {
-            let reference = (dates.last ?? .now).advanced(by: 86400)
+            let reference = (dates.last ?? Date.current).advanced(by: 86400)
             if let date = next(after: reference)?.date {
                 dates.append(date)
             }
@@ -109,7 +109,7 @@ public enum Occasion: Codable, Hashable, Equatable {
         return nil
     }
     
-    private func annual(calendar identifier: Calendar.Identifier, year: Int? = nil, month: Int, day: Int, hour: Int = 0, minute: Int = 0, after referenceDate: Date = .now) -> (date: Date, components: DateComponents)? {
+    private func annual(calendar identifier: Calendar.Identifier, year: Int? = nil, month: Int, day: Int, hour: Int = 0, minute: Int = 0, after referenceDate: Date = Date.current) -> (date: Date, components: DateComponents)? {
         let calendar = Calendar(identifier: identifier)
         let year = year ?? Date.currentYear(identifier)
         let components = DateComponents(year: year, month: month, day: day, hour: hour, minute: minute).adjusted(calendar: calendar)
@@ -123,7 +123,7 @@ public enum Occasion: Codable, Hashable, Equatable {
         return nil
     }
     
-    private func annual(calendar identifier: Calendar.Identifier, year: Int? = nil, month: Int, week: Int, weekday: Int, after referenceDate: Date = .now) -> (date: Date, components: DateComponents)? {
+    private func annual(calendar identifier: Calendar.Identifier, year: Int? = nil, month: Int, week: Int, weekday: Int, after referenceDate: Date = Date.current) -> (date: Date, components: DateComponents)? {
         let calendar = Calendar(identifier: identifier)
         let year = year ?? Date.currentYear(identifier)
         let components = DateComponents(year: year, month: month, weekday: weekday, weekdayOrdinal: week).adjusted(calendar: calendar)
@@ -137,11 +137,11 @@ public enum Occasion: Codable, Hashable, Equatable {
         return nil
     }
     
-    private func annual(calendar identifier: Calendar.Identifier, year: Int? = nil, month: Int, weekday: Int, after: Bool, day: Int, after referenceDate: Date = .now) -> (date: Date, components: DateComponents)? {
+    private func annual(calendar identifier: Calendar.Identifier, year: Int? = nil, month: Int, weekday: Int, after: Bool, day: Int, after referenceDate: Date = Date.current) -> (date: Date, components: DateComponents)? {
         let calendar = Calendar(identifier: identifier)
         let year = year ?? Date.currentYear(identifier)
         let components = DateComponents(year: year, month: month, day: day).adjusted(calendar: calendar)
-        let baseDate = calendar.date(from: components) ?? .now
+        let baseDate = calendar.date(from: components) ?? Date.current
         let baseWeekday = baseDate.component(.weekday)
         let offset = (after ? 1 : -1) * (baseWeekday - weekday + 7) % 7
         if let date = calendar.date(byAdding: .day, value: offset, to: baseDate) {
@@ -154,7 +154,7 @@ public enum Occasion: Codable, Hashable, Equatable {
         return nil
     }
     
-    private func annual(calendar identifier: Calendar.Identifier, year: Int? = nil, tag: String, offset: Int, after referenceDate: Date = .now) -> (date: Date, components: DateComponents)? {
+    private func annual(calendar identifier: Calendar.Identifier, year: Int? = nil, tag: String, offset: Int, after referenceDate: Date = Date.current) -> (date: Date, components: DateComponents)? {
         let calendar = Calendar(identifier: identifier)
         let year = year ?? Date.currentYear(identifier)
         var components: DateComponents?
