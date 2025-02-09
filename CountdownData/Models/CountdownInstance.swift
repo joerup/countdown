@@ -36,7 +36,7 @@ public final class CountdownInstance: Codable {
     public var backgroundTransforms: Card.BackgroundTransforms?
     public var backgroundID: UUID = UUID()
     
-    private(set) var backgroundRGB: RGBColor?
+    private(set) var backgroundRGB: RGBColor? = Color.defaultColor.rgb
     public var backgroundColor: Color? {
         get { if let backgroundRGB { Color(rgb: backgroundRGB) } else { nil } }
         set { backgroundRGB = newValue?.rgb }

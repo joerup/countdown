@@ -296,6 +296,12 @@ public final class Clock {
         // initial tick for setup
         self.tick = -1
         
+        // make sure using current date
+        guard !Date.isOverriden else {
+            isLoaded = true
+            return
+        }
+        
         // a short delay to start the clock when the next realtime second ticks
         let initialDelay: Double = 1 - Double(Date.now.component(.nanosecond))/1E9
         DispatchQueue.main.asyncAfter(deadline: .now() + initialDelay) {

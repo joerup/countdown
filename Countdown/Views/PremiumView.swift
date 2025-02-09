@@ -46,26 +46,17 @@ struct PremiumView: View {
                     HStack {
                         Image("icon")
                             .resizable()
-                            .frame(width: 100, height: 100)
-                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                            .frame(width: 50, height: 50)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
                             .shadow(radius: 10)
-                            .padding()
-                        
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text("Countdown")
-                                .font(.system(size: 36, weight: .bold, design: .default))
-                                .foregroundStyle(titleGradient)
-                                .minimumScaleFactor(0.8)
-                            Text("Premium")
-                                .textCase(.uppercase)
-                                .font(.system(size: 36, weight: .bold, design: .default))
-                                .fontWidth(.expanded)
-                                .foregroundStyle(titleGradient)
-                                .minimumScaleFactor(0.8)
-                        }
-                        Spacer(minLength: 0)
+                            .padding(.horizontal, 5)
+                        Text("Premium")
+                            .font(.system(size: 36, weight: .bold, design: .rounded))
+                            .foregroundStyle(titleGradient)
+                            .minimumScaleFactor(0.8)
                     }
                     .foregroundStyle(.white)
+                    .padding(.top)
                     
                     // Styled Description with Enhanced "Unlimited"
                     HStack {
@@ -84,14 +75,16 @@ struct PremiumView: View {
                             .fontWeight(.bold)
                             .foregroundStyle(.white.opacity(0.7))
                     }
+                    .fontDesign(.rounded)
                     .multilineTextAlignment(.center)
                     
                     Spacer()
                     
                     // Placeholder for future image
-                    RoundedRectangle(cornerRadius: 20)
-                        .strokeBorder(Color.white.opacity(0.5), lineWidth: 2)
-                        .frame(width: 300, height: 200)
+                    Image("splash")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .shadow(radius: 10)
                     
                     Spacer()
                     

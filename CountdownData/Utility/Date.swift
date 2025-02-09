@@ -9,9 +9,12 @@ import Foundation
 
 public extension Date {
     
-    static let currentOverride: Date? = nil //Date(year: 2024, month: 08, day: 15)
+    private static let currentOverride: Date? = nil //Date(year: 2024, month: 08, day: 15, hour: 09, minute: 41, second: 01)
     static var current: Date {
         return currentOverride ?? .now
+    }
+    static var isOverriden: Bool {
+        return currentOverride != nil
     }
     
     struct TimeRemaining {
@@ -87,16 +90,16 @@ public extension Date {
         return .current
     }
     
-    init(year: Int? = nil, month: Int, day: Int) {
+    init(year: Int? = nil, month: Int, day: Int, hour: Int = 0, minute: Int = 0, second: Int = 0) {
         let calendar = Calendar.current
         
         var components = DateComponents()
         components.year = year ?? calendar.component(.year, from: .current)
         components.month = month
         components.day = day
-        components.hour = 0
-        components.minute = 0
-        components.second = 0
+        components.hour = hour
+        components.minute = minute
+        components.second = second
         
         if let date = calendar.date(from: components) {
             self.init(timeIntervalSinceReferenceDate: date.timeIntervalSinceReferenceDate)
