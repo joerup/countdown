@@ -110,7 +110,7 @@ struct BackgroundEditor: View {
                     .padding(.top)
             }
             
-            CustomColorPicker(color: $backgroundColor, opacity: $backgroundFade, shape: RoundedRectangle(cornerRadius: 15), brightnessSlider: true, saturationSlider: background == nil, opacitySlider: background != nil, allowNoColor: background != nil, allowWhite: false, brightnessRange: 0.25...1, saturationRange: 0.2...1, opacityRange: 0...0.8)
+            CustomColorPicker(color: $backgroundColor, opacity: $backgroundFade, shape: RoundedRectangle(cornerRadius: 15), brightnessSlider: true, saturationSlider: true, opacitySlider: background != nil, allowNoColor: background != nil, allowWhite: false, brightnessRange: 0.25...1, saturationRange: 0.2...1, opacityRange: 0...0.8)
                 .padding(.vertical)
         }
         .photoMenu(isPresented: $showPhotoLibrary) { background, transform in

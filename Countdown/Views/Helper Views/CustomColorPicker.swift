@@ -46,8 +46,8 @@ struct CustomColorPicker<ColorShape: Shape>: View {
         self.opacityRange = opacityRange
         
         if brightnessSlider {
-            saturation = 1.0
-            brightness = 0.8
+            saturation = 0.6
+            brightness = 0.625
         }
         else if saturationSlider {
             saturation = 0.3
