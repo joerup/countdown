@@ -22,7 +22,7 @@ public final class Countdown {
         occasion.date
     }
     public var dateString: String {
-        date.dateString
+        "\(date.dateString)\(occasion.includeTime ? " \(date.timeString)" : "")"
     }
     
     // MARK: - Counter
